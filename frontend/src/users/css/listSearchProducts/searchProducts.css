@@ -1,0 +1,65 @@
+/* Trang tổng */
+.search-page {
+  padding: 30px 60px;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Header */
+.search-header {
+  margin-bottom: 25px;
+}
+
+.search-header h2 {
+  font-size: 26px;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.search-header p {
+  color: #666;
+  font-size: 14px;
+}
+
+/* List */
+.search-result-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* Card */
+.product-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+}
+
+
+/* Info */
+.product-name {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.product-price,
+.product-location {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+
+
+
+/* No result */
+.no-result {
+  font-size: 16px;
+  color: #999;
+}

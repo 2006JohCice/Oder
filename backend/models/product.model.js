@@ -12,6 +12,7 @@ const productSchema = new mongoose.Schema({
   stock: Number,
   category: String,
   status: { type: String, default: "active" },
+  featured:String,
   deleted: {
     type: Boolean,
     default: false

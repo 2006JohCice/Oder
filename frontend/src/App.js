@@ -5,11 +5,13 @@ import DefaultLayout from "./users/layouts/default";
 import AdminLayout from "./admin/layouts/AdminLayout";
 import NotFound from './Error/NotFound';
 import LayoutDefault from './admin/components/auth/layoutAuth';
+import ScrollToTop from './ScrollToTop';
 function App() {
 
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/admin/*" element={<AdminLayout />} />
         <Route path="/admin/auth/*" element={<LayoutDefault />} />

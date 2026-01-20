@@ -13,8 +13,11 @@ function CreateProducts({ setProducts, setNotifMessage, setLoading }) {
         img: "",
         position: "",
         status: "active",
-        category: ""
+        category: "",
+        featured: "0"
+
     });
+    // console.log(formData)
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -47,7 +50,9 @@ function CreateProducts({ setProducts, setNotifMessage, setLoading }) {
                     img: "",
                     position: "",
                     status: "active",
-                    category: ""
+                    category: "",
+                    featured: "0"
+
                 });
             } else {
                 alert("Đã xảy ra lỗi khi tạo sản phẩm.");
@@ -117,6 +122,37 @@ function CreateProducts({ setProducts, setNotifMessage, setLoading }) {
                             <ListCategory key={item._id} node={item} />
                         ))}
                     </select>
+
+                    {/* Sản phẩm nổi bật */}
+                
+                    <div className="mb-3">
+                        <label className="form-label">Cài đặt hiển thị </label>
+                        <div>
+                            <div className="form-check form-check-inline">
+                                <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="featured"
+                                    value="1"
+                                    checked={formData.featured === "1"}
+                                    onChange={handleChange}
+                                />
+                                <label className="form-check-label">Nổi Bật</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="featured"
+                                    value="0"
+                                    checked={formData.featured === "0"}
+                                    onChange={handleChange}
+
+                                />
+                                <label className="form-check-label">Không Nổi Bật</label>
+                            </div>
+                        </div>
+                    </div>
 
 
                     {/* Mô tả */}

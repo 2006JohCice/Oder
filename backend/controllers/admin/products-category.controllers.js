@@ -1,32 +1,12 @@
 
 const ProductCategory = require("../../models/controllerCategory.model")
-
+const {createTree} = require("../../helpers/createTre")
 //[GET] /api/admin/category
 module.exports.index = async (req, res) => {
     let final = {
         deleted: false,
     }
 
-
-    function createTree(data, parentId = "") {
-        const tree = [];
-
-        data.forEach((item) => {
-            if (item.father_id === String(parentId)) {
-                const newItem = item;
-
-                const children = createTree(data, String(item._id));
-               
-                if (children.length > 0) {
-                    newItem.children = children;
-                }
-
-                tree.push(newItem);
-            }
-        });
-
-        return tree;
-    }
 
     try {
         const category = await ProductCategory.find(final).lean();

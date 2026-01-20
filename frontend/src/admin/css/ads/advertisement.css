@@ -24,6 +24,40 @@
     width: 35%;
 }
 
+.form-wrap {
+    margin-top: 10px;
+    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-item span {
+    color: #1e293b;
+  width: 120px;
+  font-weight: 500;
+}
+
+.form-item input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.form-item input:focus {
+  border-color: #4f46e5;
+}
+
+
 .ads-right-top,.ads-right-bottom{
     margin-top: 50px;
     position: relative;

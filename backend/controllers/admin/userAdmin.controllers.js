@@ -3,7 +3,7 @@ const paginationHelper = require("../../helpers/pagination")
 const userAdmin = require("../../models/UserAdmin.model")
 //[GET] /api/admin/usersAdmin
 module.exports.userAdmin = async (req, res) => {
-    
+
     let final = {
         deleted: false,
     }

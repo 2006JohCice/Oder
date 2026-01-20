@@ -1,17 +1,6 @@
-/* --- Biến màu và cài đặt chung --- */
-:root {
-    --primary-color: #0d6efd; /* Màu xanh dương chủ đạo */
-    --primary-hover-color: #0b5ed7;
-    --text-color: #212529; /* Màu chữ chính */
-    --secondary-text-color: #6c757d; /* Màu chữ phụ */
-    --background-color: #f8f9fa; /* Màu nền trang */
-    --border-color: #dee2e6; /* Màu viền */
-    --white-color: #ffffff;
-    --danger-color: #dc3545; /* Màu cho hành động xóa */
-}
 
 .cart-items{
-    /* display:block; */
+ 
     display: none;
     gap: 20px;
 }

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../css/pages/cart.css";
+import "../css/card/cartPay.css";
 import { useState,useEffect } from "react";
 
 import cartControl from "../control/cart.control";
