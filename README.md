@@ -43,10 +43,15 @@ npm start
 
 
 Note: The data is already available in my account, so no additional data setup is required.
+
 With Page Admin:
+
 TK: 1234@gmail.com
+
 Mk: 1
+
 Plz.No edit ,Delete account for pepole login
+
 
 Done:
 <img width="1919" height="897" alt="image" src="https://github.com/user-attachments/assets/536d8125-861f-457e-95ac-136a9fff7dec" />
