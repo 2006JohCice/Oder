@@ -7,12 +7,19 @@ The online version has not been updated with the latest changes yet, so the UI/U
 Admin Panel:
 
 1.Admin authentication (Login / Logout)
+
 2.Product management (Add, edit, delete)
+
 3.Product backup functionality
+
 4.Category management (Add, edit)
+
 5.Admin account management (Add, edit, delete)
+
 6.Role-based permission management
+
 7.Search and filter products by status 
+
 
 Client Panel
 1.Search
@@ -21,13 +28,19 @@ Client Panel
 ----------------------------------
 # Backend
 cd backend
+
 npm install
+
 npm start
+
 
 # Frontend
 cd frontend
+
 npm install
+
 npm start 
+
 
 Note: The data is already available in my account, so no additional data setup is required.
 With Page Admin:
