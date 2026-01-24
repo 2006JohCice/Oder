@@ -18,7 +18,7 @@ function Header() {
 
   const [data, setData] = useState([]);
   useEffect(() => {
-    fetch("/api/admin/category")
+    fetch("/api/category")
       .then(res => res.json())
       .then(res => setData(res))
       .catch((err) => console.error("Lỗi khi lấy cây danh mục:", err));

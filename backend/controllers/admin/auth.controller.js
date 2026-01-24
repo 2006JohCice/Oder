@@ -13,7 +13,6 @@ module.exports.login = async (req, res) => {
 
 
 module.exports.loginPost = async (req, res) => {
-    const countLogin = 5;
     const { email, password } = req.body;
     const user = await Account.findOne({
         email: email,
@@ -32,11 +31,6 @@ module.exports.loginPost = async (req, res) => {
         });
     }
     if (md5(password) != user.password) {
-        // if(countLogin == 5){
-        //     const date = new Date();
-        // }else{
-        //     countLogin -=1;
-        // }
         return res.status(400).json({
             messagePassword: "Mật khẩu sai !"
         });
