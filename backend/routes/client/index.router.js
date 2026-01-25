@@ -2,7 +2,7 @@ const productRouer = require("./product.route");
 const homeRouter =require("./home.route")
 const search =require("./search.route")
 const category = require("./category.route")
-// const cartRouter =require("./cart.route")
+const cartRouter =require("./cart.route")
 
 module.exports = (app) => {
 
@@ -11,7 +11,7 @@ module.exports = (app) => {
     app.use("/api",productRouer)
     app.use("/api",search)
     app.use("/api",category)
-    // app.use("/api",cartRouter)
+    app.use("/api",cartRouter)
     
 }
 

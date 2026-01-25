@@ -2,17 +2,49 @@ import "../../css/detailProducts/detailProduct.css";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import FeaturedProducts from "../MainContents/featuredProducts";
+import Notification from "../../alerts/Notification";
 
 function ProductDetail() {
     const { slugProduct } = useParams();
-    console.log(slugProduct)
     const [detailProduct, setDetailProduct] = useState(null);
-    const [minStock ,setMinStock] = useState(1);
-    const handleChangeStock = (e) =>{
-         const value = e.target.value
-         setMinStock(value)
+    const [minStock, setMinStock] = useState(1);
+    const [notifi, setNotifi] = useState("")
+
+    const handleChangeStock = (e) => {
+        const value = e.target.value
+        setMinStock(value)
 
     }
+    const handlAddProductsCart = async () => {
+        try {
+            const res = await fetch("/api/cart/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    productId: detailProduct._id,
+                    quantity: minStock
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                setNotifi(data.message);
+            }
+            // const data = await res.json();
+            // console.log("ADD CART OK:", data);
+        } catch (err) {
+            alert("Đã xảy ra lỗi khi thêm sản phẩm");
+        }
+    };
+
+
+    console.log(detailProduct)
+
+
+
     useEffect(() => {
         if (!slugProduct) return;
 
@@ -32,8 +64,29 @@ function ProductDetail() {
         )
     }
 
+
+    const handleClick = (click) => {
+
+        if (click == "minus") {
+            if (minStock > 1) {
+                setMinStock(minStock - 1);
+            }
+
+        }
+        if (click == "plus") {
+            setMinStock(minStock + 1);
+        }
+
+        console.log("Min: ", minStock)
+    }
     return (
         <>
+            {notifi && (
+                <Notification
+                    message={notifi}
+                    onClose={() => setNotifi("")}
+                />
+            )}
             <div className="detail-container">
                 <div className="detail-image">
                     <img src={detailProduct.img} alt={detailProduct.name} />
@@ -44,17 +97,32 @@ function ProductDetail() {
                     <p className="detail-price">
                         {detailProduct.price.toLocaleString()}đ
                     </p>
-                    <p className="detail-desc">{detailProduct.description}</p>
-                    <p className="detail-desc">
+                    <p className="detail-desc">Stock: {detailProduct.stock}</p>
+                    <p className="detail-desc">Style: {detailProduct.category}</p>
+                    <p>{detailProduct.deleted ? "Không Còn Bán" : "Đang Bán "}</p>
+                    {/* <p className="detail-desc">
                         <input type="number" value={minStock} min="1"
-                         onChange={(e) => handleChangeStock(e)}
+                            onChange={(e) => handleChangeStock(e)}
+                            style={{ width: "50px" }}
                         >
-                    
-                    </input></p>
 
+                        </input></p> */}
+                    <div className="item-quantity" style={{ width: "100px" }}>
+                        <button onClick={() => handleClick("minus")} className="btn-quantity">-</button>
+                        <input type="number" value={minStock} min="1"
+                            // style={{ width: "50px" }}
+                        >
+                        </input>
+                        <button onClick={() => handleClick("plus")} className="btn-quantity">+</button>
+                    </div>
+                    <div>
+                        <p>
+                            {detailProduct.description}
+                        </p>
+                    </div>
 
                     <div className="detail-actions">
-                        <button className="detail-btn order">Đặt món</button>
+                        <button onClick={handlAddProductsCart} className="detail-btn order">Thêm Vào Giỏ Hàng</button>
                         <button className="detail-btn book">Đặt bàn</button>
                     </div>
                 </div>

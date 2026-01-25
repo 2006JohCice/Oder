@@ -9,7 +9,7 @@ export default function useNotification() {
   const [message, setMessage] = useState("");
 
   const showNotification = (msg) => {
-    setNotifKey((prev) => prev + 1); // reset component cũ
+    setNotifKey((prev) => prev + 1); 
     setMessage(msg);
     setVisible(true);
   };
