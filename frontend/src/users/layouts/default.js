@@ -8,11 +8,18 @@ import ProductsList from '../components/products/productList.js';
 import ProductCategoryPage from '../pages/ProductForCategory.js';
 import ProductDetail from '../components/detailProducts/detailProducts.js';
 import SearchProduct from '../components/listSearchProducts/searchProducts.js';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 function DefaultLayout() {
+  const [totalQuantity,setTotalQuantity] = useState([]);
   useEffect(() => {
-    fetch("/api/init-cart");
-}, []);
+    fetch("/api/init-cart")
+      .then(res => res.json())
+      .then(res => {
+      
+        setTotalQuantity(res);
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   return (
     <>
@@ -21,16 +28,16 @@ function DefaultLayout() {
 
 
         <div className="app-container">
-          <Header />
+          <Header totalQuantity={totalQuantity} />
         </div>
 
         <div className="app-body">
           <Routes>
             <Route path="/" element={<MainContent />} />
             <Route path='/products' element={<ProductsList />} />
-            <Route path ='/products/:slugCategory' element={<ProductCategoryPage/>}/>
-            <Route path = '/products/detail/:slugProduct' element={<ProductDetail/>} />
-            <Route path='/search' element={<SearchProduct/>} />
+            <Route path='/products/:slugCategory' element={<ProductCategoryPage />} />
+            <Route path='/products/detail/:slugProduct' element={<ProductDetail />} />
+            <Route path='/search' element={<SearchProduct />} />
             <Route path="/cart" element={<Cart />} />
           </Routes>
         </div>

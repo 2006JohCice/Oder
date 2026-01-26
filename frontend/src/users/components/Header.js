@@ -2,7 +2,9 @@ import "../css/header/header.css";
 import { useState, useEffect } from "react";
 import ListFood from "./MainContents/navBarFood/listFoodnavbar";
 import Search from "./MainContents/search/search";
-function Header() {
+import { Link } from "react-router-dom";
+
+function Header({ totalQuantity }) {
 
 
   const closeMenu = () => {
@@ -30,16 +32,16 @@ function Header() {
       <header className="app-header">
         <div className="header-left col-xl-9 col-lg-9 col-md-2">
           <div >
-            <a href="/" className="logo" style={{}}> 
+            <a href="/" className="logo" style={{}}>
               Order
             </a>
-            
-            
-            </div>
-        
 
-          <ListFood data={data} />
 
+          </div>
+
+
+          <ListFood data={data} totalQuantity={totalQuantity}/>
+      
 
         </div>
 
@@ -86,11 +88,11 @@ function Header() {
         </div>
 
 
-        
+
 
       </header>
 
-      <Search/>
+      <Search />
 
     </>
   );

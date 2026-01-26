@@ -37,6 +37,7 @@ export default function AdminDashboard() {
         setUser(res.user);
         setRole(res.role);
       })
+      
       .catch(err => {
         setUser(null);
         setRole(null);
