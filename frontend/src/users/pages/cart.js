@@ -1,116 +1,99 @@
-import { Link } from "react-router-dom";
 import "../css/card/cartPay.css";
-import { useState,useEffect } from "react";
-
-import cartControl from "../control/cart.control";
-
+import { useState , useEffect } from "react";
+import { Link } from "react-router-dom";
 
 
-function Cart() {
-    const {cart,handleClick,formatCurrency,shippingFee,sum} = cartControl();
-    
-    
-    
-    return (
-        <div className="card-content main-content col-xl-10">
-             <div className="cart-items" >
-          
-                    {cart.map(item => (
-                        <div className="cart-item" key={item.id}>
-                        <img src={item.image} alt={item.name} className="item-image" />
-                        <div className="item-details">
-                            <h3>{item.name}</h3>
-                            <p className="item-price">{formatCurrency(item.price)}</p>
-                        </div>
-                        <div className="item-quantity">
-                            <button onClick={() => handleClick("minus", item.id)} className="btn-quantity">-</button>
-                            <input type="number" value={item.quantity} readOnly />
-                            <button onClick={() => handleClick("plus", item.id)} className="btn-quantity">+</button>
-                        </div>
-                        <p className="item-total">{formatCurrency(item.price * item.quantity)}</p>
-                        </div>
-                    ))}
-             </div>
-    
+export default function CartPage() {
+  const [cartItems, setCartItems] = useState([]);
 
+  useEffect(()=>{
+    fetch("/api/cart")
+    .then(res => res.json())
+    .then(res => setCartItems(res))
+  },[])
 
-            <div className="cart-summary">
-                <h2>Tóm tắt đơn hàng</h2>
-                <div className="summary-row">
-                    <span>Tạm tính</span>
-                    {/* <span>{formatCurrency(subtotal)}</span> */}
-                    <span>{formatCurrency(sum)}</span>
-                </div>
-                <div className="summary-row">
-                    <span>Phí vận chuyển</span>
-                    <span>{formatCurrency(shippingFee)}</span>
-                </div>
-                <div className="coupon-code">
-                    <input type="text" placeholder="Nhập mã giảm giá" />
-                    
-                </div>
-                <div className="summary-row total-row">
-                    <span>Tổng cộng</span>
-                    <span>{formatCurrency(sum)}</span>
-                </div>
-                <Link 
-                    to={"/cart/pay"} style={{ color: 'white', textDecoration: 'none' }}
-                    state={{ cart: cart, total: sum }}
-                    >
-                <button className="checkout-btn" >
-                  
-                    Tiến Hành Thanh Toán
-                   
+  console.log("cartItems",cartItems)
+
+  // Xóa sản phẩm
+  const handleRemove = (id) => {
+    setCartItems(cartItems.filter(item => item.id !== id));
+  };
+
+  // Tổng số lượng
+  const totalQuantity = 0
+// cartItems.products.reduce((sum, item) => sum + item.quantity, 0)
+  // Tổng tiền
+  const totalPrice = 0
+// cartItems.reduce(
+//     (sum, item) => sum + item.price * item.quantity,
+//     0
+//   );
+  return (
+    <div className="cart-container">
+      <h2>🛒 Giỏ hàng của bạn</h2>
+
+      <table className="cart-table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Ảnh</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Tổng tiền</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {cartItems?.products?.map((item, index) => (
+            <tr key={item.id}>
+              <td>{index + 1}</td>
+              <td>
+                <img src={item.productInfo.img} alt={item.productInfo.name} />
+              </td>
+              <td className="product-name">
+                <Link to ={`/products/detail/${item.productInfo.slug}`}>
+                {item.productInfo.name}
+                </Link>
+                </td>
+              <td>{item.productInfo.price}$</td>
+              <td>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  min="1"
+                  readOnly
+                />
+              </td>
+              <td>{item.productInfo.price * item.quantity}$</td>
+              <td>
+                <button
+                  className="btn-delete"
+                  onClick={() => handleRemove(item.id)}
+                >
+                  Xóa
                 </button>
-                 </Link>
-            </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-         <div className="hot-food-box">
-
-    <div className="hot-grid" style={{display:"flex"}}>
-
-        <div className="hot-item">
-            <img src="https://picsum.photos/seed/food1/300/200" alt="food" />
-            <div className="hot-info">
-                <h3>Phở Bò Đặc Biệt</h3>
-                <p>Giá: 45.000đ</p>
-            </div>
-             <div className="item-quantity">
-                            <button  className="btn-quantity">-</button>
-                            <input type="number" readOnly />
-                            <button  className="btn-quantity">+</button>
-            </div>
+      {/* BẢNG TỔNG */}
+      <div className="cart-summary">
+        <div className="summary-row">
+          <span>Tổng số lượng:</span>
+          <strong>{totalQuantity}</strong>
         </div>
-
-        <div className="hot-item">
-            <img src="https://picsum.photos/seed/food2/300/200" alt="food" />
-            <div className="hot-info">
-                <h3>Bánh Mì Thịt Nướng</h3>
-                <p>Giá: 25.000đ</p>
-            </div>
+        <div className="summary-row">
+          <span>Tổng tiền:</span>
+          <strong>{totalPrice}$</strong>
         </div>
-
-        <div className="hot-item">
-            <img src="https://picsum.photos/seed/food3/300/200" alt="food" />
-            <div className="hot-info">
-                <h3>Cơm Gà Hải Nam</h3>
-                <p>Giá: 55.000đ</p>
-            </div>
-        </div>
-
-        <div className="hot-item">
-            <img src="https://picsum.photos/seed/food4/300/200" alt="food" />
-            <div className="hot-info">
-                <h3>Bún Chả Hà Nội</h3>
-                <p>Giá: 40.000đ</p>
-            </div>
-        </div>
-
+        <button className="btn-checkout">
+          Thanh toán
+        </button>
+      </div>
     </div>
-</div>
-
-        </div>
-    );
+  );
 }
-
-export default Cart;
