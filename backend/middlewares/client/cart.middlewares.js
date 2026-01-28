@@ -8,7 +8,7 @@ module.exports.CartId = async (req, res, next) => {
         })
 
         cart.totalQuantity = cart.products.reduce((sum, item) => sum + item.quantity, 0)
-        console.log("Nó ở đây: ", cart.totalQuantity)
+        // console.log("Nó ở đây: ", cart.totalQuantity)
         return res.status(200).json(cart.totalQuantity);
     }
     const cart = new Cart();

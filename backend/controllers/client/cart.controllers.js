@@ -3,23 +3,30 @@ const Product = require("../../models/product.model")
 
 
 //[GET] /cart
-module.exports.index = async (req,res) =>{
+module.exports.index = async (req, res) => {
+
     const cartId = req.cookies.cartId;
     const cart = await Cart.findOne({
-        _id : cartId
+        _id: cartId
     }).lean();
-    if(cart.products.length > 0){
-        for(const item of cart.products){
+    if (cart.products.length > 0) {
+        for (const item of cart.products) {
             const productId = item.product_id;
 
             const productInfo = await Product.findOne({
                 _id: productId
             }).lean();
             item.productInfo = productInfo;
+            // item.totalPrice = item.quantity * productInfo.price
+
         }
 
-    } 
-        console.log("cart",cart)
+
+    }
+
+    // cart.totalCartPrice = cart.products.reduce( (sum, item) =>  sum + (item.productInfo ? item.totalPrice : 0),    0  );
+    cart.totalCartPrice = cart.products.reduce( (sum, item) =>  sum + (item.productInfo.price * item.quantity),    0  );
+
     return res.status(200).json(cart)
 }
 
@@ -66,5 +73,5 @@ module.exports.addPost = async (req, res) => {
     res.status(200).json({ message: 'Thêm Sản Phẩm Thành Công' });
     console.log(productId, quantity)
     console.log("oke")
-} 
+}
 

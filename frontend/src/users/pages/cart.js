@@ -1,18 +1,17 @@
 import "../css/card/cartPay.css";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
-
-  useEffect(()=>{
+  useEffect(() => {
     fetch("/api/cart")
-    .then(res => res.json())
-    .then(res => setCartItems(res))
-  },[])
+      .then(res => res.json())
+      .then(res => setCartItems(res))
+  }, [])
 
-  console.log("cartItems",cartItems)
+  console.log("cartItems", cartItems)
 
   // Xóa sản phẩm
   const handleRemove = (id) => {
@@ -20,14 +19,15 @@ export default function CartPage() {
   };
 
   // Tổng số lượng
-  const totalQuantity = 0
-// cartItems.products.reduce((sum, item) => sum + item.quantity, 0)
+  const totalQuantity =
+    cartItems?.products?.reduce((sum, item) => sum + item.quantity, 0)
   // Tổng tiền
   const totalPrice = 0
-// cartItems.reduce(
-//     (sum, item) => sum + item.price * item.quantity,
-//     0
-//   );
+  // cartItems.reduce(
+  //     (sum, item) => sum + item.price * item.quantity,
+  //     0
+  //   );
+
   return (
     <div className="cart-container">
       <h2>🛒 Giỏ hàng của bạn</h2>
@@ -53,10 +53,10 @@ export default function CartPage() {
                 <img src={item.productInfo.img} alt={item.productInfo.name} />
               </td>
               <td className="product-name">
-                <Link to ={`/products/detail/${item.productInfo.slug}`}>
-                {item.productInfo.name}
+                <Link to={`/products/detail/${item.productInfo.slug}`}>
+                  {item.productInfo.name}
                 </Link>
-                </td>
+              </td>
               <td>{item.productInfo.price}$</td>
               <td>
                 <input
@@ -88,7 +88,8 @@ export default function CartPage() {
         </div>
         <div className="summary-row">
           <span>Tổng tiền:</span>
-          <strong>{totalPrice}$</strong>
+          <strong>{cartItems?.totalCartPrice}
+            $</strong>
         </div>
         <button className="btn-checkout">
           Thanh toán
