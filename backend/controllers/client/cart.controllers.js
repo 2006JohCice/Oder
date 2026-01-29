@@ -75,3 +75,23 @@ module.exports.addPost = async (req, res) => {
     console.log("oke")
 }
 
+//[DELETE] /cart/delete/productsId
+module.exports.delete = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const cartId = req.cookies.cartId;
+ console.log(productId)
+    await Cart.updateOne(
+      { _id: cartId },
+      { "$pull": { products: {"product_id": productId } } }
+    );
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+
+ 
+};
+
+

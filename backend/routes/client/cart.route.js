@@ -4,6 +4,7 @@ const cartMiddleware = require("../../middlewares/client/cart.middlewares");
 const Controller = require('../../controllers/client/cart.controllers')
 
 router.get("/cart",Controller.index)
+router.delete("/cart/delete/:productId",Controller.delete)
 router.get("/init-cart", cartMiddleware.CartId);
 router.post("/cart/add",Controller.addPost)
 

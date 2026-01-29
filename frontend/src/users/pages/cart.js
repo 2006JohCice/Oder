@@ -5,17 +5,29 @@ import { Link } from "react-router-dom";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
-  useEffect(() => {
+  const apiCartProducts = () =>{
+
     fetch("/api/cart")
       .then(res => res.json())
       .then(res => setCartItems(res))
-  }, [])
+  
+  }
+    useEffect(()=>{
+      apiCartProducts()
+    },[])
 
   console.log("cartItems", cartItems)
 
   // Xóa sản phẩm
-  const handleRemove = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
+  const handleRemove = async (id) => {
+    let url = `/api/cart/delete/${id}`
+    const res = await fetch(url, {
+      method: "DELETE",
+    })
+    if (res.ok) {
+      alert("Xóa Thành Công")
+      apiCartProducts()
+    }
   };
 
   // Tổng số lượng
@@ -70,7 +82,7 @@ export default function CartPage() {
               <td>
                 <button
                   className="btn-delete"
-                  onClick={() => handleRemove(item.id)}
+                  onClick={() => handleRemove(item.product_id)}
                 >
                   Xóa
                 </button>
