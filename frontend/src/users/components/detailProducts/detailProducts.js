@@ -107,14 +107,31 @@ function ProductDetail() {
                         >
 
                         </input></p> */}
-                    <div className="item-quantity" style={{ width: "100px" }}>
-                        <button onClick={() => handleClick("minus")} className="btn-quantity">-</button>
+                    {/* <div className="item-quantity" style={{ width: "100px" }}>
+                        <button className="btn-quantity">-</button>
                         <input type="number" value={minStock} min="1"
-                            // style={{ width: "50px" }}
+                        style={{ width: "50px" }}
                         >
                         </input>
-                        <button onClick={() => handleClick("plus")} className="btn-quantity">+</button>
-                    </div>
+                        <button  className="btn-quantity">+</button>
+                    </div> */}
+
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination">
+                            <li className="page-item"  onClick={() => handleClick("minus")}>
+                                <a className="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li className="page-item"><a className="page-link" href="#">{minStock}</a></li>
+                          
+                            <li className="page-item" onClick={() => handleClick("plus")}>
+                                <a className="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                     <div>
                         <p>
                             {detailProduct.description}

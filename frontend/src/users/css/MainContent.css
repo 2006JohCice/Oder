@@ -365,3 +365,10 @@ background: #f1f1f1;
   background-color: #06b6d4;
   border-color: #0056b3;
 }
+
+/* Responsive  for header search*/
+@media (max-width: 600px) {
+   .custom-dropdown{
+    margin-top: 15px;
+   }
+}

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import MenuItem from "./MenuItem"
 
-function ListFood({ data, patch,totalQuantity }) {
+function ListFood({ data, patch, totalQuantity }) {
 
   return (
     <nav className="main-nav">
@@ -55,7 +55,13 @@ function ListFood({ data, patch,totalQuantity }) {
           <li><a className="dropdown-item">Công thức món ngon</a></li>
         </ul>
       </div>
-      <Link to="/cart">Giỏ Hàng({totalQuantity}) </Link>
+      <Link to="/cart" className="position-relative">
+        Giỏ Hàng
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{marginTop: "15px"}}>
+          ({totalQuantity})
+        </span>
+      </Link>
+     
 
     </nav>
   );
