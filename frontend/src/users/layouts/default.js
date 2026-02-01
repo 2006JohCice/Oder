@@ -9,6 +9,7 @@ import ProductCategoryPage from '../pages/ProductForCategory.js';
 import ProductDetail from '../components/detailProducts/detailProducts.js';
 import SearchProduct from '../components/listSearchProducts/searchProducts.js';
 import { useEffect, useState } from "react";
+import CheckoutCart from '../pages/checkoutCart.js';
 function DefaultLayout() {
   const [totalQuantity,setTotalQuantity] = useState([]);
   useEffect(() => {
@@ -39,6 +40,7 @@ function DefaultLayout() {
             <Route path='/products/detail/:slugProduct' element={<ProductDetail />} />
             <Route path='/search' element={<SearchProduct />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path='/cart/checkout' element={<CheckoutCart/>}/>
           </Routes>
         </div>
         <div className='app-footer'>

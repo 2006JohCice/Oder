@@ -5,16 +5,16 @@ import { Link } from "react-router-dom";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
-  const apiCartProducts = () =>{
 
+  const apiCartProducts = () => {
     fetch("/api/cart")
       .then(res => res.json())
       .then(res => setCartItems(res))
-  
+
   }
-    useEffect(()=>{
-      apiCartProducts()
-    },[])
+  useEffect(() => {
+    apiCartProducts()
+  }, [])
 
   console.log("cartItems", cartItems)
 
@@ -39,6 +39,8 @@ export default function CartPage() {
   //     (sum, item) => sum + item.price * item.quantity,
   //     0
   //   );
+
+
 
   return (
     <div className="cart-container">
@@ -103,9 +105,13 @@ export default function CartPage() {
           <strong>{cartItems?.totalCartPrice}
             $</strong>
         </div>
-        <button className="btn-checkout">
-          Thanh toán
-        </button>
+        <Link to={`/cart/checkout`}>
+          <button className="btn-checkout">
+
+
+            Thanh toán
+          </button>
+        </Link>
       </div>
     </div>
   );
