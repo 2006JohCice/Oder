@@ -1,12 +1,10 @@
-
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema(
     {
-        // user_id:String,
         cart_id: String,
         userInfo: {
-            fullName: String,
+            fullName: String, // F hoa
             phone: String,
             address: String
         },
@@ -18,13 +16,11 @@ const orderSchema = new mongoose.Schema(
                 quantity: Number
             }
         ]
-
     },
     {
         timestamps: true
     });
 
-const Order = mongoose.model('Product', orderSchema, 'products');
+const Order = mongoose.model('Order', orderSchema, 'orders'); 
 
 module.exports = Order;
-
