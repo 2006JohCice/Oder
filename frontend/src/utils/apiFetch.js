@@ -1,7 +1,7 @@
 export const apiFetch = async (url, options = {}) => {
   const res = await fetch(url, {
-    credentials: 'include',
-    ...options
+    credentials: "include",
+    ...options,
   });
 
   if (res.status === 401) {
