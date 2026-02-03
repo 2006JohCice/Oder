@@ -20,10 +20,33 @@ import RoleCreate from "../components/role/roleCreate";
 import RoleEdit from "../components/role/roleEdit";
 import PermissionPage from "../components/permission/permission";
 import Account from "../components/account/account";
+import Advertisement from "../components/ads/advertisement"
+// import NotFound from ""
+
+import { apiFetch } from "../../utils/apiFetch";
 export default function AdminDashboard() {
 
+  // Phân quyền cho các account admin
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
 
 
+  useEffect(() => {
+    apiFetch("/api/admin/auth/login/me")
+      .then(res => {
+        setUser(res.user);
+        setRole(res.role);
+      })
+      
+      .catch(err => {
+        setUser(null);
+        setRole(null);
+      });
+  }, []);
+
+
+  console.log("User:", user);
+  console.log("Role:", role);
   const [query, setQuery] = useState("");
 
   return (
@@ -35,26 +58,31 @@ export default function AdminDashboard() {
 
         <main className="admin-main">
           <HeaderAdmin query={query} setQuery={setQuery} />
-          <Routes> 
-            <Route path="/" element={<MainAdmin query={query} />} />
-            <Route path="/productsAdmin" element={<ProductsAdmin query={query}/>} />
-            <Route path="/users" element={<UsersAdmin query={query}/>} />
-            <Route path="/addCategory" element = {<AddCategory/>} />
-            <Route path="/editCategory/:id" element = {<EditCategory/>} />
-            <Route path="/listAccount" element={<Account/>}></Route>
-            <Route path="/reports" element={<ReportsAdmin />} />
-            <Route path="/deailCloud" element={<Could/>}/>
-            <Route path="/setting" element={<SettingsAdmin />} />
-            <Route path="/chatting" element={<ChatUI />} />
-            <Route path="/myeditor" element={<MyEditor />} />
-            <Route path="/deletedItems" element={<ProductsBackUp/>} />
-            <Route path="/role" element={<RoleHome/>} />
-            <Route path="/role/create" element={<RoleCreate/>} />
-            <Route path="/role/edit/:id" element={<RoleEdit/>} />
-            <Route path ="/permission" element={<PermissionPage />} />
-            {/* <Route path="*" element={<MainAdmin />} /> */}
+          <Routes>
+            {role && role.permissions.length > 0 && (
+              <>
+                <Route path="/" element={<MainAdmin query={query} />} />
+                <Route path="/productsAdmin" element={role?.permissions?.includes("products-view") ? <ProductsAdmin query={query} /> : ""} />
+                <Route path="/users" element={role?.permissions?.includes("role-permission") ? <UsersAdmin query={query} /> : ""} />
+                <Route path="/addCategory" element = {role?.permissions?.includes("products-category-view") ? <AddCategory/> : ""} />
+                <Route path="/editCategory/:id" element = {role?.permissions?.includes("products-category-update") ? <EditCategory/> : ""} />
+                <Route path="/listAccount" element={role?.permissions?.includes("role-view") ? <Account/> : ""}></Route>
+                <Route path="/reports" element={role?.permissions?.includes("role-permission") ? <ReportsAdmin /> : ""} />
+                <Route path="/deailCloud" element={<Could/>}/>
+                <Route path="/setting" element={<SettingsAdmin />} />
+                <Route path="/chatting" element={<ChatUI />} />
+                <Route path="/advertisement" element={<Advertisement />} />
+                <Route path="/myeditor" element={role?.permissions?.includes("products-category-view") ? <MyEditor /> : ""} />
+                <Route path="/deletedItems" element={role?.permissions?.includes("products-delete") ? <ProductsBackUp/> : ""} />
+                <Route path="/role" element={role?.permissions?.includes("role-view") ? <RoleHome/> : ""} />
+                <Route path="/role/create" element={role?.permissions?.includes("role-create") ? <RoleCreate/> : ""} />
+                <Route path="/role/edit/:id" element={role?.permissions?.includes("role-update") ? <RoleEdit/> : ""} />
+                <Route path ="/permission" element={role?.permissions?.includes("role-permission") ? <PermissionPage /> : ""} />
+                {/* <Route path="*" element={<MainAdmin />} /> */}
+              </>
+            )} 
           </Routes>
-       
+
 
 
           <footer className="admin-footer">© {new Date().getFullYear()} Order Admin — Made by Việt Nhật</footer>

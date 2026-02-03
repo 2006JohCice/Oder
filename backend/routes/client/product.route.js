@@ -1,18 +1,11 @@
 const express = require('express');
 const router = express.Router();
-
-module.exports = (Product) => {
-    router.get('/products', async (req, res) => {
-        try {
-            const data = await Product.find({});
-            res.json(data);
-        } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Lỗi khi lấy dữ liệu' });
-        }
-    });
+const controller = require('../../controllers/client/product.controllers')
 
 
-    return router
 
-}
+router.get('/products/:slugCategory', controller.categoryProducts);
+router.get('/products/detail/:slugProduct', controller.detailProducts);
+
+module.exports = router
+

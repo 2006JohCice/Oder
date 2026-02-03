@@ -1,0 +1,108 @@
+.advertisement-container{
+    display: flex;
+    gap: 20px;
+}
+
+.ads-left {
+    position: relative;
+    background-color: coral;
+    border-radius: 10px;
+    width: 60%;
+    flex: 1;
+    padding: 10px;
+}
+.ads-left-info{
+    top: 10px;
+    bottom: 1.25rem;
+    left: 2%;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    position: absolute;
+}
+
+.ads-right{
+    width: 35%;
+}
+
+.form-wrap {
+    margin-top: 10px;
+    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-item span {
+    color: #1e293b;
+  width: 120px;
+  font-weight: 500;
+}
+
+.form-item input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.form-item input:focus {
+  border-color: #4f46e5;
+}
+
+
+.ads-right-top,.ads-right-bottom{
+    margin-top: 50px;
+    position: relative;
+    border-radius: 10px;
+    background-color: aqua;
+    width: 100%;
+    flex: 2;
+    padding: 10px;
+}
+
+.info-img_Setting{
+    background-color: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s ease;
+    appearance: none;
+}
+.ads-right-top-info ,.ads-right-bottom-info{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.info-img_Setting:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+.ads-img{
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    object-position: center;
+}
+.ads-img-right{
+   border-radius: 20px;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+}

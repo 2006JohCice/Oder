@@ -11,7 +11,6 @@ module.exports.login = async (req, res) => {
 }
 // [POST] /auth/login
 
-
 module.exports.loginPost = async (req, res) => {
     const { email, password } = req.body;
     const user = await Account.findOne({

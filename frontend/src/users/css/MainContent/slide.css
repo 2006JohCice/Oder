@@ -4,8 +4,14 @@
   object-fit: cover;  /* Giữ tỷ lệ ảnh, cắt bớt phần thừa để lấp đầy khung */
   object-position: center; /* Căn ảnh vào giữa */
 }
+.slide-infoShop{
+    width: 50%;
+    
+}
 .slide-content{
-  
+    gap: 20px;
+    display: flex;
+    margin-top: 20px;
     margin-top: 20px;
 }
 .carousel-inner{

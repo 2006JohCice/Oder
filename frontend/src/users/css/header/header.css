@@ -1,0 +1,236 @@
+/* ================= HEADER ================= */
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  height: 60px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* ================= LEFT / RIGHT ================= */
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin: 0;
+}
+
+.header-right {
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.header-right-children {
+  display: contents;
+}
+
+/* ================= LOGO ================= */
+
+.logo {
+  font-weight: bold;
+  font-size: 30px;
+  margin-left: 50px;
+  color: #c00;
+}
+
+/* ================= NAV ================= */
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.main-nav > a,
+.main-nav .dropdown-toggle {
+  cursor: pointer;
+  text-decoration: none;
+  color: #333;
+  padding: 10px 14px;
+  font-weight: 500;
+}
+
+.main-nav > a:hover,
+.main-nav .dropdown-toggle:hover {
+  background: #f5f5f5;
+  border-radius: 6px;
+}
+
+/* ================= DROPDOWN ================= */
+
+.dropdown-menu {
+  padding: 8px 0;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.dropdown-item {
+  padding: 10px 18px;
+  white-space: nowrap;
+}
+
+.dropdown-item:hover {
+  background: #f0f2f5;
+}
+
+/* ===== SUBMENU (LỒNG NHAU) ===== */
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-left: 2px;
+  display: none;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+
+/* ================= PHONE / BUTTON ================= */
+
+.phone-number {
+  font-weight: bold;
+  color: #c00;
+}
+
+.btn-primary:hover {
+  background-color: #06b6d4;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* ================= ICON RESPONSIVE ================= */
+
+.food-icons {
+  display: none;
+  gap: 15px;
+  align-items: center;
+  padding: 10px;
+}
+
+.food-icon,
+.food-show-menu {
+  background: #fff3e0;
+  border-radius: 50%;
+  padding: 0 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.food-icon i,
+.food-show-menu i {
+  font-size: 24px;
+  color: #ff6f00;
+}
+
+.food-icon:hover {
+  background: #ffe0b2;
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* ================= MOBILE MENU ================= */
+
+.list-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  background: rgb(237, 106, 106);
+  padding: 47px 5px 100px 48px;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transform: rotateY(90deg);
+  transform-origin: right center;
+  transition: 0.6s ease;
+  pointer-events: none;
+  border-bottom-left-radius: 78%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.list-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
+  pointer-events: auto;
+}
+
+.list-menu .menu-list {
+  line-height: 50px;
+  margin: 0;
+  padding: 0;
+}
+
+.list-menu .menu-list li {
+  text-align: center;
+}
+
+.list-menu .menu-list li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.list-menu .menu-list li a:hover {
+  color: #ff9800;
+}
+
+.list-menu .close-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 16px;
+  background: aliceblue;
+  border-bottom-left-radius: 20px;
+  cursor: pointer;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1199px) {
+  .header-right-children {
+    display: none;
+  }
+
+  .header-left {
+    gap: 0;
+  }
+
+  .logo {
+    margin-left: 0;
+  }
+
+  .food-icons {
+    display: flex;
+  }
+}
+
+@media (max-width: 1200px) {
+  .main-nav {
+    display: none;
+  }
+
+  .food-show-menu {
+    display: flex;
+  }
+}

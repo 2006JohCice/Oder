@@ -4,10 +4,13 @@ import ListCategory from "./list-category"
 import ShowCategory from "./show-category"
 import { apiFetch } from '../../../utils/apiFetch';
 import { useNavigate } from "react-router-dom";
+import CardLoading from "../mixi/loadingCart";
+
 const ProductsAdmin = () => {
   const navigate = useNavigate();
   const [showAdd, setShowAdd] = useState(false)
   const [data, setData] = useState([])
+  const [loadingCard, setLoadingCard] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -23,7 +26,7 @@ const ProductsAdmin = () => {
   }
   // console.log(formData)
   const submitCategory = async () => {
-    
+
     let url = "/api/admin/category/create";
     try {
       const res = await fetch(url, {
@@ -61,8 +64,12 @@ const ProductsAdmin = () => {
 
     apiFetch(url)
       // .then(res => res.json())
-      .then(res => setData(res))
-       .catch(err => {
+      .then(res => {
+        setData(res)
+        setLoadingCard(false)
+
+  })
+      .catch(err => {
         if (err.status === 401) {
           navigate('/admin/auth/login');
         }
@@ -91,16 +98,6 @@ const ProductsAdmin = () => {
 
       {showAdd ? (
         <div className="products-container">
-          {/* BÊN TRÁI: danh sách danh mục */}
-          {/* <div className="products-left">
-          <h3>Danh sách danh mục</h3>
-          <ul>
-            <li>Danh mục A</li>
-            <li>Danh mục B</li>
-            <li>Danh mục C</li>
-          </ul>
-        </div> */}
-          {/* BÊN PHẢI: form thêm danh mục */}
           <div className="products-right">
 
             <div className="mb-3">
@@ -239,11 +236,21 @@ const ProductsAdmin = () => {
                 <th>Hành Động</th>
               </tr>
             </thead>
+            {loadingCard ? (
+              <tbody>
+
+                < CardLoading />
+              </tbody>
+            ) : (
             <tbody>
-              {data.map((item) => (
+              {data?.map((item) => (
                 <ShowCategory key={item._id} node={item} />
               ))}
             </tbody>
+            )
+
+            }
+         
 
           </table>
         </div>

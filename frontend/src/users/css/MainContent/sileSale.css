@@ -1,0 +1,22 @@
+.slide-content .slide-sale{
+    width: 50%;
+}
+.slide-image{
+    width: 100%; 
+  
+}
+.slide-image img{
+    border-radius: 20px;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+}
+@media screen and (max-width: 767px) {
+  .slide-infoShop {
+    display: none;
+  }
+  .slide-content .slide-sale {
+    width: 100%;
+}
+    
+}

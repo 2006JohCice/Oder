@@ -251,7 +251,7 @@ const PermissionPage = () => {
                         </tr>
 
                         <tr className="permission-section-checkbox" data-name="role-create">
-                            <td>Thêm mới</td>
+                            <td>Thêm mới tài khoản</td>
                             {data.map((roleItem) => (
                                 <td key={roleItem._id}>
                                     <input type="checkbox" defaultChecked={roleItem.permissions.includes("role-create")} />
@@ -272,7 +272,7 @@ const PermissionPage = () => {
                         </tr> */}
 
                         <tr className="permission-section-checkbox" data-name="role-update">
-                            <td>Cập nhật</td>
+                            <td>Cập nhật tài khoản</td>
 
                             {data.map((roleItem) => (
                                 <td key={roleItem._id}>

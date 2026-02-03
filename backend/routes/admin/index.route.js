@@ -11,10 +11,14 @@ const backUp = require('./backUp.route')
 const account = require('./account.route')
 const auth = require ('./auth.route')
 const setting = require ('./setting.route')
+const advertisement = require ('./advertisement.route')
+
 module.exports = (app) => {
     const prefixAdmin = systemConfig.prefixAdmin;
+
     // app.use("/api" + prefixAdmin + "/auth", auth);
     app.use("/api" + prefixAdmin ,auth) // chạy trước để lấy cookie
+    app.use("/api" + prefixAdmin ,auth);
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,userAdmin)
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,productAdmin) // done
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,userAccount) // lỗi http://localhost:3000/admin/users // đã fix
@@ -24,5 +28,6 @@ module.exports = (app) => {
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,backUp) // lỗi về cái map client  // đã fix
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,account) // http://localhost:3000/admin/listAccount // đã fix
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,setting) // doing
+    app.use("/api" + prefixAdmin ,advertisement);
 
 }

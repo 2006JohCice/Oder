@@ -9,8 +9,10 @@ import CreatProducts from "../creatProduct/creatProducts";
 import EditProducts from "../creatProduct/editPtoducts";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from '../../../utils/apiFetch';
+import LoadingCart from "../mixi/loadingCart";
 
 const ProductsAdmin = ({ query }) => {
+  const [CardLoading ,setCardLoading] = useState(true);
   const navigate = useNavigate();
   // console.log("Query in ProductsAdmin:", query);
   const [products, setProducts] = useState([]);
@@ -80,6 +82,7 @@ const ProductsAdmin = ({ query }) => {
       .then((res) => {
 
         setProducts(Array.isArray(res.data) ? res.data : []);
+        setCardLoading(false)
         setTotalPages(res.objPagination.totalPages)
         setLimitPage(res.objPagination.limitItems)
       })
@@ -194,6 +197,7 @@ const ProductsAdmin = ({ query }) => {
       setSelectedIds([])
     }
   }
+  
 
   /* Change position */
   const [idPosition, setIdPosition] = useState([])
@@ -394,64 +398,75 @@ const ProductsAdmin = ({ query }) => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(products) && products.map((item, index) => (
-              <tr key={item._id}>
-                <td><input
-                  type="checkbox"
-                  name="id"
-                  checked={selectedIds.includes(item._id)}
-                  onChange={() => handleCheck(item._id)}
-                /></td>
+            {
+              CardLoading ? (
+                <LoadingCart />
+              ) : (
+                
+                  Array.isArray(products) && products.map((item, index) => (
+                    <tr key={item._id}>
+                      <td><input
+                        type="checkbox"
+                        name="id"
+                        checked={selectedIds.includes(item._id)}
+                        onChange={() => handleCheck(item._id)}
+                      /></td>
 
-                <td>{limitPage * (page - 1) + (index + 1)}</td>
-                <td>
-                  <img
-                    src={item.img}
-                    alt={item.name}
-                    className="storyHome-img"
-                  /></td>
-                <td>{item.name}</td>
-                <td>{item.price.toLocaleString()}</td>
-                {item.status === "active" ? <td style={{ color: "green" }}><a
-                  style={{ cursor: "pointer" }}
-                  data-status={item.status}
-                  data-id={item.id}
-                  onClick={() => handleChangeStatus(item._id, item.status)}
+                      <td>{limitPage * (page - 1) + (index + 1)}</td>
+                      <td>
+                        <img
+                          src={item.img}
+                          alt={item.name}
+                          className="storyHome-img"
+                        /></td>
+                      <td>{item.name}</td>
+                      <td>{item.price.toLocaleString()}</td>
+                      {item.status === "active" ? <td style={{ color: "green" }}><a
+                        style={{ cursor: "pointer" }}
+                        data-status={item.status}
+                        data-id={item.id}
+                        onClick={() => handleChangeStatus(item._id, item.status)}
 
-                >Hoạt Động</a></td> : <td style={{ color: "red" }}> <a
-                  style={{ cursor: "pointer" }}
-                  data-status={item.status}
-                  data-id={item.id}
-                  onClick={() => handleChangeStatus(item._id, item.status)}
+                      >Hoạt Động</a></td> : <td style={{ color: "red" }}> <a
+                        style={{ cursor: "pointer" }}
+                        data-status={item.status}
+                        data-id={item.id}
+                        onClick={() => handleChangeStatus(item._id, item.status)}
 
-                >Ngừng Bán</a></td>}
-                <td>
-                  <input
-                    type="number"
-                    value={item.position}
-                    style={{ width: "60px" }}
-                    min="1"
-                    name="position"
-                    onChange={(e) => handleChangePosition(index, e)}
+                      >Ngừng Bán</a></td>}
+                      <td>
+                        <input
+                          type="number"
+                          value={item.position}
+                          style={{ width: "60px" }}
+                          min="1"
+                          name="position"
+                          onChange={(e) => handleChangePosition(index, e)}
 
 
 
-                  />
-                </td>
-                <td>{item.stock}</td>
-                <td style={{ display: "flex", gap: "5px" }}>
-                  <button className="admin-btn" class="admin-btn"
-                    type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasEditProduct"
-                    aria-controls="offcanvasEditProduct"
-                    onClick={() => setIdEdit(item._id)}
+                        />
+                      </td>
+                      <td>{item.stock}</td>
+                      <td style={{ display: "flex", gap: "5px" }}>
+                        <button className="admin-btn" class="admin-btn"
+                          type="button"
+                          data-bs-toggle="offcanvas"
+                          data-bs-target="#offcanvasEditProduct"
+                          aria-controls="offcanvasEditProduct"
+                          onClick={() => setIdEdit(item._id)}
 
-                  ><i class="bi bi-pen"></i></button>
-                  <Delete set={setProducts} Id={item._id} setId={setIdDelete} setNotifMessage={setNotifMessage} setLoading={setLoading} setNotifKey={setNotifKey} />
-                </td>
-              </tr>
-            ))}
+                        ><i class="bi bi-pen"></i></button>
+                        <Delete set={setProducts} Id={item._id} setId={setIdDelete} setNotifMessage={setNotifMessage} setLoading={setLoading} setNotifKey={setNotifKey} />
+                      </td>
+                    </tr>
+                  ))
+                
+              )
+            }
+
+
+
           </tbody>
         </table>
       </div>

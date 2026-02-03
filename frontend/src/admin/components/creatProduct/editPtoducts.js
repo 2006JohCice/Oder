@@ -11,7 +11,8 @@ function EditProducts({ idEdit, setProducts }) {
         img: "",
         position: "",
         status: "inactive",
-        category: ""
+        category: "",
+        featured:"0"
     });
 
     useEffect(() => {
@@ -41,7 +42,9 @@ function EditProducts({ idEdit, setProducts }) {
                     img: data.product.img,
                     position: data.product.position,
                     status: data.product.status,
+                    featured:data.product.featured
                 });
+               
             });
     }, [idEdit]);
 
@@ -125,7 +128,35 @@ function EditProducts({ idEdit, setProducts }) {
                             <ListCategory key={item._id} node={item} />
                         ))}
                     </select>
+                    
+                    <div className="mb-3">
+                        <label className="form-label">Cài đặt hiển thị </label>
+                        <div>
+                            <div className="form-check form-check-inline">
+                                <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="featured"
+                                    value="1"
+                                    checked={dataEdit.featured === "1"}
+                                    onChange={handleChange}
+                                />
+                                <label className="form-check-label">Nổi Bật</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="featured"
+                                    value="0"
+                                    checked={dataEdit.featured === "0"}
+                                    onChange={handleChange}
 
+                                />
+                                <label className="form-check-label">Không Nổi Bật</label>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Mô tả */}
                     <div className="mb-3">

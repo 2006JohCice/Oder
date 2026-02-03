@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-// Import CSS của bạn vào đây
-// import './YourPostFeed.css'; 
+
 import Loading from '../../helps/Loading';
 
-
-// =================================================================
-// DỮ LIỆU MẪU (Giả sử lấy từ API)
-// =================================================================
 const ALL_POSTS = [
     {
         id: 1,
