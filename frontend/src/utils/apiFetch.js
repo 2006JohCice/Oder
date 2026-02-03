@@ -1,4 +1,3 @@
-// utils/apiFetch.js
 export const apiFetch = async (url, options = {}) => {
   const res = await fetch(url, {
     credentials: 'include',
@@ -6,11 +5,16 @@ export const apiFetch = async (url, options = {}) => {
   });
 
   if (res.status === 401) {
-    throw { status: 401 }; // chưa đăng nhập
+    const error = new Error("Unauthorized");
+    error.status = 401;
+    throw error;
   }
 
   if (res.status === 403) {
-    throw { status: 403 }; // ko có quyền
+    const error = new Error("Forbidden");
+    error.status = 403;
+    throw error;
   }
-  return res.json(); 
+
+  return res.json();
 };
