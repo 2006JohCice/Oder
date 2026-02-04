@@ -107,8 +107,6 @@ export default function CartPage() {
         </div>
         <Link to={`/cart/checkout`}>
           <button className="btn-checkout">
-
-
             Thanh toán
           </button>
         </Link>

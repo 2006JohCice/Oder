@@ -8,6 +8,7 @@ import ProductsList from '../components/products/productList.js';
 import ProductCategoryPage from '../pages/ProductForCategory.js';
 import ProductDetail from '../components/detailProducts/detailProducts.js';
 import SearchProduct from '../components/listSearchProducts/searchProducts.js';
+import OrderSuccess from '../pages/success.js';
 import { useEffect, useState } from "react";
 import CheckoutCart from '../pages/checkoutCart.js';
 function DefaultLayout() {
@@ -41,10 +42,11 @@ function DefaultLayout() {
             <Route path='/search' element={<SearchProduct />} />
             <Route path="/cart" element={<Cart />} />
             <Route path='/cart/checkout' element={<CheckoutCart/>}/>
+            <Route path ='/cart/checkout/success/:orderId' element={<OrderSuccess/>}/>
           </Routes>
         </div>
         <div className='app-footer'>
-          <Footed />
+          {/* <Footed /> */}
         </div>
 
       </main>

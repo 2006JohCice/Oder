@@ -1,6 +1,6 @@
 import "../css/card/cartPay.css";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CardProducts from "../components/mixi/cardProducts/cardProducts";
 
 
@@ -8,7 +8,8 @@ export default function CheckoutCart() {
     const [cartItems, setCartItems] = useState([]);
     const [dataFeatured, setDataFeatured] = useState([]);
     const [loadCard, setLoadCart] = useState(false);
-    
+    const [getData,setData] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         let url = '/api/products/featured'
         fetch(url)
@@ -36,7 +37,7 @@ export default function CheckoutCart() {
 
     // Xóa sản phẩm
     const handleDonePay = async (e) => {
-        // e.preventDefault();
+        e.preventDefault();
         const formData = {
             fullName: e.target.fullname.value,
             phone: e.target.phone.value,
@@ -52,8 +53,10 @@ export default function CheckoutCart() {
             body: JSON.stringify(formData)
         })
         if(res.ok){
-            alert("Đặt Hàng Thành Công")
-            // apiCartProducts()
+            const data = await res.json()
+         
+            // alert("Đặt Hàng Thành Công")
+            navigate(`/cart/checkout/success/${data.orderId}`)
         }else{
             const data = await res.json()
             alert(data.message)
@@ -63,8 +66,8 @@ export default function CheckoutCart() {
     // Tổng số lượng
     const totalQuantity =
         cartItems?.products?.reduce((sum, item) => sum + item.quantity, 0)
-    // Tổng tiền
-    const totalPrice = 0
+
+        console.log("Data 2",getData)
 
 
     return (

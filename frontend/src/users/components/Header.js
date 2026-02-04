@@ -48,7 +48,7 @@ function Header({ totalQuantity }) {
         <div className="header-right col-xl-3 col-lg-3 col-md-10">
           <div className="header-right-children " >
             <span className="phone-number">0569 847 809</span>
-            <button type="button" className="btn btn-primary btn-sm">Small button</button>
+            <button type="button" className="btn btn-primary btn-sm">Đăng Nhập / Đăng Ký</button>
           </div>
 
           <div className="food-icons">
