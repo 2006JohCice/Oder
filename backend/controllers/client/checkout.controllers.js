@@ -42,9 +42,22 @@ module.exports.order = async (req, res) => {
         await order.save();
         await Cart.updateOne({ _id: cartId }, { products: [] });
 
-        res.status(200).json({ message: "Đặt hàng thành công" });
-        console.log("order", objectOrder);
+        res.status(200).json({
+            message: "Đặt hàng thành công",
+            orderId: order._id
+        });
+        // console.log("order", objectOrder);
     } else {
         res.status(400).json({ message: "Vui lòng điền đầy đủ thông tin" });
     }
 };
+
+
+//[GET] /checkout/success/:id
+module.exports.success = async (req, res) => {
+    console.log(req.params.orderId)
+    const order = await Order.findOne({ _id: req.params.orderId });
+
+    console.log("Order", order)
+
+}
