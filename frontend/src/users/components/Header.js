@@ -49,7 +49,11 @@ function Header({ totalQuantity }) {
           <div className="header-right-children " >
             <span className="phone-number">0569 847 809</span>
             <div>
-            <button type="button" className="btn btn-sm btnSign">Đăng Nhập</button>
+              <Link to='/user/auth/login'>
+              
+                <button type="button" className="btn btn-sm btnSign">Đăng Nhập</button>
+    
+              </Link>
             </div>
           </div>
 

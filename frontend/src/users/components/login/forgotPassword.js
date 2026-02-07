@@ -112,14 +112,14 @@ const RegisterPageUser = () => {
                          <div className="input-group">
                             {messagePassword && <div className="error-alert">{messagePassword}</div>}
                             <input
-                                type="password"
-                                name="password"
+                                type="text"
+                                name="otp"
                                 placeholder="Xác Thực OTP Qua Email"
-                                value={formData.password}
+                                // value={formData.password}
                                 onChange={handleChange}
                                 required
                             />
-                            <button type="button" className="btn-otp" style={{ marginTop: "10px" }}>Gửi OTP</button>
+                            <button type="button" className="btn btn-info" style={{ marginTop: "10px",borderRadius:"10px" }}>Gửi OTP</button>
                         </div>
                         <button type="submit" className="login-btn" disabled={isLoading}>
                             {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
