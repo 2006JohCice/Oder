@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     avatar:String,
     status:{
         type:String,
-        dèfault:"active",
+        default:"active",
     },
     deleted:{
         type:Boolean,

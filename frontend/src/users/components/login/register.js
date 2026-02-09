@@ -6,8 +6,10 @@ import { useNavigate } from "react-router-dom";
 const RegisterPageUser = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
+        fullName: "",
         email: "",
-        password: ""
+        password: "",
+        confirmPassword: ""
     });
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
@@ -28,7 +30,7 @@ const RegisterPageUser = () => {
         setMessage("");
         setMessagePassword("")
 
-        const url = '/api/admin/auth/login';
+        const url = '/api/user/register';
         try {
             const res = await fetch(url, {
                 method: "POST",
@@ -40,15 +42,14 @@ const RegisterPageUser = () => {
             const result = await res.json();
 
             if (res.ok) {
-                navigate("/admin");
+                navigate("/");
             } else {
                 setMessage(result.message);
-                setMessagePassword(result.messagePassword)
-                setAlert(result.alerts)
+                setMessagePassword(result.messagePassword);
             }
         } catch (error) {
             console.error("Lỗi kết nối server Error:", error);
-            // setMessage("");
+            setMessage("");
         } finally {
             setIsLoading(false);
         }
@@ -74,6 +75,17 @@ const RegisterPageUser = () => {
                     </header>
 
                     <form className="login-form" onSubmit={handleSubmit}>
+                        <div className="input-group">
+                          
+                            <input
+                                type="text"
+                                name="fullName"
+                                placeholder="Họ và tên"
+                                value={formData.fullName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
                         <div className="input-group">
                             {message && <div className="error-alert">{message}</div>}
                             <input
@@ -101,9 +113,9 @@ const RegisterPageUser = () => {
                             {messagePassword && <div className="error-alert">{messagePassword}</div>}
                             <input
                                 type="password"
-                                name="password"
+                                name="confirmPassword"
                                 placeholder="Nhập Lại Mật khẩu"
-                                value={formData.password}
+                                value={formData.confirmPassword}
                                 onChange={handleChange}
                                 required
                             />

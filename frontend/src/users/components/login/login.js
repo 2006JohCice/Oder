@@ -28,7 +28,7 @@ const LoginPageUser = () => {
         setMessage("");
         setMessagePassword("")
 
-        const url = '/api/admin/auth/login';
+        const url = '/api/user/login';
         try {
             const res = await fetch(url, {
                 method: "POST",
@@ -40,7 +40,7 @@ const LoginPageUser = () => {
             const result = await res.json();
 
             if (res.ok) {
-                navigate("/admin");
+                navigate("/");
             } else {
                 setMessage(result.message);
                 setMessagePassword(result.messagePassword)
