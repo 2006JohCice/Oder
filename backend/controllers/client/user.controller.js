@@ -53,3 +53,18 @@ module.exports.login = async (req, res) => {
     console.log(user);
     return res.status(200).json({ message: "Đăng nhập thành công" });
 }
+// [GET] api/user/logout
+module.exports.logout = async (req, res) => {
+    res.clearCookie("tokenUser");
+    return res.status(200).json({ message: "Đăng xuất thành công" });
+}
+
+//[GET] /api/user/me
+module.exports.infoUser = async (req,res) =>{
+     if (res.locals.user) {
+        res.json({ user: res.locals.user });
+    } else {
+        res.status(401).json({ message: "Chưa đăng nhập" });
+    }
+    console.log(res.locals.user)
+}

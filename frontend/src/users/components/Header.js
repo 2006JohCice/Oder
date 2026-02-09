@@ -3,9 +3,35 @@ import { useState, useEffect } from "react";
 import ListFood from "./MainContents/navBarFood/listFoodnavbar";
 import Search from "./MainContents/search/search";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Header({ totalQuantity }) {
 
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("/api/user/me")
+      .then(res => res.ok ? res.json() : null)
+      .then(data => setUser(data?.user || null))
+      .catch(() => setUser(null));
+  }, []);
+  // console.log("user",user)
+  const handlLogout = async () => {
+    try {
+      const res = await fetch('/api/user/logout', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        setUser(null);
+        navigate('/user/auth/login');
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  }
 
   const closeMenu = () => {
     const listMenu = document.querySelector('.list-menu');
@@ -40,8 +66,8 @@ function Header({ totalQuantity }) {
           </div>
 
 
-          <ListFood data={data} totalQuantity={totalQuantity}/>
-      
+          <ListFood data={data} totalQuantity={totalQuantity} />
+
 
         </div>
 
@@ -49,13 +75,20 @@ function Header({ totalQuantity }) {
           <div className="header-right-children " >
             <span className="phone-number">0569 847 809</span>
             <div>
-              <Link to='/user/auth/login'>
-              
-                
-
-                <button type="button" className="btn btn-sm btnSign">Đăng Nhập</button>
-    
-              </Link>
+              {
+                user ? (
+                  <>
+                    <span className="user-name">{user.name}</span>
+                    
+                      <button type="button" className="btn btn-sm btnSign" onClick={handlLogout}>Đăng Xuất</button>
+                  
+                  </>
+                ) : (
+                  <Link to='/user/auth/login'>
+                    <button type="button" className="btn btn-sm btnSign">Đăng Nhập</button>
+                  </Link>
+                )
+              }
             </div>
           </div>
 
