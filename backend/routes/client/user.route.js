@@ -5,7 +5,9 @@ const usermiddlewars = require("../../middlewares/client/user.middlewares");
 router.post("/user/register", controller.register);
 // router.get("/user/logout", controller.logout);
 router.post("/user/login", controller.login);
-router.get("/user/logout",controller.logout)
+router.get("/user/logout",controller.logout);
+router.post("/user/password/forgot", controller.forgotPassword);
+router.post("/user/password/otp",controller.otpPasswordPost)
 router.get("/user/me", usermiddlewars.infoUser,  controller.infoUser);
 module.exports = router;
 

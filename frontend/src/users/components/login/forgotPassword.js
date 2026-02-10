@@ -7,7 +7,9 @@ const RegisterPageUser = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: "",
-        password: ""
+        password: "",
+        confirmPassword: "",
+        otp:""
     });
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
@@ -21,14 +23,11 @@ const RegisterPageUser = () => {
             [name]: value
         }));
     };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
+const handlClickOtp = async (e) =>{
         setMessage("");
         setMessagePassword("")
 
-        const url = '/api/admin/auth/login';
+        const url = '/api/user/password/forgot';
         try {
             const res = await fetch(url, {
                 method: "POST",
@@ -36,11 +35,35 @@ const RegisterPageUser = () => {
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify(formData)
             });
-
             const result = await res.json();
+                setMessage(result.message);
+                setMessagePassword(result.messagePassword)
+                setAlert(result.alerts)
+        } catch (error) {
+            console.error("Lỗi kết nối server Error:", error);
+            // setMessage("");
+        } finally {
+            setIsLoading(false);
+        }
+}
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setMessage("");
+        setMessagePassword("")
 
+        const url = '/api/user/password/otp';
+        try {
+            const res = await fetch(url, {
+                method: "POST",
+                //   credentials: "include",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify(formData)
+            });
+            const result = await res.json();
             if (res.ok) {
-                navigate("/admin");
+                
+                navigate("/user/auth/login");
             } else {
                 setMessage(result.message);
                 setMessagePassword(result.messagePassword)
@@ -79,7 +102,7 @@ const RegisterPageUser = () => {
                             <input
                                 type="text"
                                 name="email"
-                                placeholder="Email hoặc số điện thoại"
+                                placeholder="Email "
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
@@ -91,7 +114,7 @@ const RegisterPageUser = () => {
                             <input
                                 type="password"
                                 name="password"
-                                placeholder="Mật khẩu"
+                                placeholder="Mật khẩu mới"
                                 value={formData.password}
                                 onChange={handleChange}
                                 required
@@ -101,36 +124,35 @@ const RegisterPageUser = () => {
                             {messagePassword && <div className="error-alert">{messagePassword}</div>}
                             <input
                                 type="password"
-                                name="password"
-                                placeholder="Nhập Lại Mật khẩu"
-                                value={formData.password}
+                                name="confirmPassword"
+                                placeholder="Xác Nhập Lại Mật khẩu"
+                                value={formData.confirmPassword}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
 
                          <div className="input-group">
-                            {messagePassword && <div className="error-alert">{messagePassword}</div>}
                             <input
                                 type="text"
                                 name="otp"
                                 placeholder="Xác Thực OTP Qua Email"
-                                // value={formData.password}
+                                value={formData.otp}
                                 onChange={handleChange}
                                 required
                             />
-                            <button type="button" className="btn btn-info" style={{ marginTop: "10px",borderRadius:"10px" }}>Gửi OTP</button>
+                            <button type="button" className="btn btn-info" style={{ marginTop: "10px",borderRadius:"10px" }} onClick ={handlClickOtp}>Gửi OTP</button>
                         </div>
                         <button type="submit" className="login-btn" disabled={isLoading}>
-                            {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+                            {isLoading ? "Đang Ktra..." : "Thay Đổi"}
                         </button>
                     </form>
 
                     <div className="login-footer" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <Link to="/user/auth/register" className="forgot-password">Đăng Ký Mới</Link>
                         <Link to="/user/auth/login" className="forgot-password">Đăng Nhập</Link>
-                        {alert && <div className="error-alert">{alert}</div>}
                     </div>
+                        {alert && <div className="error-alert">{alert}</div>}
                 </div>
             </div>
 

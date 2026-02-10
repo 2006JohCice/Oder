@@ -1,4 +1,6 @@
 const User = require("../../models/user.model");
+const ForgotPassword = require("../../models/forgot-password.model");
+const generateHelper = require("../../helpers/generate")
 const md5 = require("md5");
 // [POST] api/user/register
 module.exports.register = async (req, res) => {
@@ -57,6 +59,68 @@ module.exports.login = async (req, res) => {
 module.exports.logout = async (req, res) => {
     res.clearCookie("tokenUser");
     return res.status(200).json({ message: "Đăng xuất thành công" });
+}
+//[POST] /api/user/password/forgot
+module.exports.forgotPassword = async (req,res) =>{
+    const { email,password,confirmPassword,otp} = req.body;
+    if(!email || !confirmPassword || !password){
+        return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
+    }
+    if(password != confirmPassword){
+        return res.status(400).json({messagePassword:"Mật Khẩu Không Khớp"})
+    }
+    const user = await User.findOne({
+        email: email,
+        deleted:false
+    })
+    // console.log(user)
+    if(!user){
+        return res.status(400).json({
+            alerts:"Tài Khoản Email Không Tồn Tại"
+        })
+    }
+    const otpRamdon = generateHelper.generateRandomNumber(6)
+    const objectForgotPassword = {
+        email:email,
+        otp:otpRamdon,
+        expireAt: Date.now()
+    }
+
+    // console.log(objectForgotPassword)
+    const forgotPassword = new ForgotPassword(objectForgotPassword)
+    await forgotPassword.save()
+
+
+
+}
+
+//[POST] /user/password/otp
+module.exports.otpPasswordPost = async (req,res) =>{
+    const { email,password,confirmPassword,otp} = req.body;
+    if(!email || !confirmPassword || !password || !otp){
+        return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
+    }
+    if(password != confirmPassword){
+        return res.status(400).json({messagePassword:"Mật Khẩu Không Khớp"})
+    }
+    const user = await ForgotPassword.findOne({
+        email: email,
+        otp: otp
+    })
+    // console.log(user)
+    if(!user){
+        return res.status(400).json({
+            alerts:"Xác Thực Không Thành Công Kiểm Tra Lại Email Hoặc OTP"
+        })
+    }else{
+        const users = await User.findOne({
+            email:email
+        })
+        res.cookie("tokenUser", user.tokenUser);
+
+        return res.status(200).json({})
+    }
+    console.log(user)
 }
 
 //[GET] /api/user/me
