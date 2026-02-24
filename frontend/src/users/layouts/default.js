@@ -11,6 +11,7 @@ import SearchProduct from '../components/listSearchProducts/searchProducts.js';
 import OrderSuccess from '../pages/success.js';
 import { useEffect, useState } from "react";
 import CheckoutCart from '../pages/checkoutCart.js';
+import DoneOrder from '../pages/doneOrder.js';
 function DefaultLayout() {
   const [totalQuantity,setTotalQuantity] = useState([]);
   useEffect(() => {
@@ -43,6 +44,7 @@ function DefaultLayout() {
             <Route path="/cart" element={<Cart />} />
             <Route path='/cart/checkout' element={<CheckoutCart/>}/>
             <Route path ='/cart/checkout/success/:orderId' element={<OrderSuccess/>}/>
+            <Route path='/cart/doneOrder' element={<DoneOrder/>}/>
           </Routes>
         </div>
         <div className='app-footer'>

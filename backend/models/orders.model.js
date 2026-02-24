@@ -3,10 +3,15 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema(
     {
         cart_id: String,
+        orderId: String,
+        orderStatus: {
+            type: String,
+            default: "pending"
+        },
         userInfo: {
             fullName: String, 
             phone: String,
-            address: String
+            address: String,
         },
         products: [
             {

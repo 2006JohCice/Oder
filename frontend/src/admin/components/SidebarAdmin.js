@@ -11,7 +11,7 @@ function SidebarAdmin() {
 
   useEffect(() => {
     apiFetch("/api/admin/auth/login/me")
-      .then(res => {
+      .then((res) => {
         setUser(res.user);
         setRole(res.role);
       })
@@ -83,6 +83,15 @@ function SidebarAdmin() {
           </Link>
         )}
 
+        {hasPermission("products-view") && (
+          <Link
+            to={`${prefixAdmin}admin/orders`}
+            className={pathname === "admin/orders" ? "active" : ""}
+          >
+            <i className="admin-ico bi bi-bag"></i>
+            {menuOpen && <span className="admin-ico">Orders</span>}
+          </Link>
+        )}
         {/* Category */}
         {hasPermission("products-category-view") && (
           <Link
@@ -115,8 +124,7 @@ function SidebarAdmin() {
           <Link
             to={`${prefixAdmin}admin/role`}
             className={
-              pathname === "admin/role" ||
-              pathname === "admin/role/create"
+              pathname === "admin/role" || pathname === "admin/role/create"
                 ? "active"
                 : ""
             }
@@ -148,10 +156,11 @@ function SidebarAdmin() {
           </Link>
         )}
 
-
         {/* Advertisement */}
-        <Link to = {`${prefixAdmin}admin/advertisement`}
-          className={pathname === "admin/advertisement" ? "active" : ""}>
+        <Link
+          to={`${prefixAdmin}admin/advertisement`}
+          className={pathname === "admin/advertisement" ? "active" : ""}
+        >
           <i className="admin-ico bi bi-megaphone"></i>
           {menuOpen && <span className="admin-ico">Advertisement</span>}
         </Link>
@@ -209,9 +218,7 @@ function SidebarAdmin() {
 
       {/* ===== PROFILE ===== */}
       <div className="admin-profile">
-        <div className="admin-avatar">
-          {user?.fullname?.charAt(0) || "A"}
-        </div>
+        <div className="admin-avatar">{user?.fullname?.charAt(0) || "A"}</div>
         {menuOpen && (
           <div>
             <div className="admin-name">{user?.fullname}</div>

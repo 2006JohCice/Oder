@@ -12,6 +12,7 @@ const account = require('./account.route')
 const auth = require ('./auth.route')
 const setting = require ('./setting.route')
 const advertisement = require ('./advertisement.route')
+const doneCart = require ('./doneCart')
 
 module.exports = (app) => {
     const prefixAdmin = systemConfig.prefixAdmin;
@@ -21,6 +22,7 @@ module.exports = (app) => {
     app.use("/api" + prefixAdmin ,auth);
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,userAdmin)
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,productAdmin) // done
+    app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,doneCart)
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,userAccount) // lỗi http://localhost:3000/admin/users // đã fix
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,userInforOrder) // lỗi http://localhost:3000/admin/reports // đã fix
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,addcategory)

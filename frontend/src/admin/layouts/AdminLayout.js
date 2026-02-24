@@ -24,6 +24,7 @@ import Advertisement from "../components/ads/advertisement"
 // import NotFound from ""
 
 import { apiFetch } from "../../utils/apiFetch";
+import Order from "../components/order/order";
 export default function AdminDashboard() {
 
   // Phân quyền cho các account admin
@@ -63,6 +64,7 @@ export default function AdminDashboard() {
               <>
                 <Route path="/" element={<MainAdmin query={query} />} />
                 <Route path="/productsAdmin" element={role?.permissions?.includes("products-view") ? <ProductsAdmin query={query} /> : ""} />
+                <Route path="/orders" element={role?.permissions?.includes("products-view") ? <Order query={query} /> : ""} />
                 <Route path="/users" element={role?.permissions?.includes("role-permission") ? <UsersAdmin query={query} /> : ""} />
                 <Route path="/addCategory" element = {role?.permissions?.includes("products-category-view") ? <AddCategory/> : ""} />
                 <Route path="/editCategory/:id" element = {role?.permissions?.includes("products-category-update") ? <EditCategory/> : ""} />

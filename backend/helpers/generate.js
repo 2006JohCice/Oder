@@ -31,3 +31,19 @@ module.exports.generateRandomNumber = (length) => {
 };
 
 // 0 -> 1 * length(characters)  0.5*42 = 12 
+
+// Ramdom Mã Hóa Đơn
+module.exports.generateRandomOrderId = (length) => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(
+      Math.floor(Math.random() * characters.length)
+    );
+  }
+
+  return result;
+};

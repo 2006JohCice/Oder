@@ -5,7 +5,7 @@ const md5 = require("md5");
 // [POST] api/user/register
 module.exports.register = async (req, res) => {
 
-    console.log("Register user:", req.body);
+    // console.log("Register user:", req.body);
     if (!req.body || !req.body.fullName || !req.body.email || !req.body.password || !req.body.confirmPassword) {
         return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
     }
