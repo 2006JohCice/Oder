@@ -8,6 +8,6 @@ router.get('/checkout', controller.index);
 router.post('/checkout/order', controller.order);
 router.get('/checkout/success/:orderId', controller.success)
 router.get('/checkout/doneOrder', controller.doneOrder)
-
+router.patch('/checkout/authenOrder', controller.authenOrder)
 module.exports = router
 

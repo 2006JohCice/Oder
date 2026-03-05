@@ -1,7 +1,14 @@
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
 const generateHelper = require("../../helpers/generate")
+const sendMailHelper = require("../../helpers/sendMail")
 const md5 = require("md5");
+// [GET]  api/user
+module.exports.getUser = async (req, res) => {
+    const users = await User.find({ deleted: false }).select("-password -tokenUser");
+    return res.status(200).json({users});
+}
+
 // [POST] api/user/register
 module.exports.register = async (req, res) => {
 
@@ -89,8 +96,9 @@ module.exports.forgotPassword = async (req,res) =>{
     // console.log(objectForgotPassword)
     const forgotPassword = new ForgotPassword(objectForgotPassword)
     await forgotPassword.save()
-
-
+    const subject = "Yêu Cầu Đặt Lại Mật Khẩu"
+    const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.`
+    sendMailHelper.sendMail(email, subject, html)
 
 }
 
@@ -110,13 +118,15 @@ module.exports.otpPasswordPost = async (req,res) =>{
     // console.log(user)
     if(!user){
         return res.status(400).json({
-            alerts:"Xác Thực Không Thành Công Kiểm Tra Lại Email Hoặc OTP"
+            alerts:"Xác Thực Không Thành Công Kiểm Tra Lại Email, Mật Khẩu Hoặc OTP"
         })
     }else{
-        const users = await User.findOne({
-            email:email
+        const users = await User.updateOne({
+            email: email
+        },{
+            password: md5(password)
         })
-        res.cookie("tokenUser", user.tokenUser);
+        // res.cookie("tokenUser", user.tokenUser);
 
         return res.status(200).json({})
     }

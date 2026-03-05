@@ -136,8 +136,6 @@ function Account() {
         fetchAccounts();
     }, newUser);
 
-    console.log(users)
-    console.log(activeTab)
 
     return (
         <>

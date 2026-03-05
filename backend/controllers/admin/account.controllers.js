@@ -23,7 +23,7 @@ module.exports.index = async (req, res) => {
                 });
             } 
         }
-        console.log(records)
+        // console.log(records)
 
         res.json({
             records

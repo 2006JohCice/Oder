@@ -11,9 +11,6 @@ import NewProducts from './MainContents/newProducts';
 
 function MainContent() {
 
-
-
-
   const scrollRef = useRef();
   const scrollRight = () => {
     scrollRef.current.scrollBy({ left: 200, behavior: "smooth" });

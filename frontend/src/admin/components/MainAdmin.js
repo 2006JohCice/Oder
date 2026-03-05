@@ -8,18 +8,28 @@ import { useNavigate } from "react-router-dom";
 function MainAdmin({ query }) {
 
   const [users, setUsers] = useState([]);
-  console.log(users)
   const navigate = useNavigate();
   // const [activeTab, setActiveTab] = useState(1);
-  const [selected, setSelected] = useState(null);
-  const [showNotification, setShowNotification] = useState(false);
+  const [showNotification, setShowNotification] = useState("");
   const [sumUsers, setSumUsers] = useState(0);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [idUser, setIdUser] = useState(null);
-
-  console.log("bbb", sumUsers)
-
+  const [selected, setSelected] = useState({
+        _id: "",
+        fullname: "",
+        email: "",
+        phone: "",
+        role: "",
+        status: ""
+    });
+  const [totalUser,setTotalUser] = useState()
+  const [totalSuspended,setTotalSuspended] = useState(0)
+  const [totalPending ,setTotalPending] = useState(0)
+  // //   totalUser: 0,
+  //   totalSuspended:0,
+  //   totalPending:0
+  const [revenue, setRevenue] = useState(0);
   const handleChangeUser = (e) => {
     const { value } = e.target;
     setSelected((prev) => ({
@@ -57,6 +67,27 @@ function MainAdmin({ query }) {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+    
+    // --- Cập nhật thông tin người dùng ---
+    const handleSave = (e) => {
+        e.preventDefault();
+        if (selected) {
+
+            let url = `/api/admin/listAccount/edit/${selected._id}`;
+            fetch(url, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(selected),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.success) {
+                        setShowNotification("Thay Đổi Thành Công");
+                        setSelected(null);
+                    }
+                });
+        }
+    };
 
 
   const checkBoxSetting = () => {
@@ -91,43 +122,66 @@ function MainAdmin({ query }) {
 
 
   const fetchUser = () => {
-    let url = '/api/admin/userAdmin';
-    const params = [];
+    // let url = '/api/admin/userAdmin';
+    // const params = [];
 
 
-    if (filters.status) {
-      params.push(`status=${filters.status}`);
-    }
-    if (filters.role) {
-      params.push(`role=${filters.role}`);
-    }
-    if (query) {
-      params.push(`userName_email=${query}`);
-    }
-    if (page) {
-      params.push(`page=${page}`);
-    }
-    if (params.length > 0) {
-      url += `?${params.join('&')}`;
-    }
+    // if (filters.status) {
+    //   params.push(`status=${filters.status}`);
+    // }
+    // if (filters.role) {
+    //   params.push(`role=${filters.role}`);
+    // }
+    // if (query) {
+    //   params.push(`userName_email=${query}`);
+    // }
+    // if (page) {
+    //   params.push(`page=${page}`);
+    // }
+    // if (params.length > 0) {
+    //   url += `?${params.join('&')}`;
+    // }
+    // apiFetch(url)
+    //   .then((res => {
+    //     setUsers(res.data)
+    //     setTotalPages(res.objPagination.totalPages)
+    //     setSumUsers(res.data)
+    //   }))
+    //   .catch(err => {
+    //     if (err.status === 401) {
+    //       navigate('/admin/auth/login');
+    //     }
+    //   });
+    let urlDone =`/api/admin/checkout/doneOrder`
+    apiFetch(urlDone)
+      .then((res =>{
+        res.orders.forEach(order => {
+          if (order) {
+            setRevenue(prev => prev + order.products.reduce((sum, item) => sum + item.price * item.quantity, 0));
+          }
+        });
+      }))
 
-
+    let urlUser = `/api/user`  
+    apiFetch(urlUser)
+      .then((res =>{
+        setTotalUser(res.users.length)
+      }))
+    let url = `/api/admin/listAccount`
     apiFetch(url)
-      // .then((res) => res.json()) đã trả res.json ở bên apiFetch
       .then((res => {
-        setUsers(res.data)
-        setTotalPages(res.objPagination.totalPages)
-        setSumUsers(res.data)
+        setUsers(res.records)
       }))
       .catch(err => {
         if (err.status === 401) {
           navigate('/admin/auth/login');
         }
-        // if (err.status === 200) {
-        //   navigate('/admin');
-        // }
       });
+
   };
+  
+  // console.log("users",users)
+  // const fet
 
 
 
@@ -211,7 +265,7 @@ function MainAdmin({ query }) {
                 <h3>Users</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">{sumUsers.length}</div>
+                    <div className="admin-big">{totalUser}</div>
                     <div className="admin-trend">Active users</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">+6% vs last week</div></div>
@@ -221,7 +275,7 @@ function MainAdmin({ query }) {
                 <h3>Users Suspended</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">{users?.filter(u => u.status === "Pending").length}</div>
+                    <div className="admin-big">{totalSuspended}</div>
                     <div className="admin-trend">Active Suspended</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">+2% vs last week</div></div>
@@ -231,7 +285,7 @@ function MainAdmin({ query }) {
                 <h3>Users Pending</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">{users?.filter(u => u.status === "Pending").length}</div>
+                    <div className="admin-big">{totalPending}</div>
                     <div className="admin-trend">Active Pending</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">+1% vs last week</div></div>
@@ -241,7 +295,7 @@ function MainAdmin({ query }) {
                 <h3>Revenue</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">₫ 124,500,000</div>
+                    <div className="admin-big">$ {revenue}</div>
                     <div className="admin-trend">This month</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">+12% vs last month</div></div>
@@ -252,10 +306,10 @@ function MainAdmin({ query }) {
                   Spending</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">₫ - 24,500,000</div>
+                    <div className="admin-big">₫ </div>
                     <div className="admin-trend">This month</div>
                   </div>
-                  <div className="admin-right"><div className="admin-trend">+1% vs last month</div></div>
+                  <div className="admin-right"><div className="admin-trend">0% vs last month</div></div>
                 </div>
               </div>
               <div className="admin-card">
@@ -264,12 +318,12 @@ function MainAdmin({ query }) {
                   Reserves & Investments </h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">₫ 26,500,000</div>
+                    <div className="admin-big">₫ </div>
                     <div className="admin-trend">This month</div>
 
                   </div>
                   <div className="admin-right">
-                    <div className="admin-trend">+1% vs last month</div>
+                    <div className="admin-trend">+0% vs last month</div>
                     <div className="admin-trend">
                       Reserves & Investments = Revenue x 21.3%</div>
 
@@ -330,16 +384,16 @@ function MainAdmin({ query }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {users?.map((u, index) => (
-                        <tr key={u.id}>
+                      {users?.map((item, index) => (
+                        <tr key={item._id}>
                           <td>{index + 1}</td>
-                          <td className="admin-bold">{u.name}</td>
-                          <td>{u.email}</td>
-                          <td>{u.role}</td>
-                          <td><span className={`admin-badge ${u.status === "Active" ? "admin-active" : ""}`}>{u.status}</span></td>
+                          <td className="admin-bold">{item.fullname}</td>
+                          <td>{item.email}</td>
+                          <td>{item.role.description}</td>
+                          <td><span className={`admin-badge ${item.status === "active" ? "admin-active" : ""}`}>{item.status}</span></td>
                           <td style={{ display: "flex", gap: "5px" }}>
-                            <button className="admin-btn" onClick={() => setSelected(u)}><i class="bi bi-pen"></i></button>
-                            <button className="admin-btn" onClick={() => idDeleteUser(u._id)}><i class="bi bi-trash"></i></button>
+                            <button className="admin-btn" onClick={() => setSelected(item)}><i class="bi bi-pen"></i></button>
+                            <button className="admin-btn" onClick={() => idDeleteUser(item._id)}><i class="bi bi-trash"></i></button>
 
                           </td>
                         </tr>
@@ -373,30 +427,78 @@ function MainAdmin({ query }) {
               <aside className="admin-panel">
                 <div className="admin-card">
                   <h3>User editor</h3>
-                  {selected ? (
-                    <div className="admin-editor">
-                      <input className="admin-input" defaultValue={selected.name} onChange={handleChangeUser} />
-                      <input className="admin-input" defaultValue={selected.email} style={{ marginTop: "10px" }} onChange={handleChangeEmail} />
-                      <div className="admin-form-row">
-                        <select className="admin-select" defaultValue={selected.role} onChange={handleChangeRole}>
-                          <option>Admin</option>
-                          <option>Moderator</option>
-                          <option>User</option>
-                        </select>
-                        <select className="admin-select" defaultValue={selected.status} onChange={handleChangeAction}>
-                          <option>Active</option>
-                          <option>Pending</option>
-                          <option>Suspended</option>
-                        </select>
-                      </div>
-                      <div className="admin-form-row">
-                        <button className="admin-btn admin-primary" onClick={editUser} >Save</button>
-                        <button className="admin-btn" onClick={() => setSelected(null)}>Cancel</button>
-                      </div>
-                    </div>
-                  ) : (
+                  
+                    {(selected !== null) ? (
+                        <div className="admin-card">
+                       
+
+                            <form onSubmit={handleSave}>
+
+                                <div className="admin-editor" style={{ display: "grid", gap: "10px" }}>
+                                    <div className="admin-field">
+                                        <label htmlFor="name" className="admin-label">Name</label>
+                                        <input
+                                            id="name"
+                                            className="admin-input"
+                                            value={selected.fullname}
+                                            onChange={(e) => setSelected({ ...selected, fullname: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="admin-field">
+                                        <label htmlFor="email" className="admin-label">Email</label>
+                                        <input
+                                            id="email"
+                                            className="admin-input"
+                                            value={selected.email}
+                                            onChange={(e) => setSelected({ ...selected, email: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="admin-field">
+                                        <label htmlFor="password" className="admin-label">Password</label>
+                                        <input
+                                            id="password"
+                                            className="admin-input"
+                                            value={selected.newpassword}
+                                            onChange={(e) => setSelected({ ...selected, password: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+
+
+                                    <div className="admin-form-row" style={{ display: "grid", gap: "10px" }}>
+                                        <div className="admin-field" style={{ display: "flex", gap: "5px" }}>
+
+
+                                            <select
+                                                id="status"
+                                                className="admin-select"
+                                                value={selected.status}
+                                                onChange={(e) => setSelected({ ...selected, status: e.target.value })}
+                                            >
+                                                <option value="active">Active</option>
+                                                <option value="inActive">Inactive</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div className="admin-form-row">
+                                        <button className="admin-btn admin-primary" type="submit">Save</button>
+                                        <button className="admin-btn" type="button" onClick={() => {
+                                            setSelected(null);
+                                            // setActiveTab(null);
+                                        }}>Cancel</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    ) : (
                     <div className="admin-muted">Chọn một user từ bảng để chỉnh sửa.</div>
-                  )}
+                    )}
+                  
                 </div>
                 <div className="admin-card">
                   <h3>Quick stats</h3>
