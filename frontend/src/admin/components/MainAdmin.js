@@ -9,63 +9,21 @@ function MainAdmin({ query }) {
 
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
-  // const [activeTab, setActiveTab] = useState(1);
   const [showNotification, setShowNotification] = useState("");
   const [sumUsers, setSumUsers] = useState(0);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [idUser, setIdUser] = useState(null);
-  const [selected, setSelected] = useState({
-        _id: "",
-        fullname: "",
-        email: "",
-        phone: "",
-        role: "",
-        status: ""
-    });
+  const [selected, setSelected] = useState(null);
   const [totalUser,setTotalUser] = useState()
   const [totalSuspended,setTotalSuspended] = useState(0)
   const [totalPending ,setTotalPending] = useState(0)
+  const [orders, setOrders] = useState(0);
+  const [ordering, setOrdering] = useState(0);
   // //   totalUser: 0,
   //   totalSuspended:0,
   //   totalPending:0
   const [revenue, setRevenue] = useState(0);
-  const handleChangeUser = (e) => {
-    const { value } = e.target;
-    setSelected((prev) => ({
-      ...prev,
-      name: value,
-    }));
-  }
-  const handleChangeEmail = (e) => {
-    const { value } = e.target;
-    setSelected((prev) => ({
-      ...prev,
-      email: value,
-    }));
-  }
-
-  const handleChangeRole = (e) => {
-    const { value } = e.target;
-    setSelected((prev) => ({
-      ...prev,
-      role: value,
-    }));
-  }
-
-  const handleChangeAction = (e) => {
-    const { value } = e.target;
-    setSelected((prev) => ({
-      ...prev,
-      status: value,
-    }))
-  }
-
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
 
     
     // --- Cập nhật thông tin người dùng ---
@@ -94,28 +52,7 @@ function MainAdmin({ query }) {
     setShowNotification(true);
   }
 
-  // Tìm kiếm nhiều tiêu chí
-  const [filters, setFilters] = useState({
-    status: "",
-    role: "",
-    userName_email: "",
-  });
 
-
-  // ====== Danh sách option ======
-  const statusOptions = [
-    { id: 1, value: "", label: "All" },
-    { id: 2, value: "Active", label: "Active" },
-    { id: 3, value: "Pending", label: "Pending" },
-    { id: 4, value: "Suspended", label: "Suspended" }
-  ];
-
-  const roleOptions = [
-    { id: 1, value: "", label: "All" },
-    { id: 6, value: "Admin", label: "Admin" },
-    { id: 7, value: "Moderator", label: "Moderator" },
-    { id: 8, value: "User", label: "User" }
-  ];
 
 
 
@@ -158,11 +95,24 @@ function MainAdmin({ query }) {
         res.orders.forEach(order => {
           if (order) {
             setRevenue(prev => prev + order.products.reduce((sum, item) => sum + item.price * item.quantity, 0));
+            // setRevenue(0)
           }
         });
       }))
+      .catch(err => {
+        if (err.status === 401) {
+          navigate('/admin/auth/login');
+        }
+      });
+    
+    let urlOrder = `/api/admin/checkout/doneOrder`
+    apiFetch(urlOrder)
+      .then((res =>{
+        setOrders(res.orders.length)
+        setOrdering(res.orders.filter(order => order.status === "pending").length)
+      }))
 
-    let urlUser = `/api/user`  
+    let urlUser = `/api/user`
     apiFetch(urlUser)
       .then((res =>{
         setTotalUser(res.users.length)
@@ -180,12 +130,6 @@ function MainAdmin({ query }) {
 
   };
   
-  // console.log("users",users)
-  // const fet
-
-
-
-
 
 
   const editUser = async () => {
@@ -205,13 +149,14 @@ function MainAdmin({ query }) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       fetchUser();
     }, 500);
     return () => clearTimeout(delayDebounce);
 
-  }, [filters, query, page]);
+  }, [query, page]);
 
 
 
@@ -339,37 +284,6 @@ function MainAdmin({ query }) {
 
                     <h3>Users overview</h3>
 
-
-                    <div style={{ display: "flex", gap: "10px" }}>
-
-
-
-                      <select
-                        name="status"
-                        className="admin-btn"
-                        onChange={handleChange}
-                      >
-                        {statusOptions?.map((opt) => (
-                          <option key={opt.id} value={opt.value} >
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-
-                      {/* Dropdown vai trò */}
-                      <select
-                        name="role"
-                        className="admin-btn"
-                        onChange={handleChange}
-                      >
-                        {roleOptions?.map((opt) => (
-                          <option key={opt.id} value={opt.value} >
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-
-                    </div>
                   </div>
 
                   <table>
@@ -402,24 +316,6 @@ function MainAdmin({ query }) {
                   </table>
 
                   <PaginationHelper totalPages={totalPages} page={page} setPage={setPage} />
-                </div>
-
-                <div className="admin-card">
-                  <h3>Quick actions</h3>
-                  <div className="admin-btn-group">
-                    <button className="admin-btn">Invite user</button>
-                    <button className="admin-btn">Export CSV</button>
-                    <button className="admin-btn admin-primary">Create product</button>
-                  </div>
-                </div>
-
-                <div className="admin-card">
-                  <h3>Activity</h3>
-                  <div className="admin-feed">
-                    <div className="admin-feed-item">User <strong>Nguyễn Văn A</strong> đăng nhập từ IP 110.234.45.1</div>
-                    <div className="admin-feed-item">Order <strong>#1209</strong> đã thanh toán — ₫1,200,000</div>
-                    <div className="admin-feed-item">Backup database hoàn tất (2:14 AM)</div>
-                  </div>
                 </div>
               </div>
 
@@ -483,7 +379,6 @@ function MainAdmin({ query }) {
                                                 <option value="inActive">Inactive</option>
                                             </select>
                                         </div>
-
                                     </div>
                                     <div className="admin-form-row">
                                         <button className="admin-btn admin-primary" type="submit">Save</button>
@@ -498,24 +393,14 @@ function MainAdmin({ query }) {
                     ) : (
                     <div className="admin-muted">Chọn một user từ bảng để chỉnh sửa.</div>
                     )}
-                  
                 </div>
                 <div className="admin-card">
                   <h3>Quick stats</h3>
                   <div className="admin-kpi-grid">
-                    <div className="admin-kpi"><h4>Orders</h4><div className="admin-kpi-value">1,240</div></div>
-                    <div className="admin-kpi"><h4>Visitors</h4><div className="admin-kpi-value">24,230</div></div>
+                    <div className="admin-kpi"><h4>Orders</h4><div className="admin-kpi-value">{orders}</div></div>
+                    <div className="admin-kpi"><h4>Ordering</h4><div className="admin-kpi-value">{ordering}</div></div>
                     <div className="admin-kpi"><h4>Conversion</h4><div className="admin-kpi-value">3.6%</div></div>
-                    <div className="admin-kpi"><h4>Refunds</h4><div className="admin-kpi-value">12</div></div>
-                  </div>
-                </div>
-
-                <div className="admin-card">
-                  <h3>Settings</h3>
-                  <div className="admin-settings" style={{ display: "flex", gap: "5px" }}>
-                    <label><input type="checkbox" defaultChecked onClick={checkBoxSetting} /> Enable maintenance mode</label>
-                    <label><input type="checkbox" onClick={checkBoxSetting} /> Send weekly reports</label>
-                    <small>Timezone: Asia/Bangkok</small>
+                    <div className="admin-kpi"><h4>Refunds</h4><div className="admin-kpi-value">0</div></div>
                   </div>
                 </div>
               </aside>

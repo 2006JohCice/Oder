@@ -7,6 +7,7 @@ router.post("/user/register", controller.register);
 // router.get("/user/logout", controller.logout);
 router.post("/user/login", controller.login);
 router.get("/user/logout",controller.logout);
+router.post("/user/register/passwordOtp",controller.passwordRegisterOtp)
 router.post("/user/password/forgot", controller.forgotPassword);
 router.post("/user/password/otp",controller.otpPasswordPost)
 router.get("/user/me", usermiddlewars.infoUser,  controller.infoUser);

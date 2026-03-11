@@ -31,13 +31,13 @@ function FilterListFood({ activeTab, onTabClick }) {
                 >
                     Tất cả
                 </button>
-            {listNameFood.map((tab) => (
+            {listNameFood.map((item) => (
                 <button
-                    key={tab._id}
-                    className={`admin-btn ${activeTab === tab._id ? "admin-primary" : ""}`}
-                    onClick={() => onTabClick(tab.category, tab._id)}
+                    key={item._id}
+                    className={`admin-btn ${activeTab === item._id ? "admin-primary" : ""}`}
+                    onClick={() => onTabClick(item._id, item._id)}
                 >
-                    {tab.name}
+                    {item.name}
                 </button>
             ))}
         </div>

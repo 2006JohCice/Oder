@@ -1,18 +1,30 @@
 import { useState, useEffect } from "react";
+import AutoCloseNotification from "../alerts/AutoCloseNotification";
 
 function Order() {
   const [orders, setOrders] = useState([]);
+  const [idOrders, setIdOrder] = useState([]);
   const [table, setTable] = useState(false);
-  console.log(orders)
-  const handleChangeStatus = (orderId, newStatus) => {
-  setOrders((prev) =>
-    prev.map((o) =>
-      o._id === orderId ? { ...o, orderStatus: newStatus } : o
+  const [messege , setMessege] = useState("")
+const handleChangeStatus = (orderId, status, orderCode) => {
+  setIdOrder((prev) => {
+    const existingIndex = prev.findIndex((item) => item[0] === orderId);
+    if (existingIndex !== -1) {
+      const updated = [...prev];
+      updated[existingIndex] = [orderId, status, orderCode];
+      return updated;
+    } else {
+      return [...prev, [orderId, status, orderCode]];
+    }
+  });
+
+  // Cập nhật trạng thái orderStatus trong orders để giao diện phản ứng ngay
+  setOrders((prevOrders) =>
+    prevOrders.map((order) =>
+      order._id === orderId ? { ...order, orderStatus: status } : order
     )
   );
 };
-
-
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -32,34 +44,37 @@ function Order() {
     { id: 2, value: "activating" },
     { id: 3, value: "completed" },
   ];
-const handlClick = async () => {
- 
+  const handleClick = async () => {
+    let url = "/api/admin/authenOrder";
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ orderNew: idOrders }),
+    });
+    const res = await response.json();
 
-  const res = await fetch("/api/checkout/authenOrder", {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      ordersAuthen:orders
-    }),
-  });
+        setMessege(res.message);
+        setTimeout(() => {
+          setMessege("");
+        }, 3000);
+  };
 
-  const data = await res.json();
-};
   return (
     <>
-      <div style={{ display: "flex", gap: "10px" }}>          <select
-            name="status"
-            className="admin-select"
-            style={{ width: "130px" }}
-           
-          >
-          </select>
-    <button className="btn-accent" onClick={handlClick}>Áp Dụng</button>
-        </div>
+      {messege && <AutoCloseNotification message={messege} />}
+      <div style={{ display: "flex", gap: "10px" }}>
+        <select
+          name="status"
+          className="admin-select"
+          style={{ width: "130px" }}
+        ></select>
+        <button className="btn-accent" onClick={handleClick}>
+          Áp Dụng
+        </button>
+      </div>
       <div className="products-table">
-
         <table>
           <thead>
             <tr>
@@ -97,20 +112,27 @@ const handlClick = async () => {
                 </td>
                 <td>{order.userInfo?.address || "N/A"}</td>
                 <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                <td style={{ textAlign: "center"  }} >
-                    <input style={{ width: "50px", textAlign: "center" }}
-                      type="text"
-                       value={order.tableNumber || "N/A"}
-                       onClick={() => setTable(true)}
-                    />
-                  </td>
+                <td style={{ textAlign: "center" }}>
+                  <input
+                    style={{ width: "50px", textAlign: "center" }}
+                    type="text"
+                    value={order.tableNumber || "N/A"}
+                    onClick={() => setTable(true)}
+                  />
+                </td>
                 <td>
                   <select
                     name="status"
                     className="admin-select"
                     style={{ width: "130px" }}
-                    onChange={(e) => handleChangeStatus(order._id, e.target.value)}
-                 
+                    value={order.orderStatus}
+                    onChange={(e) =>
+                      handleChangeStatus(
+                        order._id,
+                        e.target.value,
+                        order.orderId
+                      )
+                    }
                   >
                     {statusOptions?.map((opt) => (
                       <option key={opt.id} value={opt.value}>

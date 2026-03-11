@@ -73,15 +73,3 @@ module.exports.doneOrder = async (req, res) => {
     const orders = await Order.find({ cart_id: cartId }).sort({ createdAt: -1 });
     res.status(200).json(orders);
 }
-// [PATCH] /checkout/authenOrder
-module.exports.authenOrder = async (req, res) => {
-  const { ordersAuthen } = req.body;
-
-  console.log(ordersAuthen);
-
-
-  res.json({
-    success: true,
-    message: "Cập nhật trạng thái thành công",
-  });
-};

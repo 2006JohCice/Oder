@@ -27,7 +27,6 @@ function ProductCategoryPage() {
         <div>
             {
 
-                
                 loadingCard ? (<CardLoading widthWeb={widthWeb} />
                 ) : (<CardProducts data={data} />)
 

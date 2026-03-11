@@ -88,7 +88,7 @@ function SidebarAdmin() {
             to={`${prefixAdmin}admin/orders`}
             className={pathname === "admin/orders" ? "active" : ""}
           >
-            <i className="admin-ico bi bi-bag"></i>
+           <i class="admin-ico bi bi-receipt-cutoff"></i>
             {menuOpen && <span className="admin-ico">Orders</span>}
           </Link>
         )}
@@ -165,7 +165,7 @@ function SidebarAdmin() {
           {menuOpen && <span className="admin-ico">Advertisement</span>}
         </Link>
         {/* Reports */}
-        {hasPermission("role-permission") && (
+        {/* {hasPermission("role-permission") && (
           <Link
             to={`${prefixAdmin}admin/reports`}
             className={pathname === "admin/reports" ? "active" : ""}
@@ -173,10 +173,10 @@ function SidebarAdmin() {
             <i className="admin-ico bi bi-book"></i>
             {menuOpen && <span className="admin-ico">Reports</span>}
           </Link>
-        )}
+        )} */}
 
         {/* Content */}
-        {hasPermission("products-category-view") && (
+        {/* {hasPermission("products-category-view") && (
           <Link
             to={`${prefixAdmin}admin/myeditor`}
             className={pathname === "admin/myeditor" ? "active" : ""}
@@ -184,7 +184,7 @@ function SidebarAdmin() {
             <i className="admin-ico bi bi-cloud-upload"></i>
             {menuOpen && <span className="admin-ico">Content</span>}
           </Link>
-        )}
+        )} */}
 
         {/* Chatting */}
         <Link
