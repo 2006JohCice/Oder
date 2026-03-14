@@ -1,5 +1,5 @@
-import CardLoading from "../mixi/CardLoading";
-import CardProducts from "../mixi/cardProducts/cardProducts";
+import CardLoading from "../../mixi/CardLoading";
+import CardProducts from "../../mixi/cardProducts/cardProducts";
 import { useEffect, useState } from "react";
 
 function NewProducts({DataProductsNew}) {

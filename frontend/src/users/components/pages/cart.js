@@ -1,10 +1,11 @@
-import "../css/card/cartPay.css";
+import "../../css/card/cartPay.css";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import { useCart } from "../mixi/cart/CartContext";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
+  const { fetchCart } = useCart();
 
   const apiCartProducts = () => {
     fetch("/api/cart")
@@ -16,7 +17,6 @@ export default function CartPage() {
     apiCartProducts()
   }, [])
 
-  console.log("cartItems", cartItems)
 
   // Xóa sản phẩm
   const handleRemove = async (id) => {
@@ -25,8 +25,10 @@ export default function CartPage() {
       method: "DELETE",
     })
     if (res.ok) {
-      alert("Xóa Thành Công")
-      apiCartProducts()
+      alert("Xóa Thành Công");
+      apiCartProducts();
+      fetchCart();
+
     }
   };
 
@@ -107,8 +109,6 @@ export default function CartPage() {
         </div>
         <Link to={`/cart/checkout`}>
           <button className="btn-checkout">
-
-
             Thanh toán
           </button>
         </Link>

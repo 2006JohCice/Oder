@@ -1,6 +1,6 @@
-import CardLoading from "../mixi/CardLoading";
+import CardLoading from "../../mixi/CardLoading";
 import { useState, useEffect } from "react";
-import CardProducts from "../mixi/cardProducts/cardProducts";
+import CardProducts from "../../mixi/cardProducts/cardProducts";
 import NewProducts from "./newProducts";
 
 function FeaturedProducts() {

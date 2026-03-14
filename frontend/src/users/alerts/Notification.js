@@ -22,7 +22,7 @@ function Notification({ message, onClose }) {
   if (!show) return null;
 
   return (
-    <div className={`alert alert-success ${fade}`} role="alert" style={{position: "fixed",  right: "20px" , zIndex: "9999"}}>
+    <div className={`alert alert-success ${fade}`} role="alert" style={{position: "fixed", bottom: "20px", right: "20px" , zIndex: "9999"}}>
        <span>{message}</span>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CardLoading from "../components/mixi/CardLoading";
-import CardProducts from "../components/mixi/cardProducts/cardProducts";
+import CardLoading from "../../components/mixi/CardLoading";
+import CardProducts from "../../components/mixi/cardProducts/cardProducts";
 
 function ProductCategoryPage() {
     const { slugCategory } = useParams();
@@ -27,7 +27,6 @@ function ProductCategoryPage() {
         <div>
             {
 
-                
                 loadingCard ? (<CardLoading widthWeb={widthWeb} />
                 ) : (<CardProducts data={data} />)
 

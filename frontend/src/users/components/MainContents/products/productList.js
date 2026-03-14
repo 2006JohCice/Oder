@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "../../css/products/products.css"
-import CardLoading from "../mixi/CardLoading";
-import CardProducts from "../mixi/cardProducts/cardProducts";
+import "../../../css/products/products.css"
+import CardLoading from "../../mixi/CardLoading";
+import CardProducts from "../../mixi/cardProducts/cardProducts";
 
 
 const widthWeb = window.innerWidth;

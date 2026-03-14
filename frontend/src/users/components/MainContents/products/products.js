@@ -1,8 +1,8 @@
-import '../../css/MainContent/products.css'
-import '../../css/MainContent/cartMiniProducts.css'
+import '../../../css/MainContent/products.css'
+import '../../../css/MainContent/cartMiniProducts.css'
 import { useState, useEffect } from 'react';
-import CardLoading from '../mixi/CardLoading';
-import CardProducts from '../mixi/cardProducts/cardProducts';
+import CardLoading from '../../mixi/CardLoading';
+import CardProducts from '../../mixi/cardProducts/cardProducts';
 
 function Products() {
 

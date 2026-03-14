@@ -24,13 +24,14 @@ const ProductsAdmin = ({ query }) => {
   const [idEdit, setIdEdit] = useState("");
   const [newStatusListFood, setNewStatusListFood] = useState("");
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(null);
   const [sortAim, setSortAim] = useState("");
+  const [totalPages, setTotalPages] = useState(null);
   const [limitPage, setLimitPage] = useState(null);
 
+
+  console.log("activeTab và newStatusListFood ",activeTab, newStatusListFood)
   // Xử lý phần frontend về thông báo
 
-  // console.log("activeName và newStatusListFood ",activeName, newStatusListFood)
 
   const [notifKey, setNotifKey] = useState(0);
 
@@ -80,7 +81,6 @@ const ProductsAdmin = ({ query }) => {
     apiFetch(url)
       // .then((res) => res.json())
       .then((res) => {
-
         setProducts(Array.isArray(res.data) ? res.data : []);
         setCardLoading(false)
         setTotalPages(res.objPagination.totalPages)
@@ -298,7 +298,6 @@ const ProductsAdmin = ({ query }) => {
     <div className="products-page">
       <CreatProducts setProducts={setProducts} setNotifMessage={setNotifMessage}
         setLoading={setLoading} />
-
       <EditProducts idEdit={idEdit} setProducts={setProducts} />
       {loading && (<AutoCloseNotification
         key={notifKey}
@@ -316,7 +315,7 @@ const ProductsAdmin = ({ query }) => {
           />
         </div>
 
-        <div div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px" }}>
           <select
             name="status"
             className="admin-select"
@@ -400,9 +399,11 @@ const ProductsAdmin = ({ query }) => {
           <tbody>
             {
               CardLoading ? (
-                <LoadingCart />
-              ) : (
+               
+                    <LoadingCart />
                 
+              ) : (
+                products.length > 0 ? (
                   Array.isArray(products) && products.map((item, index) => (
                     <tr key={item._id}>
                       <td><input
@@ -442,31 +443,31 @@ const ProductsAdmin = ({ query }) => {
                           min="1"
                           name="position"
                           onChange={(e) => handleChangePosition(index, e)}
-
-
-
                         />
                       </td>
                       <td>{item.stock}</td>
                       <td style={{ display: "flex", gap: "5px" }}>
-                        <button className="admin-btn" class="admin-btn"
+                        <button className="admin-btn"
                           type="button"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#offcanvasEditProduct"
                           aria-controls="offcanvasEditProduct"
                           onClick={() => setIdEdit(item._id)}
 
-                        ><i class="bi bi-pen"></i></button>
+                        ><i className="bi bi-pen"></i></button>
                         <Delete set={setProducts} Id={item._id} setId={setIdDelete} setNotifMessage={setNotifMessage} setLoading={setLoading} setNotifKey={setNotifKey} />
                       </td>
                     </tr>
                   ))
-                
+                ) : (
+                  <tr>
+                    <td colSpan="9" style={{ textAlign: "center" }}>
+                      Không có dữ liệu sản phẩm.
+                    </td>
+                  </tr>
+                )
               )
             }
-
-
-
           </tbody>
         </table>
       </div>

@@ -205,6 +205,15 @@
   cursor: pointer;
 }
 
+
+/* ====================Sign=========== */
+.btnSign:hover{
+  background-color: #06b6d4;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  
+}
+
+
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 1199px) {

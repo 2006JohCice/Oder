@@ -11,7 +11,7 @@ function SidebarAdmin() {
 
   useEffect(() => {
     apiFetch("/api/admin/auth/login/me")
-      .then(res => {
+      .then((res) => {
         setUser(res.user);
         setRole(res.role);
       })
@@ -83,6 +83,15 @@ function SidebarAdmin() {
           </Link>
         )}
 
+        {hasPermission("products-view") && (
+          <Link
+            to={`${prefixAdmin}admin/orders`}
+            className={pathname === "admin/orders" ? "active" : ""}
+          >
+           <i class="admin-ico bi bi-receipt-cutoff"></i>
+            {menuOpen && <span className="admin-ico">Orders</span>}
+          </Link>
+        )}
         {/* Category */}
         {hasPermission("products-category-view") && (
           <Link
@@ -115,8 +124,7 @@ function SidebarAdmin() {
           <Link
             to={`${prefixAdmin}admin/role`}
             className={
-              pathname === "admin/role" ||
-              pathname === "admin/role/create"
+              pathname === "admin/role" || pathname === "admin/role/create"
                 ? "active"
                 : ""
             }
@@ -148,15 +156,16 @@ function SidebarAdmin() {
           </Link>
         )}
 
-
         {/* Advertisement */}
-        <Link to = {`${prefixAdmin}admin/advertisement`}
-          className={pathname === "admin/advertisement" ? "active" : ""}>
+        <Link
+          to={`${prefixAdmin}admin/advertisement`}
+          className={pathname === "admin/advertisement" ? "active" : ""}
+        >
           <i className="admin-ico bi bi-megaphone"></i>
           {menuOpen && <span className="admin-ico">Advertisement</span>}
         </Link>
         {/* Reports */}
-        {hasPermission("role-permission") && (
+        {/* {hasPermission("role-permission") && (
           <Link
             to={`${prefixAdmin}admin/reports`}
             className={pathname === "admin/reports" ? "active" : ""}
@@ -164,10 +173,10 @@ function SidebarAdmin() {
             <i className="admin-ico bi bi-book"></i>
             {menuOpen && <span className="admin-ico">Reports</span>}
           </Link>
-        )}
+        )} */}
 
         {/* Content */}
-        {hasPermission("products-category-view") && (
+        {/* {hasPermission("products-category-view") && (
           <Link
             to={`${prefixAdmin}admin/myeditor`}
             className={pathname === "admin/myeditor" ? "active" : ""}
@@ -175,7 +184,7 @@ function SidebarAdmin() {
             <i className="admin-ico bi bi-cloud-upload"></i>
             {menuOpen && <span className="admin-ico">Content</span>}
           </Link>
-        )}
+        )} */}
 
         {/* Chatting */}
         <Link
@@ -209,9 +218,7 @@ function SidebarAdmin() {
 
       {/* ===== PROFILE ===== */}
       <div className="admin-profile">
-        <div className="admin-avatar">
-          {user?.fullname?.charAt(0) || "A"}
-        </div>
+        <div className="admin-avatar">{user?.fullname?.charAt(0) || "A"}</div>
         {menuOpen && (
           <div>
             <div className="admin-name">{user?.fullname}</div>

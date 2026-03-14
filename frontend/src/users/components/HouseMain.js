@@ -1,18 +1,14 @@
 import React from 'react';
 import "../css/MainContent.css";
-import PostFeed from './MainContents/PostFeed';
+import PostFeed from './MainContents/newPost/PostFeed';
 import Stories from './MainContents/Stories';
 import { useRef, useEffect, useState } from "react";
-import Slide from './MainContents/slide';
-import Products from './MainContents/products';
-import SlideSale from './MainContents/slideSale';
-import FeaturedProducts from './MainContents/featuredProducts';
-import NewProducts from './MainContents/newProducts';
+import Products from './MainContents/products/products';
+import Advertisement from './MainContents/Advertisement/Advertisement';
+import FeaturedProducts from './MainContents/products/featuredProducts';
+import NewProducts from './MainContents/products/newProducts';
 
 function MainContent() {
-
-
-
 
   const scrollRef = useRef();
   const scrollRight = () => {
@@ -48,10 +44,7 @@ function MainContent() {
       </div> */}
 
       {/* <PostFeed /> */}
-      <div className="slide-content">
-        <Slide />
-        <SlideSale/>
-      </div>
+      <Advertisement/>
       <FeaturedProducts/> 
 
 

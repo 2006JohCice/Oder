@@ -1,4 +1,4 @@
-import "../../css/MainContent/slide.css";
+import "../../../css/MainContent/slide.css";
 import React from 'react'; // Nên import React để rõ ràng
 
 function Slide() {

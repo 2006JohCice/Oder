@@ -1,24 +1,30 @@
 const mongoose = require('mongoose');
+const generate = require('../helpers/generate')
+const userSchema = new mongoose.Schema(
+    {
 
-const AddressSchema = new mongoose.Schema({
-  street: String,
-  city: String,
-  district: String,
-  ward: String,
-  phone: String,
-});
+    fullname: String,
+    email:String,
+    password:String,
+    tokenUser:{
+        type:String,
+        default:generate.generateRandomString(20),
+    },
+    phone:String,
+    avatar:String,
+    status:{
+        type:String,
+        default:"active",
+    },
+    deleted:{
+        type:Boolean,
+        default:false,
+    },
+    deleteAt: Date,
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, trim: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-  password: { type: String, required: true }, 
-  status: { type: String, default: 'active' },
-  role: { type: String, default: 'user' },
-  deleted: { type: Boolean, default: false },
-  deletedAt: Date,
-  address: AddressSchema,
-  // addresses: [AddressSchema],
-}, { timestamps: true });
+    },{
+        timestamps: true
+    });
 
 const userAccount = mongoose.model('userAccount', userSchema , "userAccounts")
 

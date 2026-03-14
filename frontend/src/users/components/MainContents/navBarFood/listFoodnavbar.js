@@ -61,6 +61,10 @@ function ListFood({ data, patch, totalQuantity }) {
           ({totalQuantity})
         </span>
       </Link>
+
+       <Link to="/cart/doneOrder" className="position-relative">
+        Các Đơn Đã Đặt
+      </Link>
      
 
     </nav>

@@ -5,6 +5,7 @@ import DefaultLayout from "./users/layouts/default";
 import AdminLayout from "./admin/layouts/AdminLayout";
 import NotFound from './Error/NotFound';
 import LayoutDefault from './admin/components/auth/layoutAuth';
+import LayoutLoginUser from './users/components/login/layoutLogin';
 import ScrollToTop from './ScrollToTop';
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
 
         <Route path="/*" element={<DefaultLayout />} />
         <Route path='*' element={<NotFound />} />
+        <Route path='/user/auth/*' element={<LayoutLoginUser />} />
       </Routes>
     </BrowserRouter>
   );

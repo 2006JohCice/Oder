@@ -1,5 +1,5 @@
 
-import "../../css/MainContent/sileSale.css";
+import "../../../css/MainContent/sileSale.css";
 function SlideSale() {
     return (
         <div className="slide-sale">
@@ -15,12 +15,6 @@ function SlideSale() {
                     style={{ marginTop: '20px' }}
                 />
             </div>
-
-            {/* <div className="slide-info">
-                <h2>Khuyến mãi lớn</h2>
-                <p>Giảm đến 50% cho nhiều sản phẩm</p>
-                <button>Mua ngay</button>
-            </div> */}
         </div>
 
     );

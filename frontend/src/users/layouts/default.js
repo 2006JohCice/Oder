@@ -1,15 +1,17 @@
 import Header from '../components/Header.js';
-import MainContent from '../components/MainContent.js';
+import MainContent from '../components/HouseMain.js';
 import { Routes, Route } from 'react-router-dom';
 import Footed from '../components/foot/footed.js';
 import "../js/index.js";
-import Cart from '../pages/cart.js';
-import ProductsList from '../components/products/productList.js';
-import ProductCategoryPage from '../pages/ProductForCategory.js';
-import ProductDetail from '../components/detailProducts/detailProducts.js';
+import Cart from '../components/pages/cart.js';
+import ProductsList from '../components/MainContents/products/productList.js';
+import ProductCategoryPage from '../components/pages/ProductForCategory.js';
+import ProductDetail from '../components/MainContents/products/detailProducts/detailProducts.js';
 import SearchProduct from '../components/listSearchProducts/searchProducts.js';
+import OrderSuccess from '../components/pages/success.js';
 import { useEffect, useState } from "react";
-import CheckoutCart from '../pages/checkoutCart.js';
+import CheckoutCart from '../components/pages/checkoutCart.js';
+import DoneOrder from '../components/pages/doneOrder.js';
 function DefaultLayout() {
   const [totalQuantity,setTotalQuantity] = useState([]);
   useEffect(() => {
@@ -41,11 +43,14 @@ function DefaultLayout() {
             <Route path='/search' element={<SearchProduct />} />
             <Route path="/cart" element={<Cart />} />
             <Route path='/cart/checkout' element={<CheckoutCart/>}/>
+            <Route path ='/cart/checkout/success/:orderId' element={<OrderSuccess/>}/>
+            <Route path='/cart/doneOrder' element={<DoneOrder/>}/>
           </Routes>
         </div>
         {/* <div className='app-footer'>
           <Footed />
         </div> */}
+ 
 
       </main>
     </>

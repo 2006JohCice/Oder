@@ -1,9 +1,9 @@
-import "../../css/detailProducts/detailProduct.css";
+import "../../../../css/detailProducts/detailProduct.css";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import FeaturedProducts from "../MainContents/featuredProducts";
-import Notification from "../../alerts/Notification";
-
+import FeaturedProducts from "../../../MainContents/products/featuredProducts";
+import Notification from "../../../../alerts/Notification";
+import { useCart } from "../../../mixi/cart/CartContext";
 function ProductDetail() {
     const { slugProduct } = useParams();
     const [detailProduct, setDetailProduct] = useState(null);
@@ -15,6 +15,8 @@ function ProductDetail() {
         setMinStock(value)
 
     }
+    const { fetchCart } = useCart();
+
     const handlAddProductsCart = async () => {
         try {
             const res = await fetch("/api/cart/add", {
@@ -32,6 +34,7 @@ function ProductDetail() {
 
             if (res.ok) {
                 setNotifi(data.message);
+                fetchCart();
             }
             // const data = await res.json();
             // console.log("ADD CART OK:", data);

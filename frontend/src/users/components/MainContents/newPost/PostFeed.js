@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-import Loading from '../../helps/Loading';
+import Loading from '../../../helps/Loading';
 
 const ALL_POSTS = [
     {
@@ -138,111 +138,6 @@ const ALL_POSTS = [
 ];
 
 function PostFeed(){
-
-    // const [videos, setVideos] = useState([]);
-    // const [page, setPage] = useState(0);
-    // const [isLoading, setIsLoading] = useState(false);
-    // const [hasMore, setHasMore] = useState(true);
-  
-    // const fetchVideos = useCallback(async () => {
-      
-    //     if (isLoading || !hasMore) return;
-    //         setIsLoading(true);
-    //         // Giả lập gọi API với timeout
-    //         setTimeout(() => {
-    //             const newVideos = ALL_POSTS.slice(page * 2, (page + 1) * 2); // Lấy 3 video mỗi trang
-    //             setVideos((prev) => [...prev, ...newVideos]);
-    //             setPage((prev) => prev + 1);
-    //             setIsLoading(false);
-    //             if (newVideos.length === 0) setHasMore(false); // Không còn video để tải
-    //         }, 1000);
-
-
-    // }, [page, isLoading, hasMore]);
-  
-    // useEffect(() => {
-    //     fetchVideos();
-    // }, []); // Chỉ gọi lần đầu
-  
-    // const observer = useRef();
-    // const lastVideoElementRef = useCallback((node) => {
-    //     if (isLoading) return;
-    //     if (observer.current) observer.current.disconnect();
-    //     observer.current = new IntersectionObserver((entries) => {
-    //         if (entries[0].isIntersecting && hasMore) {
-    //             fetchVideos();
-    //         }
-    //     });
-    //     if (node) observer.current.observe(node);
-    // }, [isLoading, hasMore, fetchVideos]);
-
-    // return(
-    // <>
-    // {videos.map((post, index) => {
-    //     if (videos.length === index + 1) {
-    //         return (
-    //             <div ref={lastVideoElementRef} key={post.id} className="post-card">
-    //                 <div className="post-header">
-    //                     <div className="poster-avatar">
-    //                         <img src={post.authorAvatar} alt="Avatar" className="poster-avatar" />
-    //                     </div>
-    //                     <div className="poster-info">
-    //                         <p className="poster-name">{post.authorName}</p>
-    //                     </div>
-    //                     <div className="post-actions">
-    //                         <button className="follow-btn">Follow</button>
-    //                         <button className="chat-btn">Chat</button>
-    //                     </div>
-    //                 </div>
-    //                 <div className="post-body">
-    //                     {post.content.split('\n').map((line, idx) => (
-    //                         <p key={idx}>{line}</p>
-    //                     ))}
-    //                 </div>
-    //                 <div id={`carouselExampleIndicators${post.id}`} className="carousel slide photo-grid" data-bs-ride="carousel">
-    //                     {post.images.map((img, imgIdx) => (
-    //                         <img key={imgIdx} src={img} alt={`Post image ${imgIdx + 1}`} />
-    //                     ))}
-    //                 </div>
-    //             </div>
-    //         );
-    //     } else {
-    //         return (
-    //             <div key={post.id} className="post-card">
-    //                 <div className="post-header">
-    //                     <div className="poster-avatar">
-    //                         <img src={post.authorAvatar} alt="Avatar" className="poster-avatar" />
-    //                     </div>
-    //                     <div className="poster-info">
-    //                         <p className="poster-name">{post.authorName}</p>
-    //                     </div>
-    //                     <div className="post-actions">
-    //                         <button className="follow-btn">Follow</button>
-    //                         <button className="chat-btn">Chat</button>
-    //                     </div>
-    //                 </div>
-    //                 <div className="post-body">
-    //                     {post.content.split('\n').map((line, idx) => (
-    //                         <p key={idx}>{line}</p>
-    //                     ))}
-    //                 </div>
-    //                 <div id={`carouselExampleIndicators${post.id}`} className="carousel slide photo-grid" data-bs-ride="carousel">
-    //                     {post.images.map((img, imgIdx) => (
-    //                         <img key={imgIdx}
-    //                             src={img}
-    //                             alt={`Post image ${imgIdx + 1}`}
-    //                         />
-    //                     ))}
-    //                 </div>
-    //             </div>
-    //         );
-    //     }
-    // })}
-    // {isLoading && <p><Loading/></p>}
-    // {!hasMore && <p>Hết Kết Qủa Cho Khu Vực Của Bạn</p>}
-
-    
-    // </>)
 
     const scrollRef = useRef();
     const scrollRight = () => {
