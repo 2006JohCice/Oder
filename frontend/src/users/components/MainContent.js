@@ -29,7 +29,7 @@ function MainContent() {
 
   return (
     <div>
-      <div className="stories-wrapper">
+      {/* <div className="stories-wrapper">
         <button className="arrow-btn left" onClick={scrollLeft}>
           ❮
         </button>
@@ -45,14 +45,14 @@ function MainContent() {
         <button className="arrow-btn right" onClick={scrollRight}>
           ❯
         </button>
-      </div>
+      </div> */}
 
-      <PostFeed />
-      <FeaturedProducts/> 
+      {/* <PostFeed /> */}
       <div className="slide-content">
         <Slide />
         <SlideSale/>
       </div>
+      <FeaturedProducts/> 
 
 
       <Products />

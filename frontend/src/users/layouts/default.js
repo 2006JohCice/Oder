@@ -43,9 +43,9 @@ function DefaultLayout() {
             <Route path='/cart/checkout' element={<CheckoutCart/>}/>
           </Routes>
         </div>
-        <div className='app-footer'>
+        {/* <div className='app-footer'>
           <Footed />
-        </div>
+        </div> */}
 
       </main>
     </>

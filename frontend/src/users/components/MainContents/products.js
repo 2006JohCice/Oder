@@ -151,8 +151,8 @@ function Products() {
       }
 
 
-      {/* CART */}
-      {!isMinimized && (
+      {/* Mini cart */}
+      {/* {!isMinimized && (
         <aside className="cart" id="draggable-div">
           <div className="cart-header">
             <strong>🛒 Giỏ hàng</strong>
@@ -188,7 +188,7 @@ function Products() {
         <aside className="iconCart" onClick={() => setIsMinimized(false)}>
           🛒
         </aside>
-      )}
+      )} */}
     </>
   );
 }
