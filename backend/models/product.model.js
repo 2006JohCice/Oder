@@ -6,6 +6,7 @@ const { mongoose } = require('../config/database');
 const slug = require('mongoose-slug-updater');
 mongoose.plugin(slug)
 const productSchema = new mongoose.Schema({
+  
   name: String,
   price: Number,
   img: String,

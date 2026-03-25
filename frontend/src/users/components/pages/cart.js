@@ -1,34 +1,42 @@
 import "../../css/card/cartPay.css";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../mixi/cart/CartContext";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const { fetchCart } = useCart();
+  const navigate = useNavigate();
 
-  const apiCartProducts = () => {
-    fetch("/api/cart")
-      .then(res => res.json())
-      .then(res => setCartItems(res))
-
+  const apiCartProducts = async () => {
+    const res = await fetch("/api/cart");
+    if (res.status === 401) {
+      navigate('/user/auth/login');
+      return;
+    }
+    const data = await res.json();
+    setCartItems(data);
   }
+
   useEffect(() => {
-    apiCartProducts()
-  }, [])
+    apiCartProducts();
+  }, []);
 
 
   // Xóa sản phẩm
   const handleRemove = async (id) => {
-    let url = `/api/cart/delete/${id}`
+    let url = `/api/cart/delete/${id}`;
     const res = await fetch(url, {
       method: "DELETE",
-    })
+    });
+    if (res.status === 401) {
+      navigate('/user/auth/login');
+      return;
+    }
     if (res.ok) {
       alert("Xóa Thành Công");
       apiCartProducts();
       fetchCart();
-
     }
   };
 

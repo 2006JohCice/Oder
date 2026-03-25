@@ -5,6 +5,7 @@ const category = require("./category.route")
 const cartRouter =require("./cart.route")
 const checkOutRouter = require("./checkout.route")
 const userRoure =require("./user.route")
+const foodSuggestionRouter = require("./foodsugGestion")
 module.exports = (app) => {
 
 
@@ -12,9 +13,10 @@ module.exports = (app) => {
     app.use("/api",productRouer)
     app.use("/api",search)
     app.use("/api",category)
-    app.use("/api",cartRouter)
-    app.use("/api",checkOutRouter)
+    app.use("/api", cartRouter) 
+    app.use("/api", checkOutRouter)
     app.use("/api",userRoure)
+    app.use("/api",foodSuggestionRouter)
 
 }
 

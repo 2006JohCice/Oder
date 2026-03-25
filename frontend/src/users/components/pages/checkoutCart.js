@@ -22,16 +22,19 @@ export default function CheckoutCart() {
 
 
     }, [])
-    const apiCartProducts = () => {
-
-        fetch("/api/cart")
-            .then(res => res.json())
-            .then(res => setCartItems(res))
-
+    const apiCartProducts = async () => {
+        const res = await fetch("/api/cart");
+        if (res.status === 401) {
+            navigate('/user/auth/login');
+            return;
+        }
+        const data = await res.json();
+        setCartItems(data);
     }
+
     useEffect(() => {
-        apiCartProducts()
-    }, [])
+        apiCartProducts();
+    }, []);
 
     // console.log("cartItems", cartItems)
 
@@ -51,7 +54,13 @@ export default function CheckoutCart() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
-        })
+        });
+
+        if (res.status === 401) {
+            navigate('/user/auth/login');
+            return;
+        }
+
         if(res.ok){
             const data = await res.json()
          

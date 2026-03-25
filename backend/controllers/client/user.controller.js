@@ -126,6 +126,8 @@ module.exports.login = async (req, res) => {
   }
   res.cookie("tokenUser", user.tokenUser, {
     httpOnly: true,
+    secure: false,        // dev localhost
+    sameSite: "lax",
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
   console.log(user);
