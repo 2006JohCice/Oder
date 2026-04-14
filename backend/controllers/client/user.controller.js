@@ -43,7 +43,7 @@ module.exports.passwordRegisterOtp =async (req, res) =>{
     email: req.body.email,
     otp: otpRamdon,
     type: "register",
-    expireAt: Date.now(),
+    expireAt:Date.now() + 60 * 1000,
   };
   console.log(objectForgotPassword)
   // console.log("Forgot Password Object:", otpRamdon);
@@ -52,6 +52,11 @@ module.exports.passwordRegisterOtp =async (req, res) =>{
   const subject = "Yêu Tạo Tài Khoản Mới Với Order Local ";
   const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.`;
   sendMailHelper.sendMail( req.body.email, subject, html);
+
+
+   return res.status(200).json({
+    message: "Đã gửi OTP về email"
+  });
 }
 // [POST] api/user/register
 module.exports.register = async (req, res) => {
@@ -162,7 +167,7 @@ module.exports.forgotPassword = async (req, res) => {
   const objectForgotPassword = {
     email: email,
     otp: otpRamdon,
-    expireAt: Date.now(),
+    expireAt: Date.now() + 60 * 1000,
   };
 
   // console.log(objectForgotPassword)
