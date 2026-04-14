@@ -49,7 +49,7 @@ module.exports.passwordRegisterOtp =async (req, res) =>{
   // console.log("Forgot Password Object:", otpRamdon);
   const forgotPassword = new ForgotPassword(objectForgotPassword);
   await forgotPassword.save();
-  const subject = "Yêu Tạo Tài Khoản Mới";
+  const subject = "Yêu Tạo Tài Khoản Mới Voi Order";
   const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.`;
   sendMailHelper.sendMail( req.body.email, subject, html);
 }
