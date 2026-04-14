@@ -109,12 +109,12 @@ function Advertisement() {
       <div className="slide-sale">
         <div className="slide-image">
           <img
-            src="https://cdn.tgdd.vn/2024/05/banner/800-200-800x200-12.png"
+            src="https://inan2h.vn/wp-content/uploads/2022/12/in-banner-quang-cao-do-an-5.jpg"
             alt="Slide Sale"
           />
 
           <img
-            src="https://cdn.tgdd.vn/2024/05/banner/800-200-800x200-10.png"
+            src="https://inan2h.vn/wp-content/uploads/2022/12/in-banner-quang-cao-do-an-5-1.jpg"
             alt="Slide Sale"
             style={{ marginTop: "20px" }}
           />
