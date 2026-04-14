@@ -23,7 +23,7 @@ app.use(cors({
     "http://localhost:3000",
     "https://oder-xi.vercel.app"
   ],
-  credentials: true
+  // credentials: true
 }));
 
 
