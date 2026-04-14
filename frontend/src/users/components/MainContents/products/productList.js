@@ -12,7 +12,7 @@ function ProductsList() {
     const [data, setData] = useState([]);
     const [LoadingCart, setLoadingCart] = useState(true);
     useEffect(() => {
-        fetch("/api/products")
+        fetch("https://myoder.onrender.com/api/products")
             .then(res => res.json())
             .then(data => {
                 setData(data)
