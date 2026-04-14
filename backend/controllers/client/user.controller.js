@@ -176,6 +176,9 @@ module.exports.forgotPassword = async (req, res) => {
   const subject = "Yêu Cầu Đặt Lại Mật Khẩu";
   const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.`;
   sendMailHelper.sendMail(email, subject, html);
+    return res.status(200).json({
+    message: "Đã gửi OTP về email"
+  });
 };
 
 //[POST] /user/password/otp
