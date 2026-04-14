@@ -58,12 +58,12 @@ const nodemailer = require("nodemailer");
 
 const { Resend } = require("resend");
 
-const resend = new Resend("re_Y8qZgjBD_2t85vbsKbijf2xBGJJvoiUsr");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 module.exports.sendMail = async (email, subject, html) => {
   try {
     await resend.emails.send({
-      from: "nhatluong.0987@gmail.com",
+      from: "onboarding@resend.dev",
       to: email,
       subject: subject,
       html: html,
