@@ -12,9 +12,9 @@ module.exports.getUser = async (req, res) => {
 };
 //Create OTP For Register
 //[POST] api/user/register/passwordOtp
-module.exports.passwordRegisterOtp =async (req, res) =>{
+module.exports.passwordRegisterOtp = async (req, res) => {
   console.log("Password Register OTP:", req.body);
-   if (
+  if (
     !req.body ||
     !req.body.fullName ||
     !req.body.email ||
@@ -26,7 +26,7 @@ module.exports.passwordRegisterOtp =async (req, res) =>{
   if (req.body.password !== req.body.confirmPassword) {
     return res.status(400).json({ messagePassword: "Mật Khẩu Không Khớp" });
   }
- 
+
 
 
   const existEmail = await User.find({
@@ -38,12 +38,12 @@ module.exports.passwordRegisterOtp =async (req, res) =>{
     return res.status(400).json({ message: "Email đã tồn tại" });
   }
   const otpRamdon = generateHelper.generateRandomNumber(6);
-  
+
   const objectForgotPassword = {
     email: req.body.email,
     otp: otpRamdon,
     type: "register",
-    expireAt:Date.now() + 60 * 1000,
+    expireAt: Date.now() + 60 * 1000,
   };
   console.log(objectForgotPassword)
   // console.log("Forgot Password Object:", otpRamdon);
@@ -51,12 +51,20 @@ module.exports.passwordRegisterOtp =async (req, res) =>{
   await forgotPassword.save();
   const subject = "Yêu Tạo Tài Khoản Mới Với Order Local ";
   const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.`;
-  sendMailHelper.sendMail( req.body.email, subject, html);
+  // sendMailHelper.sendMail( req.body.email, subject, html);
+  try {
+    await sendMailHelper.sendMail(req.body.email, subject, html);
 
+    return res.status(200).json({
+      message: "Đã gửi OTP về email"
+    });
 
-   return res.status(200).json({
-    message: "Đã gửi OTP về email"
-  });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Gửi email thất bại"
+    });
+  }
+
 }
 // [POST] api/user/register
 module.exports.register = async (req, res) => {
@@ -83,9 +91,9 @@ module.exports.register = async (req, res) => {
   if (existEmail.length > 0) {
     return res.status(400).json({ message: "Email đã tồn tại" });
   }
- 
+
   const userRegister = await ForgotPassword.findOne({
-    email:  req.body.email,
+    email: req.body.email,
     otp: req.body.otp,
     type: "register",
   });
@@ -176,7 +184,7 @@ module.exports.forgotPassword = async (req, res) => {
   const subject = "Yêu Cầu Đặt Lại Mật Khẩu";
   const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.`;
   sendMailHelper.sendMail(email, subject, html);
-    return res.status(200).json({
+  return res.status(200).json({
     message: "Đã gửi OTP về email"
   });
 };
