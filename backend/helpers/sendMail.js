@@ -1,30 +1,30 @@
 const nodemailer = require("nodemailer");
 
-// module.exports.sendMail = (email,subject,html) => {
-//   const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//       user: process.env.EMAIL_USER ,
-//       pass: process.env.EMAIL_PASS,
-//     },
-//   });
+module.exports.sendMail = (email,subject,html) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER ,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
-//   const mailOptions = {
-//     from: process.env.EMAIL_USER,
-//     to: email,
-//     subject: subject,
-//     html: html,
-//   };
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: subject,
+    html: html,
+  };
 
-//   transporter.sendMail(mailOptions, function (error, info) {
-//     if (error) {
-//       console.log(error);
-//     } else {
-//       console.log("Email sent: " + info.response);
-//       // do something useful
-//     }
-//   });
-// };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+      // do something useful
+    }
+  });
+};
 
 
 
@@ -56,22 +56,22 @@ const nodemailer = require("nodemailer");
 //   }
 // };
 
-const { Resend } = require("resend");
+// const { Resend } = require("resend");
 
-const resend = new Resend("re_Y8qZgjBD_2t85vbsKbijf2xBGJJvoiUsr");
+// const resend = new Resend("re_Y8qZgjBD_2t85vbsKbijf2xBGJJvoiUsr");
 
-module.exports.sendMail = async (email, subject, html) => {
-  try {
-    await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: email,
-      subject: subject,
-      html: html,
-    });
+// module.exports.sendMail = async (email, subject, html) => {
+//   try {
+//     await resend.emails.send({
+//       from: "onboarding@resend.dev",
+//       to: email,
+//       subject: subject,
+//       html: html,
+//     });
 
-    console.log(" gửi mail OK");
-  } catch (error) {
-    console.log(" lỗi gửi mail:", error);
-    throw error;
-  }
-};
+//     console.log(" gửi mail OK");
+//   } catch (error) {
+//     console.log(" lỗi gửi mail:", error);
+//     throw error;
+//   }
+// };
