@@ -1,97 +1,105 @@
-const Cart = require("../../models/cart.model")
-const Product = require("../../models/product.model")
+const Cart = require("../../models/cart.model");
+const Product = require("../../models/product.model");
 
+const ensureCart = async (req, res) => {
+    let cartId = req.cookies.cartId;
 
-//[GET] /cart
-module.exports.index = async (req, res) => {
-
-    const cartId = req.cookies.cartId;
-    const cart = await Cart.findOne({
-        _id: cartId
-    }).lean();
-    if (cart.products.length > 0) {
-        for (const item of cart.products) {
-            const productId = item.product_id;
-
-            const productInfo = await Product.findOne({
-                _id: productId
-            }).lean();
-            item.productInfo = productInfo;
-            // item.totalPrice = item.quantity * productInfo.price
-
+    if (cartId) {
+        const existingCart = await Cart.findOne({ _id: cartId });
+        if (existingCart) {
+            return existingCart;
         }
-
-
     }
 
-    // cart.totalCartPrice = cart.products.reduce( (sum, item) =>  sum + (item.productInfo ? item.totalPrice : 0),    0  );
-    cart.totalCartPrice = cart.products.reduce( (sum, item) =>  sum + (item.productInfo.price * item.quantity),    0  );
+    const cart = new Cart();
+    await cart.save();
 
-    return res.status(200).json(cart)
-}
+    const expiresTime = 1000 * 60 * 60 * 24 * 14;
+    res.cookie("cartId", cart._id.toString(), {
+        expires: new Date(Date.now() + expiresTime)
+    });
 
-//[POST] /cart/add
+    return cart;
+};
+
+// [GET] /cart
+module.exports.index = async (req, res) => {
+    const cart = await ensureCart(req, res);
+    const cartData = cart.toObject();
+
+    if (cartData.products.length > 0) {
+        for (const item of cartData.products) {
+            const productInfo = await Product.findOne({
+                _id: item.product_id
+            }).lean();
+
+            item.productInfo = productInfo;
+        }
+    }
+
+    cartData.totalCartPrice = cartData.products.reduce((sum, item) => {
+        const price = item.productInfo?.price || 0;
+        return sum + price * item.quantity;
+    }, 0);
+
+    return res.status(200).json(cartData);
+};
+
+// [POST] /cart/add
 module.exports.addPost = async (req, res) => {
-    const cartId = req.cookies.cartId;
+    const cart = await ensureCart(req, res);
+    const cartId = cart._id;
     const { productId, quantity } = req.body;
 
-    const cart = await Cart.findOne({
-        _id: cartId
-    })
+    if (!productId || !quantity) {
+        return res.status(400).json({ message: "Thieu thong tin san pham" });
+    }
 
-    const exitProductInCart = cart.products.find(item => item.product_id == productId)
-    if (exitProductInCart) {
-        // console.log("vào đây")
-        const newQuantity = parseInt(quantity) + exitProductInCart.quantity;
-        // console.log(newQuantity)
+    const existingProductInCart = cart.products.find((item) => item.product_id == productId);
+    if (existingProductInCart) {
+        const newQuantity = parseInt(quantity, 10) + existingProductInCart.quantity;
+
         await Cart.updateOne(
             {
                 _id: cartId,
-                'products.product_id': productId
+                "products.product_id": productId
             },
             {
-                'products.$.quantity': newQuantity
+                "products.$.quantity": newQuantity
             }
-        )
+        );
     } else {
-        const objectCart = {
-            product_id: productId,
-            quantity: parseInt(quantity)
-        };
         await Cart.updateOne(
             {
                 _id: cartId
-            }, {
-            $push: {
-                products: objectCart
+            },
+            {
+                $push: {
+                    products: {
+                        product_id: productId,
+                        quantity: parseInt(quantity, 10)
+                    }
+                }
             }
-        }
-        )
+        );
     }
 
-
-    res.status(200).json({ message: 'Thêm Sản Phẩm Thành Công' });
-    console.log(productId, quantity)
-    console.log("oke")
-}
-
-//[DELETE] /cart/delete/productsId
-module.exports.delete = async (req, res) => {
-  try {
-    const productId = req.params.productId;
-    const cartId = req.cookies.cartId;
- console.log(productId)
-    await Cart.updateOne(
-      { _id: cartId },
-      { "$pull": { products: {"product_id": productId } } }
-    );
-
-    return res.status(200).json({ success: true });
-  } catch (err) {
-    return res.status(500).json({ success: false, error: err.message });
-  }
-
- 
+    return res.status(200).json({ message: "Them san pham thanh cong" });
 };
 
+// [DELETE] /cart/delete/:productId
+module.exports.delete = async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        const cart = await ensureCart(req, res);
 
+        await Cart.updateOne(
+            { _id: cart._id },
+            { $pull: { products: { product_id: productId } } }
+        );
+
+        return res.status(200).json({ success: true });
+    } catch (err) {
+        return res.status(500).json({ success: false, error: err.message });
+    }
+};

@@ -1,126 +1,111 @@
-import "../../css/card/cartPay.css";
-import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../mixi/cart/CartContext";
+import { calculateLineTotal, formatCurrency } from "../../utils/shop";
+import FeaturedProducts from "../MainContents/products/featuredProducts";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState([]);
-  const { fetchCart } = useCart();
+  const { cartItems, totalQuantity, fetchCart, loading } = useCart();
   const navigate = useNavigate();
 
-  const apiCartProducts = async () => {
-    const res = await fetch("/api/cart");
-    if (res.status === 401) {
-      navigate('/user/auth/login');
-      return;
-    }
-    const data = await res.json();
-    setCartItems(data);
-  }
-
-  useEffect(() => {
-    apiCartProducts();
-  }, []);
-
-
-  // Xóa sản phẩm
   const handleRemove = async (id) => {
-    let url = `/api/cart/delete/${id}`;
-    const res = await fetch(url, {
+    const res = await fetch(`/api/cart/delete/${id}`, {
       method: "DELETE",
     });
+
     if (res.status === 401) {
-      navigate('/user/auth/login');
+      notifyApp("Vui lòng đăng nhập để thao tác với giỏ hàng", "info");
+      navigate("/user/auth/login");
       return;
     }
+
     if (res.ok) {
-      alert("Xóa Thành Công");
-      apiCartProducts();
-      fetchCart();
+      await fetchCart(); 
+      notifyApp("Đã xóa sản phẩm khỏi giỏ hàng", "success");
+      return;
     }
+
+    notifyApp("Không thể xóa sản phẩm khỏi giỏ hàng", "error");
   };
 
-  // Tổng số lượng
-  const totalQuantity =
-    cartItems?.products?.reduce((sum, item) => sum + item.quantity, 0)
-  // Tổng tiền
-  const totalPrice = 0
-  // cartItems.reduce(
-  //     (sum, item) => sum + item.price * item.quantity,
-  //     0
-  //   );
+  if (loading) {
+    return <p>Đang tải giỏ hàng...</p>;
+  }
 
+  if (cartItems.length === 0) {
+    return (
+      <div className="page-stack">
+        <section className="success-shell">
+          <article className="success-card">
+            <div className="success-icon">
+              <i className="bi bi-cart-x" />
+            </div>
+            <p className="eyebrow">Giỏ hàng trống</p>
+            <h1>Bạn chưa thêm món ăn nào.</h1>
 
+            <div className="empty-state-actions">
+              <Link to="/products" className="primary-button no-underline ">
+                Xem sản phẩm
+              </Link>
+              <Link to="/" className="secondary-button no-underline ">
+                Về trang chủ
+              </Link>
+            </div>
+          </article>
+        </section>
+
+        <FeaturedProducts />
+      </div>
+    );
+  }
 
   return (
-    <div className="cart-container">
-      <h2>🛒 Giỏ hàng của bạn</h2>
+    <section className="section-shell">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">Giỏ hàng của bạn</p>
+          <h2>Rà soát lại món trước khi đặt hàng</h2>
+        </div>
+      </div>
 
-      <table className="cart-table">
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Ảnh</th>
-            <th>Tên</th>
-            <th>Giá</th>
-            <th>Số lượng</th>
-            <th>Tổng tiền</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {cartItems?.products?.map((item, index) => (
-            <tr key={item.id}>
-              <td>{index + 1}</td>
-              <td>
-                <img src={item.productInfo.img} alt={item.productInfo.name} />
-              </td>
-              <td className="product-name">
-                <Link to={`/products/detail/${item.productInfo.slug}`}>
-                  {item.productInfo.name}
-                </Link>
-              </td>
-              <td>{item.productInfo.price}$</td>
-              <td>
-                <input
-                  type="number"
-                  value={item.quantity}
-                  min="1"
-                  readOnly
-                />
-              </td>
-              <td>{item.productInfo.price * item.quantity}$</td>
-              <td>
+      <div className="order-layout">
+        <div className="table-card">
+          <div className="order-list">
+            {cartItems.map((item, index) => (
+              <article className="order-item" key={`${item.product_id}-${index}`}>
+                <img src={item.productInfo?.img} alt={item.productInfo?.name} />
+                <div className="order-item-copy">
+                  <Link to={`/products/detail/${item.productInfo?.slug}`}>
+                    {item.productInfo?.name}
+                  </Link>
+                  <span>Số lượng: {item.quantity}</span>
+                </div>
+                <strong>{formatCurrency(calculateLineTotal(item))}</strong>
                 <button
-                  className="btn-delete"
+                  type="button"
+                  className="danger-link"
                   onClick={() => handleRemove(item.product_id)}
                 >
                   Xóa
                 </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </article>
+            ))}
+          </div>
+        </div>
 
-      {/* BẢNG TỔNG */}
-      <div className="cart-summary">
-        <div className="summary-row">
-          <span>Tổng số lượng:</span>
-          <strong>{totalQuantity}</strong>
-        </div>
-        <div className="summary-row">
-          <span>Tổng tiền:</span>
-          <strong>{cartItems?.totalCartPrice}
-            $</strong>
-        </div>
-        <Link to={`/cart/checkout`}>
-          <button className="btn-checkout">
-            Thanh toán
-          </button>
-        </Link>
+        <aside className="summary-card">
+          <h3>Tổng kết đơn hàng</h3>
+
+          <div className="summary-row">
+            <span>Số món</span>
+            <strong>{totalQuantity}</strong>
+          </div>
+
+          <Link to="/cart/checkout" className="primary-button full-width no-underline ">
+            Đi đến thanh toán
+          </Link>
+        </aside>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,147 +1,104 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate,Link } from "react-router-dom";
 
 function Search() {
   const navigate = useNavigate();
-
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
   const [price, setPrice] = useState("");
   const [meal, setMeal] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    let url = "/search";
-    const params = [];
+    const searchParams = new URLSearchParams();
+    if (keyword) searchParams.set("keyword", keyword);
+    if (location) searchParams.set("location", location);
+    if (price) searchParams.set("price", price);
+    if (meal) searchParams.set("meal", meal);
 
-    if (keyword) params.push(`keyword=${encodeURIComponent(keyword)}`);
-    if (location) params.push(`location=${encodeURIComponent(location)}`);
-    if (price) params.push(`price=${encodeURIComponent(price)}`);
-    if (meal) params.push(`meal=${encodeURIComponent(meal)}`);
-
-    if (params.length > 0) {
-      url += `?${params.join("&")}`;
-    }
-
-    navigate(url);
+    navigate(`/search${searchParams.toString() ? `?${searchParams.toString()}` : ""}`);
   };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="search-bar-container" style={{ marginTop: "45px" }}>
-
-        {/* ===== ĐỊA ĐIỂM ===== */}
-        <div className="custom-dropdown">
-          <div className="dropdown-selected active" data-bs-toggle="dropdown">
-            <span className="addrress">{location == "" ? "Lựa Chọn Của Bạn" : location} </span>
-            <i className="bi bi-geo-alt">
-              <span className="showAddress">{location}</span>
-            </i>
-          </div>
-
-          <ul className="dropdown-menu">
-            {["Hà Nội", "Hồ Chí Minh", "Thanh Hóa"].map(item => (
-              <li key={item}>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => setLocation(item)}
-                >
-                  {item}
-                </button>
-              </li>
-            ))}
-          </ul>
+    <section className="search-shell">
+      <form className="search-panel" onSubmit={handleSubmit}>
+        <div className="search-heading">
+          <p className="eyebrow">Tìm Nhanh Món Phù Hợp</p>
+          <h1>Thực Đơn Đẹp, Đặt Bàn Nhanh, Xử Lý Nhanh Cho Bạn.</h1>
         </div>
 
-        {/* ===== INPUT SEARCH ===== */}
-        <div className="search-input-group">
-          <button type="submit">
-            <span className="search-text">Tìm</span>
-            <i className="bi bi-search search-icon"></i>
+        <div className="search-grid">
+          <div className="search-field search-field-wide">
+            <label htmlFor="search-keyword">Món Ăn & Tên ComBo</label>
+            <div className="search-input-wrap">
+              <i className="bi bi-search" />
+              <input
+                id="search-keyword"
+                type="text"
+                placeholder="Vi du: lau thai, nuong han quoc, combo 4 nguoi"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="search-field">
+            <label htmlFor="search-location">Khu Vực</label>
+            <select
+              id="search-location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            >
+              <option value="">Chọn Khu Vực</option>
+              <option value="Ha Noi">Hà Nội</option>
+              <option value="Ho Chi Minh">Hồ Chí Minh</option>
+              <option value="Thanh Hoa">Thanh Hóa</option>
+            </select>
+          </div>
+
+          <div className="search-field">
+            <label htmlFor="search-price">Mức Giá</label>
+            <select id="search-price" value={price} onChange={(e) => setPrice(e.target.value)}>
+              <option value="">Chọn Mức Giá</option>
+              <option value="Duoi 100k">Dưới 100k</option>
+              <option value="100k - 200k">100k - 200k</option>
+              <option value="200k - 300k">200k - 300k</option>
+              <option value="300k - 500k">300k - 500k</option>
+              <option value="Tren 500k">Trên 500k</option>
+            </select>
+          </div>
+
+          <div className="search-field">
+            <label htmlFor="search-meal">Loại Bửa</label>
+            <select id="search-meal" value={meal} onChange={(e) => setMeal(e.target.value)}>
+              <option value="">Chọn bữa ăn</option>
+              <option value="Bua sang">Bữa sáng</option>
+              <option value="Bua trua">Bữa trưa</option>
+              <option value="Bua toi">Bữa tối</option>
+              <option value="Lau">Lẫu</option>
+              <option value="Nuong">Nướng</option>
+              <option value="Combo">Combo</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="search-actions">
+          <button type="submit" className="primary-button">
+            Tìm Món Ăn
           </button>
-
-          <input
-            type="text"
-            name="keyword"
-            placeholder="Tìm kiếm theo tên, món ăn..."
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-          />
+          <LinkButton />
         </div>
+      </form>
+    </section>
+  );
+}
 
-        {/* ===== GIÁ ===== */}
-        <div className="custom-dropdown">
-          <div className="dropdown-selected active" data-bs-toggle="dropdown">
-            <span className="addrress">{price == "" ? "Lựa Chọn Của Bạn" : price}</span>
-            <i className="bi bi-tag">
-              <span className="showAddress">
-                {price || "Chọn giá"}
-              </span>
-            </i>
-          </div>
-
-          <ul className="dropdown-menu">
-            {[
-              "Dưới 100k",
-              "100k - 200k",
-              "200k - 300k",
-              "300k - 500k",
-              "500k - 1 triệu",
-              "Trên 1 triệu"
-            ].map(item => (
-              <li key={item}>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => setPrice(item)}
-                >
-                  {item}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* ===== BỮA ĂN ===== */}
-        <div className="custom-dropdown">
-          <div className="dropdown-selected active" data-bs-toggle="dropdown">
-            <span className="addrress"> {meal == "" ? "Lựa Chọn Của Bạn" : meal} </span>
-            <i className="bi bi-fork-knife">
-              <span className="showAddress">
-                {meal || "Chọn bữa ăn"}
-              </span>
-            </i>
-          </div>
-
-          <ul className="dropdown-menu">
-            {[
-              "Bữa sáng",
-              "Bữa trưa",
-              "Bữa tối",
-              "Bữa khuya",
-              "Nướng",
-              "Lẩu",
-              "Combo",
-              "Món khác"
-            ].map(item => (
-              <li key={item}>
-                <button
-                  type="button"
-                  className="dropdown-item"
-                  onClick={() => setMeal(item)}
-                  value={meal}
-                >
-
-                  {item}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-      </div>
-    </form>
+function LinkButton() {
+  return (
+    <a href="/cart/checkout?mode=table" className="secondary-button no-underline ">
+      Ưu Tiên Đặt Bàn
+    </a>
   );
 }
 

@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import "../../css/AddCategory/AddCategory.css";
-import ListCategory from "./list-category"
-import ShowCategory from "./show-category"
-import { apiFetch } from '../../../utils/apiFetch';
+import ListCategory from "./list-category";
+import ShowCategory from "./show-category";
+import { apiFetch } from "../../../utils/apiFetch";
 import { useNavigate } from "react-router-dom";
 import CardLoading from "../mixi/loadingCart";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
 const ProductsAdmin = () => {
   const navigate = useNavigate();
-  const [showAdd, setShowAdd] = useState(false)
-  const [data, setData] = useState([])
+  const [showAdd, setShowAdd] = useState(false);
+  const [data, setData] = useState([]);
   const [loadingCard, setLoadingCard] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -18,131 +19,104 @@ const ProductsAdmin = () => {
     img: "",
     position: "",
     status: "active",
-
   });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-  // console.log(formData)
-  const submitCategory = async () => {
-
-    let url = "/api/admin/category/create";
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(formData)
-      })
-
-      const data = await res.json();
-
-      if (res.ok) {
-
-        setFormData({
-          name: "",
-          description: "",
-          price: "",
-          discountPercentage: "",
-          stock: "",
-          img: "",
-          position: "",
-          status: "active",
-          category: ""
-        });
-      } else {
-        alert("Đã xảy ra lỗi khi tạo sản phẩm.");
-      }
-
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const dataCategory = () => {
-    let url = "/api/admin/category"
-
-    apiFetch(url)
-      // .then(res => res.json())
-      .then(res => {
-        setData(res)
-        setLoadingCard(false)
-
-  })
-      .catch(err => {
+    apiFetch("/api/admin/category")
+      .then((res) => {
+        setData(res);
+        setLoadingCard(false);
+      })
+      .catch((err) => {
         if (err.status === 401) {
-          navigate('/admin/auth/login');
+          navigate("/admin/auth/login");
         }
-        // if (err.status === 200) {
-        //   navigate('/admin');
-        // }
       });
-  }
+  };
+
+  const submitCategory = async () => {
+    try {
+      const res = await fetch("/api/admin/category/create", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const responseData = await res.json();
+      if (!res.ok) {
+        notifyApp(responseData?.message || "Khong the tao danh muc", "error");
+        return;
+      }
+
+      notifyApp(responseData?.message || "Tao danh muc thanh cong", "success");
+      setFormData({
+        name: "",
+        description: "",
+        father_id: "",
+        img: "",
+        position: "",
+        status: "active",
+      });
+      setShowAdd(false);
+      dataCategory();
+    } catch (error) {
+      notifyApp("Da xay ra loi khi tao danh muc", "error");
+    }
+  };
 
   useEffect(() => {
     dataCategory();
-  }, [])
+  }, []);
 
-
-
-  // console.log("data", data);
   return (
     <>
-      <div div style={{ display: "flex", gap: "10px" }}>
-
+      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
         <button className="btn-accent" type="button" onClick={() => setShowAdd(!showAdd)}>
-          {showAdd ? `Hiện Danh Mục` : "+ Thêm Danh Mục"}
+          {showAdd ? "Hien danh muc" : "+ Them danh muc"}
         </button>
-
       </div>
 
       {showAdd ? (
         <div className="products-container">
           <div className="products-right">
-
             <div className="mb-3">
-              <label className="form-label">Tiêu đề</label>
+              <label className="form-label">Tieu de</label>
               <input
                 type="text"
                 name="name"
                 className="form-control createProducts-input"
-                placeholder="Nhập tiêu đề..."
+                placeholder="Nhap tieu de..."
                 value={formData.name}
                 onChange={handleChange}
               />
             </div>
 
             <div className="mb-3">
-              {/* <label className="form-label">Danh Mục Cha</label>
-            <input
-              type="text"
-              name="father_id"
-              className="form-control createProducts-input"
-              placeholder="Nhập ID danh mục cha..."
-              value={formData.father_id}
-              onChange={handleChange}
-            /> */}
               <select
                 name="father_id"
                 className="admin-select"
-                style={{ width: "500px" }}
+                style={{ width: "100%" }}
                 value={formData.father_id}
                 onChange={handleChange}
               >
-                <option value="">Lựa chọn của bạn</option>
+                <option value="">Lua chon danh muc cha</option>
                 {data.map((item) => (
                   <ListCategory key={item._id} node={item} />
                 ))}
               </select>
-
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Mô tả</label>
+              <label className="form-label">Mo ta</label>
               <textarea
                 name="description"
                 className="form-control createProducts-input"
-                placeholder="Nhập mô tả..."
+                placeholder="Nhap mo ta..."
                 rows="3"
                 value={formData.description}
                 onChange={handleChange}
@@ -150,32 +124,31 @@ const ProductsAdmin = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Ảnh (URL)</label>
+              <label className="form-label">Anh (URL)</label>
               <input
                 type="url"
                 name="img"
                 className="form-control createProducts-input"
-                placeholder="Dán link ảnh vào đây..."
+                placeholder="Dan link anh vao day..."
                 value={formData.img}
                 onChange={handleChange}
               />
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Vị trí</label>
+              <label className="form-label">Vi tri</label>
               <input
                 type="number"
                 name="position"
                 className="form-control createProducts-input"
-                placeholder="Nhập vị trí hiển thị"
+                placeholder="Nhap vi tri hien thi"
                 value={formData.position}
                 onChange={handleChange}
               />
             </div>
 
-            {/* Trạng thái */}
             <div className="mb-3">
-              <label className="form-label">Trạng thái</label>
+              <label className="form-label">Trang thai</label>
               <div>
                 <div className="form-check form-check-inline">
                   <input
@@ -186,7 +159,7 @@ const ProductsAdmin = () => {
                     checked={formData.status === "active"}
                     onChange={handleChange}
                   />
-                  <label className="form-check-label">Hoạt động</label>
+                  <label className="form-check-label">Hoat dong</label>
                 </div>
 
                 <div className="form-check form-check-inline">
@@ -198,19 +171,13 @@ const ProductsAdmin = () => {
                     checked={formData.status === "inactive"}
                     onChange={handleChange}
                   />
-                  <label className="form-check-label">
-                    Dừng hoạt động
-                  </label>
+                  <label className="form-check-label">Tam dung</label>
                 </div>
               </div>
             </div>
 
-            <button
-              type="button"
-              className="btn createProducts-btn"
-              onClick={submitCategory}
-            >
-              Tạo mới
+            <button type="button" className="btn createProducts-btn" onClick={submitCategory}>
+              Tao moi
             </button>
           </div>
         </div>
@@ -219,45 +186,30 @@ const ProductsAdmin = () => {
           <table>
             <thead>
               <tr>
-                <th><input
-                  type="checkbox"
-                  name="checkall"
-                // onChange={handleCheckAll}
-                // checked={selectedIds.length === products.length}
-                /></th>
-
-                <th>ID</th>
-                <th>Ảnh</th>
-                <th>Tên</th>
-
-                {/* <th>Danh Mục Cha</th> */}
-                <th>Trạng Thái</th>
-                <th>Vị Trí</th>
-                <th>Hành Động</th>
+                <th>#</th>
+                <th>Anh</th>
+                <th>Ten</th>
+                <th>Trang thai</th>
+                <th>Vi tri</th>
+                <th>Hanh dong</th>
               </tr>
             </thead>
             {loadingCard ? (
               <tbody>
-
-                < CardLoading />
+                <CardLoading />
               </tbody>
             ) : (
-            <tbody>
-              {data?.map((item) => (
-                <ShowCategory key={item._id} node={item} />
-              ))}
-            </tbody>
-            )
-
-            }
-         
-
+              <tbody>
+                {data?.map((item, index) => (
+                  <ShowCategory key={item._id} node={{ ...item, index }} />
+                ))}
+              </tbody>
+            )}
           </table>
         </div>
       )}
     </>
   );
-
 };
 
 export default ProductsAdmin;

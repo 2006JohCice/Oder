@@ -1,126 +1,52 @@
-import "../../../css/MainContent/slide.css";
-import "../../../css/MainContent/sileSale.css";
-
 function Advertisement() {
+  const promos = [
+    {
+      title: "Dat ban nhom nhanh hon",
+      description: "Chon khu vuc, so khach va gio den ngay trong luong checkout moi.",
+      image:
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      title: "Combo toi uu cho ban an gia dinh",
+      description: "Goi y mon noi bat va combo phu hop theo nhu cau order tai quan.",
+      image:
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80",
+    },
+  ];
+
   return (
-    <div className="slide-content">
-      <div className="slide-infoShop">
-        <div
-          id="carouselExampleDark"
-          className="carousel carousel-dark slide"
-          data-bs-ride="carousel"
-        >
-          <div className="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#carouselExampleDark"
-              data-bs-slide-to="0"
-              className="active"
-              aria-current="true"
-              aria-label="Slide 1"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleDark"
-              data-bs-slide-to="1"
-              aria-label="Slide 2"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleDark"
-              data-bs-slide-to="2"
-              aria-label="Slide 3"
-            ></button>
+    <section className="promo-grid">
+      <article className="promo-hero">
+        <div className="promo-copy">
+          <p className="eyebrow">Khong gian an uong</p>
+          <h2>Lam moi trang dat mon theo phong cach nha hang hien dai.</h2>
+          <p>
+            Giao dien uu tien thao tac nhanh, card mon an ro rang, checkout tach ro dat ban va
+            giao hang.
+          </p>
+          <div className="promo-actions">
+            <a href="/products" className="primary-button">
+              Xem thuc don
+            </a>
+            <a href="/cart/checkout?mode=table" className="secondary-button">
+              Giu ban toi nay
+            </a>
           </div>
-          <div className="carousel-inner">
-            <div className="carousel-item active" data-bs-interval="10000">
-              <img
-                src="https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2022/8/23/1084128/Isushi.jpeg"
-                className="d-block w-100 carousel-img-fit"
-                alt="..."
-              />
-              <div className="carousel-caption d-none d-md-block">
-                <button className="btn btn-primary btn-silde">Tìm Hiểu </button>
-
-                <h5>First slide label</h5>
-                <p>
-                  Some representative placeholder content for the first slide.
-                </p>
-              </div>
-            </div>
-            <div className="carousel-item" data-bs-interval="2000">
-              {/* Thêm class mới vào đây */}
-              <img
-                src="https://noithatphacach.com/wp-content/uploads/2024/04/mau-nha-hang-dep-don-gian-1.jpg"
-                className="d-block w-100 carousel-img-fit"
-                alt="..."
-              />
-              <div className="carousel-caption d-none d-md-block">
-                <button className="btn btn-primary btn-silde">Tìm Hiểu </button>
-                <h5>Second slide label</h5>
-                <p>
-                  Some representative placeholder content for the second slide.
-                </p>
-              </div>
-            </div>
-            <div className="carousel-item">
-              {/* Thêm class mới vào đây */}
-              <img
-                src="https://thietkeaz.com/images/img-1608002314.jpg"
-                className="d-block w-100 carousel-img-fit"
-                alt="..."
-              />
-              <div className="carousel-caption d-none d-md-block">
-                <button className="btn btn-primary btn-silde">Tìm Hiểu </button>
-
-                <h5>Third slide label</h5>
-                <p>
-                  Some representative placeholder content for the third slide.
-                </p>
-              </div>
-            </div>
-          </div>
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleDark"
-            data-bs-slide="prev"
-          >
-            <span
-              className="carousel-control-prev-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleDark"
-            data-bs-slide="next"
-          >
-            <span
-              className="carousel-control-next-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Next</span>
-          </button>
         </div>
-      </div>
-      <div className="slide-sale">
-        <div className="slide-image">
-          <img
-            src="https://inan2h.vn/wp-content/uploads/2022/12/in-banner-quang-cao-do-an-5.jpg"
-            alt="Slide Sale"
-          />
+      </article>
 
-          <img
-            src="https://inan2h.vn/wp-content/uploads/2022/12/in-banner-quang-cao-do-an-5-1.jpg"
-            alt="Slide Sale"
-            style={{ marginTop: "20px" }}
-          />
-        </div>
+      <div className="promo-aside">
+        {promos.map((promo) => (
+          <article key={promo.title} className="promo-card">
+            <img src={promo.image} alt={promo.title} />
+            <div>
+              <h3>{promo.title}</h3>
+              <p>{promo.description}</p>
+            </div>
+          </article>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
 

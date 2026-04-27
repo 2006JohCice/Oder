@@ -1,21 +1,18 @@
 import { Link } from "react-router-dom";
 
 function MenuItem({ item }) {
-  const hasChildren = Array.isArray(item.children) && item.children.length > 0;
+  const hasChildren = Array.isArray(item?.children) && item.children.length > 0;
 
   return (
-    <li className={hasChildren ? "dropdown-submenu" : ""}>
-      <Link 
-        to = {`/products/${item.slug}`}
-      
-      className="dropdown-item">
-        {item.name}
-        {hasChildren && " ▸"}
+    <li className={hasChildren ? "nav-submenu-item" : ""}>
+      <Link to={`/products/${item.slug}`} className="nav-dropdown-link no-underline ">
+        <span>{item.name}</span>
+        {hasChildren && <i className="bi bi-chevron-right" />}
       </Link>
 
       {hasChildren && (
-        <ul className="dropdown-menu">
-          {item && item?.children.map(child => (
+        <ul className="nav-submenu">
+          {item.children.map((child) => (
             <MenuItem key={child._id} item={child} />
           ))}
         </ul>

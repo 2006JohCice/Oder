@@ -1,75 +1,46 @@
 import { Link } from "react-router-dom";
-import MenuItem from "./MenuItem"
+import MenuItem from "./MenuItem";
 
-function ListFood({ data, patch, totalQuantity }) {
-
+function ListFood({ data, totalQuantity, onNavigate }) {
   return (
-    <nav className="main-nav">
-      <div className="dropdown">
-        <Link
-          className="dropdown-toggle"
-          data-bs-toggle="dropdown"
-          role="button"
-          to={`/products`}
-        >
+    <nav className="site-nav">
+      <div className="nav-dropdown">
+        <button type="button" className="nav-link nav-link-button">
           Danh mục
-        </Link>
+          <i className="bi bi-chevron-down" />
+        </button>
 
-        <ul className="dropdown-menu">
-          <Link
-            to={`/products`}
-            style={
-              { display: "block" }
-            }
-          >
-            Danh mục
-          </Link>
-          {Array.isArray(data) && data?.map(item => (
-            <MenuItem key={item._id} item={item} />
-          ))}
+        <ul className="nav-dropdown-menu">
+          <li>
+            <Link to="/products" className="nav-dropdown-link no-underline " onClick={onNavigate}>
+              Xem Thực Đơn
+            </Link>
+          </li>
+          {Array.isArray(data) &&
+            data.map((item) => (
+              <MenuItem key={item._id} item={item} />
+            ))}
         </ul>
       </div>
 
-
-
-
-      <Link to="/products">Nhà hàng uy tín</Link>
-      <a href="#">Ưu đãi hot</a>
-      <a href="#">Mới nhất</a>
-
-
-      {/* ===== BLOG ===== */}
-      <div className="dropdown">
-        <a
-          className="dropdown-toggle"
-          data-bs-toggle="dropdown"
-          role="button"
-        >
-          Tin tức & Blog
-        </a>
-
-        <ul className="dropdown-menu">
-          <li><a className="dropdown-item">Sự kiện ẩm thực</a></li>
-          <li><a className="dropdown-item">Khuyến mãi</a></li>
-          <li><a className="dropdown-item">Review nhà hàng</a></li>
-          <li><a className="dropdown-item">Công thức món ngon</a></li>
-        </ul>
-      </div>
-      <Link to="/cart" className="position-relative">
+      <Link to="/" className="nav-link no-underline " onClick={onNavigate}>
+        Trang chủ
+      </Link>
+      <Link to="/products" className="nav-link no-underline " onClick={onNavigate}>
+        Món nổi bật
+      </Link>
+      <Link to="/cart/checkout?mode=table" className="nav-link no-underline " onClick={onNavigate}>
+        Đặt Bàn
+      </Link>
+      <Link to="/cart/doneOrder" className="nav-link no-underline " onClick={onNavigate}>
+        Đơn Đặt
+      </Link>
+      <Link to="/cart" className="nav-link nav-cart-link no-underline " onClick={onNavigate}>
         Giỏ Hàng
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{marginTop: "15px"}}>
-          ({totalQuantity})
-        </span>
+        <span className="nav-badge">{totalQuantity}</span>
       </Link>
-
-       <Link to="/cart/doneOrder" className="position-relative">
-        Các Đơn Đã Đặt
-      </Link>
-     
-
     </nav>
   );
 }
 
 export default ListFood;
-

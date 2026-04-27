@@ -1,59 +1,47 @@
-import CardLoading from "../../mixi/CardLoading";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import CardProducts from "../../mixi/cardProducts/cardProducts";
-import NewProducts from "./newProducts";
 
 function FeaturedProducts() {
-    const widthWeb = window.innerWidth;
-    const [dataFeatured, setDataFeatured] = useState([]);
-    const [DataProductsNew, setDataProductsNew] = useState([]);
-    const [loadCard, setLoadCart] = useState(true)
+  const [featured, setFeatured] = useState([]);
+  const [latest, setLatest] = useState([]);
 
-    useEffect(() => {
-        let url = '/api/products/featured'
-        fetch(url)
-            .then(res => res.json())
-            .then(res => {
-                setDataFeatured(res.data)
-                setDataProductsNew(res.dataProductsNew)
-                setLoadCart(false)
-            })
-            .catch(() => setLoadCart(true));
+  useEffect(() => {
+    fetch("/api/products/featured")
+      .then((res) => res.json())
+      .then((res) => {
+        setFeatured(res.data || []);
+        setLatest(res.dataProductsNew || []);
+      })
+      .catch(() => {
+        setFeatured([]);
+        setLatest([]);
+      });
+  }, []);
 
+  return (
+    <section className="page-stack">
+      <section className="section-shell">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Món Ăn Được Gọi Nhiều Nhất</p>
+            <h2>Lựa Chọn Nổi Bật</h2>
+          </div>
+          <p>Card giá ngon hơn, nhan giá rõ ràng , thao tác nhanh hơnn.</p>
+        </div>
+        <CardProducts data={featured} />
+      </section>
 
-    }, [])
-
-
-    // console.log("demo", dataFeatured)
-
-    return (
-
-        <>
-
-            <section className="food-filter">
-                <div className="filter-container">
-                    <button className="filter-btn active">Sản Phẩm Nổi Bật Của Shop</button>
-                    <button className="filter-btn ">Sản Phẩm Giảm Giá</button>
-                </div>
-            </section>
-
-            {loadCard ? (
-                <CardLoading widthWeb={widthWeb} />
-            ) : (
-                <>
-
-                <CardProducts data={dataFeatured} />
-                <NewProducts DataProductsNew={DataProductsNew}/>
-                </>
-             
-
-            )
-
-            }
-
-
-        </>
-    )
+      <section className="section-shell">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Mới Cập Nhật</p>
+            <h2>Món mới trong thực đơn</h2>
+          </div>
+        </div>
+        <CardProducts data={latest} />
+      </section>
+    </section>
+  );
 }
 
 export default FeaturedProducts;

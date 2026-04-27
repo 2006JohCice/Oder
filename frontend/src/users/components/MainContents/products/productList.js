@@ -1,42 +1,27 @@
-import React, { useEffect, useState } from "react";
-import "../../../css/products/products.css"
-import CardLoading from "../../mixi/CardLoading";
+import { useEffect, useState } from "react";
 import CardProducts from "../../mixi/cardProducts/cardProducts";
 
-
-const widthWeb = window.innerWidth;
-
-
 function ProductsList() {
+  const [data, setData] = useState([]);
 
-    const [data, setData] = useState([]);
-    const [LoadingCart, setLoadingCart] = useState(true);
-    useEffect(() => {
-        fetch("/api/products")
-            .then(res => res.json())
-            .then(data => {
-                setData(data)
-                setLoadingCart(false)
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((products) => setData(Array.isArray(products) ? products : []))
+      .catch(() => setData([]));
+  }, []);
 
-            })
-            .catch(() => setData([]));
-    }, []);
-    console.log("here", data)
-
-    return (
-        <>
-
-            {LoadingCart ? (
-                <CardLoading widthWeb={widthWeb} />
-            ) : (
-                <CardProducts data={data} />
-            )
-
-            }
-
-
-        </>
-    );
+  return (
+    <section className="section-shell">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">Danh Sách</p>
+          <h2>Toàn Bộ Món Ăn Đang Phục Vụ</h2>
+        </div>
+      </div>
+      <CardProducts data={data} />
+    </section>
+  );
 }
 
 export default ProductsList;

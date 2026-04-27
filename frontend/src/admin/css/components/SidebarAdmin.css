@@ -1,99 +1,155 @@
+.admin-sidebar {
+  width: 300px;
+  min-height: calc(100vh - 40px);
+  padding: 18px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(8, 20, 40, 0.95));
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.4);
+  position: sticky;
+  top: 20px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+}
 
-/* ================= SIDEBAR ================= */
-.admin-sidebar{
-  width: 360px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius:var(--radius);
-  padding:18px;
-  min-height: calc(100vh - 56px);
-  /* position:sticky; */
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
   position: relative;
-  /* top:28px; */
-  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
-  transition: width 0.3s ease;
 }
 
-.close-admin-menu{
-  width: 80px;
- 
-}
-.admin-sidebar .admin-brand .admin-menu-toggle-wrapper{
-  position: absolute;
-  font-size: 40px;
-  width: 40px;
- 
-  cursor: pointer;
-  right: 0px;
-  transition: right 0.3s ease;
+.admin-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #34d399, #22c55e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #062028;
 }
 
-.admin-sidebar .admin-brand .admin-menu-toggle-wrapper:hover{
+.admin-brand-title {
+  font-weight: 700;
+}
+
+.admin-brand-sub {
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.admin-menu-toggle-wrapper {
   position: absolute;
-  font-size: 40px;
+  top: 0;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+}
+
+.admin-menu-toggle-wrapper:hover {
+  background: rgba(255, 255, 255, 0.08);
   color: aquamarine;
-  right: 0px;
 }
 
+.admin-menu {
+  margin-top: 6px;
+}
 
-.admin-brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:18px;
+.admin-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #cbd5e1;
+  text-decoration: none;
+  margin-bottom: 6px;
 }
-.admin-logo{
-  width:44px;
-  height:44px;
-  border-radius:10px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  color:#062028;
-}
-.admin-menu{
-  margin-top:6px;
-}
-.admin-menu a{
-  cursor: pointer;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:10px;
-  border-radius:10px;
-  color:var(--muted);
-  text-decoration:none;
-  margin-bottom:6px;
-}
+
 .admin-menu a.active,
+.admin-menu a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #34d399;
+}
 
-.admin-menu a:hover{
-  background:var(--glass);
-  color:var(--accent);
- 
+.admin-menu a .admin-ico {
+  font-size: 18px;
+  width: 26px;
+  text-align: center;
 }
-.admin-menu a .admin-ico{
-  font-size:18px;
-  width:26px;
-  text-align:center;
+
+.admin-profile {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
-.admin-profile{
-  margin-top:auto;
-  padding-top:12px;
-  border-top:1px dashed rgba(255,255,255,0.03);
-  display:flex;
-  gap:12px;
-  align-items:center;
+
+.admin-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #334155, #0f1724);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
 }
-.admin-avatar{
-  width:44px;
-  height:44px;
-  border-radius:10px;
-  background:linear-gradient(135deg,#334155,#0f1724);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
+
+.admin-name {
+  font-weight: 600;
+}
+
+.admin-role {
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.admin-sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .admin-sidebar {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    bottom: 14px;
+    min-height: auto;
+    transform: translateX(-120%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .admin-sidebar.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .admin-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.45);
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 45;
+  }
+
+  .admin-sidebar-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

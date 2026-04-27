@@ -1,216 +1,129 @@
-import "../../../../css/detailProducts/detailProduct.css";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FeaturedProducts from "../../../MainContents/products/featuredProducts";
-import Notification from "../../../../alerts/Notification";
 import { useCart } from "../../../mixi/cart/CartContext";
+import { formatCurrency } from "../../../../utils/shop";
+import { notifyApp } from "../../../../../shared/notifications/ToastProvider";
+import CardProducts from "../../../mixi/cardProducts/cardProducts";
+
 function ProductDetail() {
-    const navigate = useNavigate();
-    const { slugProduct } = useParams();
-    const [detailProduct, setDetailProduct] = useState(null);
-    const [minStock, setMinStock] = useState(1);
-    const [notifi, setNotifi] = useState("")
-    const [recommendations, setRecommendations] = useState([]);
+  const navigate = useNavigate();
+  const { slugProduct } = useParams();
+  const { fetchCart } = useCart();
+  const [detailProduct, setDetailProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
 
-    const handleChangeStock = (e) => {
-        const value = e.target.value
-        setMinStock(value)
+  useEffect(() => {
+    fetch(`/api/products/detail/${slugProduct}`)
+      .then((res) => res.json())
+      .then((data) => setDetailProduct(data))
+      .catch(() => setDetailProduct(null));
+  }, [slugProduct]);
 
+  const handleAddToCart = async (goCheckout = false) => {
+    if (!detailProduct?._id || isAdding) return;
+
+    setIsAdding(true);
+
+    try {
+      const res = await fetch("/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: detailProduct._id,
+          quantity,
+        }),
+      });
+
+      if (res.status === 401) {
+        notifyApp("Vui lòng đăng nhập để thêm món ăn", "info");
+        navigate("/user/auth/login");
+        return;
+      }
+
+      const result = await res.json().catch(() => ({}));
+      if (res.ok) {
+        await fetchCart();
+        notifyApp(result.message || "Đã thêm món ăn vào giỏ hàng", "success");
+        navigate(goCheckout ? "/cart/checkout?mode=table" : "/cart");
+        return;
+      }
+
+      notifyApp(result.message || "Không thể thêm món ăn", "error");
+    } finally {
+      setIsAdding(false);
     }
-    const { fetchCart } = useCart();
+  };
 
+  if (!detailProduct) {
 
+    return(
+      <>
+      <CardProducts/>
 
+      <FeaturedProducts />
+      </>
+      
+    ) 
+  }
 
-    const handlAddProductsCart = async () => {
-        try {
-            const res = await fetch("/api/cart/add", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    productId: detailProduct._id,
-                    quantity: minStock
-                })
-            });
+  return (
+    <div className="page-stack">
+      <section className="detail-shell">
+        <div className="detail-media">
+          <img src={detailProduct.img} alt={detailProduct.name} />
+        </div>
 
-            if (res.status === 401) {
-                navigate('/user/auth/login');
-                return;
-            }
+        <div className="detail-content">
+          <p className="eyebrow">Chi tiết món ăn</p>
+          <h1>{detailProduct.name}</h1>
+          <p className="detail-price">{formatCurrency(detailProduct.price)}</p>
+          <p className="detail-description">
+            {detailProduct.description || "Món ăn phù hợp cho đặt bàn, tiệc nhỏ và bữa tối gia đình."}
+          </p>
 
-            const data = await res.json();
+          <div className="detail-stat-grid">
+            <article>
+              <span>Tồn kho</span>
+              <strong>{detailProduct.stock || "Còn phục vụ"}</strong>
+            </article>
+            <article>
+              <span>Trạng thái</span>
+              <strong>{detailProduct.deleted ? "Tạm dừng" : "Đang bán"}</strong>
+            </article>
+            <article>
+              <span>Danh mục</span>
+              <strong>{detailProduct.category || "Nhà hàng"}</strong>
+            </article>
+          </div>
 
-            if (res.ok) {
-                setNotifi(data.message);
-                fetchCart();
-            }
-        
-            // const data = await res.json();
-            // console.log("ADD CART OK:", data);
-        } catch (err) {
-            alert("Đã xảy ra lỗi khi thêm sản phẩm");
-        }
-    };
+          <div className="quantity-picker">
+            <button type="button" onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}>
+              -
+            </button>
+            <span>{quantity}</span>
+            <button type="button" onClick={() => setQuantity((prev) => prev + 1)}>
+              +
+            </button>
+          </div>
 
-    // ...existing code...
-    const suggestedProducts = async (productName) => {
-        if (!productName) return;
-        const res = await fetch(`/api/recommend`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                selectedFood: productName
-            })
+          <div className="detail-actions">
+            <button type="button" className="ghost-button" onClick={() => handleAddToCart(false)} disabled={isAdding}>
+              {isAdding ? "Đang thêm..." : "Thêm vào giỏ"}
+            </button>
+            <button type="button" className="primary-button" onClick={() => handleAddToCart(true)} disabled={isAdding}>
+              {isAdding ? "Đang xử lý..." : "Đặt bàn cùng món này"}
+            </button>
+          </div>
+        </div>
+      </section>
 
-        });
-        const data = await res.json();
-        if (res.ok) {
-            // console.log("SUGGESTION OK:", data);
-            setRecommendations(data.dataSuggestion);
-        }
-    }
-    // ...existing code...
-    useEffect(() => {
-        if (!slugProduct) return;
-        fetch(`/api/products/detail/${slugProduct}`)
-            .then(res => res.json())
-            .then(data => {
-                setDetailProduct(data);
-                suggestedProducts(data?.name);
-            })
-            .catch(err => console.error("FETCH ERROR:", err));
-    }, [slugProduct]);
-    // ...existing code...
-
-    if (!detailProduct) {
-
-        return (
-            <>
-                <p>Sản Phẩm Đã Hết Hàng...</p>
-                <FeaturedProducts />
-            </>
-        )
-    }
-
-
-    const handleClick = (click) => {
-
-        if (click == "minus") {
-            if (minStock > 1) {
-                setMinStock(minStock - 1);
-            }
-
-        }
-        if (click == "plus") {
-            setMinStock(minStock + 1);
-        }
-
-        console.log("Min: ", minStock)
-    }
-    return (
-        <>
-            {notifi && (
-                <Notification
-                    message={notifi}
-                    onClose={() => setNotifi("")}
-                />
-            )}
-            <div className="detail-container">
-                <div className="detail-container-order">
-                    <div className="detail-image">
-                        <img src={detailProduct.img} alt={detailProduct.name} />
-                    </div>
-
-                    <div className="detail-content">
-                        <h1 className="detail-title">{detailProduct.name}</h1>
-                        <p className="detail-price">
-                            {detailProduct.price.toLocaleString()}đ
-                        </p>
-                        <p className="detail-desc">Stock: {detailProduct.stock}</p>
-                        <p className="detail-desc">Style: {detailProduct.category}</p>
-                        <p>{detailProduct.deleted ? "Không Còn Bán" : "Đang Bán "}</p>
-                        <nav aria-label="Page navigation example">
-                            <ul className="pagination">
-                                <li className="page-item" onClick={() => handleClick("minus")}>
-                                    <a className="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">{minStock}</a></li>
-
-                                <li className="page-item" onClick={() => handleClick("plus")}>
-                                    <a className="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div>
-                            <p>
-                                {detailProduct.description}
-                            </p>
-                        </div>
-
-                        <div className="detail-actions">
-                            <button onClick={handlAddProductsCart} className="detail-btn order">Thêm Vào Giỏ Hàng</button>
-                            <button className="detail-btn book">Đặt bàn</button>
-                        </div>
-                    </div>
-                </div>
-                <div className="detail-container-recommendations">
-                    <div style={{ padding: '16px 10px', background: 'linear-gradient(135deg, #fff8e7, #fffdf8)', borderRadius: '18px', boxShadow: '0 4px 10px rgba(255, 193, 7, 0.15)' }}>
-                        <h2 style={{ fontSize: "20px", textAlign: "center" }}>Sản Phẩm Gợi Ý</h2>
-                    </div>
-                    <div className="detail-image-right">
-                        <div class="product-card" bis_skin_checked="1">
-                            <div class="product-image" bis_skin_checked="1">
-                                <img alt="Bánh xèo miền Trung" src="https://i.pinimg.com/1200x/eb/3c/79/eb3c790f030935a67058e81b4b876381.jpg" />
-                                    <span class="inner-featured">Nổi Bật</span>
-                            </div>
-                            <div class="product-info" bis_skin_checked="1">
-                                <a class="product-name" href="/products/detail/undefined" data-discover="true">Bánh xèo miền Trung</a>
-                                <p class="product-price">40.000 đ</p>
-                                <div class="product-actions" bis_skin_checked="1">
-                                    <button class="product-btn product-btn-cart">Thêm</button></div></div>
-                        </div>
-                         <div class="product-card" bis_skin_checked="1">
-                            <div class="product-image" bis_skin_checked="1">
-                                <img alt="Bánh xèo miền Trung" src="https://i.pinimg.com/1200x/eb/3c/79/eb3c790f030935a67058e81b4b876381.jpg" />
-                                    <span class="inner-featured">Nổi Bật</span>
-                            </div>
-                            <div class="product-info" bis_skin_checked="1">
-                                <a class="product-name" href="/products/detail/undefined" data-discover="true">Bánh xèo miền Trung</a>
-                                <p class="product-price">40.000 đ</p>
-                                <div class="product-actions" bis_skin_checked="1">
-                                    <button class="product-btn product-btn-cart">Thêm</button></div></div>
-                        </div>
-                          <div class="product-card" bis_skin_checked="1">
-                            <div class="product-image" bis_skin_checked="1">
-                                <img alt="Bánh xèo miền Trung" src="https://i.pinimg.com/1200x/eb/3c/79/eb3c790f030935a67058e81b4b876381.jpg" />
-                                    <span class="inner-featured">Nổi Bật</span>
-                            </div>
-                            <div class="product-info" bis_skin_checked="1">
-                                <a class="product-name" href="/products/detail/undefined" data-discover="true">Bánh xèo miền Trung</a>
-                                <p class="product-price">40.000 đ</p>
-                                <div class="product-actions" bis_skin_checked="1">
-                                    <button class="product-btn product-btn-cart">Thêm</button></div></div>
-                        </div>
-
-
-                    </div>
-                </div>
-
-            </div>
-
-
-
-            <FeaturedProducts />
-        </>
-    );
+      <FeaturedProducts />
+    </div>
+  );
 }
 
 export default ProductDetail;

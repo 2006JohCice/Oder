@@ -1,61 +1,30 @@
-import React from 'react';
 import "../css/MainContent.css";
-import PostFeed from './MainContents/newPost/PostFeed';
-import Stories from './MainContents/Stories';
-import { useRef, useEffect, useState } from "react";
-import Products from './MainContents/products/products';
-import Advertisement from './MainContents/Advertisement/Advertisement';
-import FeaturedProducts from './MainContents/products/featuredProducts';
-import NewProducts from './MainContents/products/newProducts';
+import Advertisement from "./MainContents/Advertisement/Advertisement";
+import FeaturedProducts from "./MainContents/products/featuredProducts";
+import Products from "./MainContents/products/products";
 
 function MainContent() {
-
-  const scrollRef = useRef();
-  const scrollRight = () => {
-    scrollRef.current.scrollBy({ left: 200, behavior: "smooth" });
-  };
-  const scrollLeft = () => {
-    scrollRef.current.scrollBy({ left: -200, behavior: "smooth" });
-  };
-
-
-  const [message, setMessage] = useState("Đang tải...");
-
-
-
   return (
-    <div>
-      {/* <div className="stories-wrapper">
-        <button className="arrow-btn left" onClick={scrollLeft}>
-          ❮
-        </button>
-        <div className="stories-section" ref={scrollRef}>
+    <div className="page-stack">
+      <section className="hero-metrics">
+        <article>
+          <strong>120+</strong>
+          <span>Món Ăn Đang Chờ Phục Vụ</span>
+        </article>
+        <article>
+          <strong>15 phút</strong>
+          <span>Thời gian lên đơn trung bình</span>
+        </article>
+        <article>
+          <strong>Hơn 20 bàn </strong>
+          <span>Khu vực rộng rải</span>
+        </article>
+      </section>
 
-          {[...Array(18)].map((_, i) => (
-
-            <img src={`https://picsum.photos/id/${i + 1000}/40/40`} alt={`Story ${i + 1}`} className="poster-avatar" />
-
-          ))}
-
-        </div>
-        <button className="arrow-btn right" onClick={scrollRight}>
-          ❯
-        </button>
-      </div> */}
-
-      {/* <PostFeed /> */}
-      <Advertisement/>
-      <FeaturedProducts/> 
-
-
+      <Advertisement />
+      <FeaturedProducts />
       <Products />
-
-
-
-
     </div>
-
-
   );
 }
 

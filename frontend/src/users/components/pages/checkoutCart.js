@@ -1,165 +1,262 @@
-import "../../css/card/cartPay.css";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import CardProducts from "../../components/mixi/cardProducts/cardProducts";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useCart } from "../mixi/cart/CartContext";
+import {
+  calculateLineTotal,
+  DINING_AREAS,
+  formatCurrency,
+  TABLE_OPTIONS,
+} from "../../utils/shop";
+import FeaturedProducts from "../MainContents/products/featuredProducts";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
+const defaultForm = {
+  fullName: "",
+  phone: "",
+  address: "",
+  orderType: "dine_in",
+  tableInfo: {
+    area: DINING_AREAS[0],
+    tableNumber: TABLE_OPTIONS[0],
+    guestCount: 2,
+    arrivalTime: "",
+    note: "",
+  },
+};
 
 export default function CheckoutCart() {
-    const [cartItems, setCartItems] = useState([]);
-    const [dataFeatured, setDataFeatured] = useState([]);
-    const [loadCard, setLoadCart] = useState(false);
-    const [getData,setData] = useState([]);
-    const navigate = useNavigate();
-    useEffect(() => {
-        let url = '/api/products/featured'
-        fetch(url)
-            .then(res => res.json())
-            .then(res => {
-                setDataFeatured(res.data)
+  const [cartItems, setCartItems] = useState({});
+  const [formData, setFormData] = useState(defaultForm);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { fetchCart } = useCart();
 
-            })
-            .catch(() => setLoadCart(true));
-
-
-    }, [])
-    const apiCartProducts = async () => {
-        const res = await fetch("/api/cart");
-        if (res.status === 401) {
-            navigate('/user/auth/login');
-            return;
-        }
-        const data = await res.json();
-        setCartItems(data);
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get("mode") === "table") {
+      setFormData((prev) => ({ ...prev, orderType: "dine_in" }));
     }
+  }, [location.search]);
 
-    useEffect(() => {
-        apiCartProducts();
-    }, []);
+  useEffect(() => {
+    const loadCart = async () => {
+      const res = await fetch("/api/cart");
+      if (res.status === 401) {
+        navigate("/user/auth/login");
+        return;
+      }
 
-    // console.log("cartItems", cartItems)
-
-    // Xóa sản phẩm
-    const handleDonePay = async (e) => {
-        e.preventDefault();
-        const formData = {
-            fullName: e.target.fullname.value,
-            phone: e.target.phone.value,
-            address: e.target.address.value,
-        };
-        console.log("nó ở đây",formData)
-        let url = `/api/checkout/order`
-        const res = await fetch(url, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (res.status === 401) {
-            navigate('/user/auth/login');
-            return;
-        }
-
-        if(res.ok){
-            const data = await res.json()
-         
-            // alert("Đặt Hàng Thành Công")
-            navigate(`/cart/checkout/success/${data.orderId}`)
-        }else{
-            const data = await res.json()
-            alert(data.message)
-        }
+      const data = await res.json();
+      setCartItems(data);
     };
 
-    // Tổng số lượng
-    const totalQuantity =
-        cartItems?.products?.reduce((sum, item) => sum + item.quantity, 0)
+    loadCart();
+  }, [navigate]);
 
-        console.log("Data 2",getData)
+  const products = Array.isArray(cartItems?.products) ? cartItems.products : [];
+  const totalQuantity = products.reduce((sum, item) => sum + item.quantity, 0);
 
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
+  const handleTableChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      tableInfo: {
+        ...prev.tableInfo,
+        [name]: name === "guestCount" ? Number(value) : value,
+      },
+    }));
+  };
+
+  const handleDonePay = async (event) => {
+    event.preventDefault();
+
+    const res = await fetch("/api/checkout/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (res.status === 401) {
+      notifyApp("Vui lòng đăng nhập để đặt hàng", "info");
+      navigate("/user/auth/login");
+      return;
+    }
+
+    const data = await res.json();
+    if (!res.ok) {
+      notifyApp(data.message, "error");
+      return;
+    }
+
+    await fetchCart();
+    notifyApp("Đặt hàng thành công", "success");
+    navigate(`/cart/checkout/success/${data.orderId}`);
+  };
+
+  if (products.length === 0) {
     return (
-        <div className="cart-container">
-            <h2> Giỏ hàng của bạn</h2>
-
-            <table className="cart-table">
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Ảnh</th>
-                        <th>Tên</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>Tổng tiền</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {cartItems?.products?.map((item, index) => (
-                        <tr key={item.id}>
-                            <td>{index + 1}</td>
-                            <td>
-                                <img src={item.productInfo.img} alt={item.productInfo.name} />
-                            </td>
-                            <td className="product-name">
-                                {item.productInfo.name}
-                            </td>
-                            <td>{item.productInfo.price}$</td>
-                            <td>
-                                {item.quantity}
-                            </td>
-                            <td>{item.productInfo.price * item.quantity}$</td>
-
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {/* BẢNG TỔNG */}
-            <div>
-                <div className="cart-donePay">
-                    <form className="cart-summary" onSubmit={handleDonePay}>
-                        <div className="cart-summary">
-                            <div class="mb-3">
-                                <label for="formGroupExampleInput" class="form-label">Họ và Tên</label>
-                                <input type="text" name="fullname" class="form-control" id="formGroupExampleInput" placeholder="Họ và tên" required />
-                            </div>
-                            <div class="mb-3">
-                                <label for="formGroupExampleInput2" class="form-label">Số Điện Thoại</label>
-                                <input type="text" name="phone" class="form-control" id="formGroupExampleInput2" placeholder="Số điện thoại" required />
-                            </div>
-                            <div class="mb-3">
-                                <label for="formGroupExampleInput2" class="form-label">Địa chỉ</label>
-                                <input type="text" name="address" class="form-control" id="formGroupExampleInput2" placeholder="Địa chỉ" required />
-                            </div>
-                        </div>
-
-
-                        <div className="summary-row">
-                            <span>Tổng số lượng:</span>
-                            <strong>{totalQuantity}</strong>
-                        </div>
-                        <div className="summary-row">
-                            <span>Tổng tiền:</span>
-                            <strong>{cartItems?.totalCartPrice}
-                                $</strong>
-                        </div>
-                        <button className="btn-checkout">
-                            Thanh toán
-                        </button>
-                    </form>
-
-
-                </div>
-
-                <div>
-                    <CardProducts data={dataFeatured} />
-                </div>
-
+      <div className="page-stack">
+        <section className="success-shell">
+          <article className="success-card">
+            <div className="success-icon">
+              <i className="bi bi-basket3" />
             </div>
-
-
-        </div>
+            <p className="eyebrow">Chưa thể thanh toán</p>
+            <h1>Giỏ hàng hiện đang trống.</h1>
+            <p>Vui lòng thêm món ăn trước khi đi đến bước thanh toán hoặc đặt bàn.</p>
+            <div className="empty-state-actions">
+              <Link to="/products" className="primary-button no-underline ">
+                Đi tới sản phẩm
+              </Link>
+              <Link to="/" className="secondary-button no-underline ">
+                Về trang chủ
+              </Link>
+            </div>
+          </article>
+        </section>
+        <FeaturedProducts />
+      </div>
     );
+  }
+
+  return (
+    <section className="section-shell">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">Thanh toán mới</p>
+          <h2>Thanh toán nhanh và giữ bàn ngay trong cùng một màn hình</h2>
+        </div>
+      </div>
+
+      <div className="order-layout">
+        <div className="table-card">
+          <div className="order-list">
+            {products.map((item, index) => (
+              <article className="order-item" key={`${item.product_id}-${index}`}>
+                <img src={item.productInfo?.img} alt={item.productInfo?.name} />
+                <div className="order-item-copy">
+                  <strong>{item.productInfo?.name}</strong>
+                  <span>Số lượng: {item.quantity}</span>
+                </div>
+                <strong>{formatCurrency(calculateLineTotal(item))}</strong>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <form className="summary-card checkout-form" onSubmit={handleDonePay}>
+          <div className="toggle-row">
+            <button
+              type="button"
+              className={formData.orderType === "dine_in" ? "toggle active" : "toggle"}
+              onClick={() => setFormData((prev) => ({ ...prev, orderType: "dine_in" }))}
+            >
+              Ăn tại bàn
+            </button>
+            <button
+              type="button"
+              className={formData.orderType === "delivery" ? "toggle active" : "toggle"}
+              onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}
+            >
+              Giao tận nơi
+            </button>
+          </div>
+
+          <div className="form-grid">
+            <label>
+              Họ và tên
+              <input name="fullName" value={formData.fullName} onChange={handleChange} required />
+            </label>
+            <label>
+              Số điện thoại
+              <input name="phone" value={formData.phone} onChange={handleChange} required />
+            </label>
+
+            {formData.orderType === "delivery" && (
+              <label className="field-span">
+                Địa chỉ giao hàng
+                <input name="address" value={formData.address} onChange={handleChange} required />
+              </label>
+            )}
+
+            {formData.orderType === "dine_in" && (
+              <>
+                <label>
+                  Khu vực
+                  <select name="area" value={formData.tableInfo.area} onChange={handleTableChange}>
+                    {DINING_AREAS.map((area) => (
+                      <option key={area} value={area}>
+                        {area}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Số bàn
+                  <select
+                    name="tableNumber"
+                    value={formData.tableInfo.tableNumber}
+                    onChange={handleTableChange}
+                  >
+                    {TABLE_OPTIONS.map((table) => (
+                      <option key={table} value={table}>
+                        {table}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Số khách
+                  <input
+                    type="number"
+                    min="1"
+                    name="guestCount"
+                    value={formData.tableInfo.guestCount}
+                    onChange={handleTableChange}
+                  />
+                </label>
+                <label>
+                  Giờ đến dự kiến
+                  <input
+                    type="time"
+                    name="arrivalTime"
+                    value={formData.tableInfo.arrivalTime}
+                    onChange={handleTableChange}
+                  />
+                </label>
+                <label className="field-span">
+                  Ghi chú bàn ăn
+                  <textarea
+                    rows="3"
+                    name="note"
+                    value={formData.tableInfo.note}
+                    onChange={handleTableChange}
+                    placeholder="Sinh nhật, gần cửa sổ, thêm ghế em bé..."
+                  />
+                </label>
+              </>
+            )}
+          </div>
+
+          <div className="summary-row">
+            <span>Tổng số lượng</span>
+            <strong>{totalQuantity}</strong>
+          </div>
+          <div className="summary-row">
+            <span>Tổng tiền</span>
+            <strong>{formatCurrency(cartItems?.totalCartPrice)}</strong>
+          </div>
+          <button className="primary-button full-width" type="submit">
+            Xác nhận đơn hàng
+          </button>
+        </form>
+      </div>
+    </section>
+  );
 }

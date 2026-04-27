@@ -8,10 +8,21 @@ const orderSchema = new mongoose.Schema(
             type: String,
             default: "pending"
         },
+        orderType: {
+            type: String,
+            default: "dine_in"
+        },
         userInfo: {
             fullName: String, 
             phone: String,
             address: String,
+        },
+        tableInfo: {
+            area: String,
+            tableNumber: String,
+            guestCount: Number,
+            arrivalTime: String,
+            note: String
         },
         products: [
             {

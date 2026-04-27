@@ -1,59 +1,38 @@
-import Header from '../components/Header.js';
-import MainContent from '../components/HouseMain.js';
-import { Routes, Route } from 'react-router-dom';
-import Footed from '../components/foot/footed.js';
-import "../js/index.js";
-import Cart from '../components/pages/cart.js';
-import ProductsList from '../components/MainContents/products/productList.js';
-import ProductCategoryPage from '../components/pages/ProductForCategory.js';
-import ProductDetail from '../components/MainContents/products/detailProducts/detailProducts.js';
-import SearchProduct from '../components/listSearchProducts/searchProducts.js';
-import OrderSuccess from '../components/pages/success.js';
-import { useEffect, useState } from "react";
-import CheckoutCart from '../components/pages/checkoutCart.js';
-import DoneOrder from '../components/pages/doneOrder.js';
+import { useEffect } from "react";
+import Header from "../components/Header";
+import MainContent from "../components/HouseMain";
+import { Routes, Route } from "react-router-dom";
+import Cart from "../components/pages/cart";
+import ProductsList from "../components/MainContents/products/productList";
+import ProductCategoryPage from "../components/pages/ProductForCategory";
+import ProductDetail from "../components/MainContents/products/detailProducts/detailProducts";
+import SearchProduct from "../components/listSearchProducts/searchProducts";
+import OrderSuccess from "../components/pages/success";
+import CheckoutCart from "../components/pages/checkoutCart";
+import DoneOrder from "../components/pages/doneOrder";
+
 function DefaultLayout() {
-  const [totalQuantity,setTotalQuantity] = useState([]);
   useEffect(() => {
-    fetch("/api/init-cart")
-      .then(res => res.json())
-      .then(res => {
-      
-        setTotalQuantity(res);
-      })
-      .catch(err => console.error(err));
+    fetch("/api/init-cart").catch(() => {});
   }, []);
 
   return (
-    <>
-
-      <main className="main-content col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
-
-        <div className="app-container">
-          <Header totalQuantity={totalQuantity} />
-        </div>
-
-        <div className="app-body">
-          <Routes>
-            <Route path="/" element={<MainContent />} />
-            <Route path='/products' element={<ProductsList />} />
-            <Route path='/products/:slugCategory' element={<ProductCategoryPage />} />
-            <Route path='/products/detail/:slugProduct' element={<ProductDetail />} />
-            <Route path='/search' element={<SearchProduct />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path='/cart/checkout' element={<CheckoutCart/>}/>
-            <Route path ='/cart/checkout/success/:orderId' element={<OrderSuccess/>}/>
-            <Route path='/cart/doneOrder' element={<DoneOrder/>}/>
-          </Routes>
-        </div>
-        {/* <div className='app-footer'>
-          <Footed />
-        </div> */}
- 
-
-      </main>
-    </>
+    <main className="site-shell">
+      <Header />
+      <div className="site-main">
+        <Routes>
+          <Route path="/" element={<MainContent />} />
+          <Route path="/products" element={<ProductsList />} />
+          <Route path="/products/:slugCategory" element={<ProductCategoryPage />} />
+          <Route path="/products/detail/:slugProduct" element={<ProductDetail />} />
+          <Route path="/search" element={<SearchProduct />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/cart/checkout" element={<CheckoutCart />} />
+          <Route path="/cart/checkout/success/:orderId" element={<OrderSuccess />} />
+          <Route path="/cart/doneOrder" element={<DoneOrder />} />
+        </Routes>
+      </div>
+    </main>
   );
 }
 

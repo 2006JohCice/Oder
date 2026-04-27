@@ -1,55 +1,116 @@
-import { Link } from "react-router-dom";
-
-
-
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../cart/CartContext";
+import { formatCurrency } from "../../../utils/shop";
+import { notifyApp } from "../../../../shared/notifications/ToastProvider";
 
 function CardProducts({ data }) {
-    console.log(data)
-    const widthWeb = window.innerWidth;
-    const containerWidth = data.length <= 3 ? "50%" : "100%";
-    
+  const navigate = useNavigate();
+  const { fetchCart } = useCart();
+  const [addingProductId, setAddingProductId] = useState(null);
+
+  const handleAddToCart = async (productId, redirectToCheckout = false) => {
+    if (addingProductId === productId) return;
+
+    setAddingProductId(productId);
+
+    try {
+      const res = await fetch("/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId,
+          quantity: 1,
+        }),
+      });
+
+      if (res.status === 401) {
+        notifyApp("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng", "info");
+        navigate("/user/auth/login");
+        return;
+      }
+
+      const result = await res.json().catch(() => ({}));
+      if (res.ok) {
+        await fetchCart();
+        notifyApp(result.message || "Đã thêm sản phẩm vào giỏ hàng", "success");
+        if (redirectToCheckout) {
+          navigate("/cart/checkout");
+        }
+        return;
+      }
+
+      notifyApp(result.message || "Không thể thêm sản phẩm vào giỏ hàng", "error");
+    } finally {
+      setAddingProductId(null);
+    }
+  };
+
+  if (!Array.isArray(data) || data.length === 0) {
     return (
-        <>
-            <div className="card-products-container" style={{width:containerWidth} }>
-                <div className="products-grid">
-                    {Array.isArray(data) && data?.map(p => (
-                        <div className="product-card" key={p._id}>
+      <div className="empty-state">
+        <i className="bi bi-emoji-smile" />
+        <h3>Chưa có món ăn phù hợp</h3>
+        <p>Hãy thử bộ lọc khác hoặc quay lại sau khi cửa hàng cập nhật thực đơn.</p>
+      </div>
+    );
+  }
 
-                            <div className="product-image">
-                                <img src={p.img} alt={p.name} />
-                                {p.featured == '1' && (
-                                    <span className="inner-featured">
-                                        Nổi Bật
-                                    </span>
-                                )}
-                            </div>
+  return (
+    <div className="product-grid">
+      {data.map((product) => {
+        const isAdding = addingProductId === product._id;
 
-                            <div className="product-info">
-
-                                <Link to={`/products/detail/${p.slug}`}  className="product-name" >
-                                        {p.name}
-                                </Link>
-                                <p className="product-price">{p.price.toLocaleString()} đ</p>
-
-                                <div className="product-actions">
-                                    <button
-                                        className="product-btn product-btn-cart"
-                                    // onClick={() => addToCart(p)}
-                                    >
-                                        Thêm
-                                    </button>
-                                    <button className="product-btn product-btn-buy">
-                                        Mua ngay
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
-                    ))}
-                </div>
+        return (
+          <article className="product-card" key={product._id}>
+            <div className="product-image">
+              <img src={product.img} alt={product.name} />
+              {product.featured === "1" && <span className="product-tag">Nổi bật</span>}
             </div>
-        </>
-    )
+
+            <div className="product-info">
+              <div className="product-meta">
+                <span>{product.stock > 0 ? "Sẵn sàng phục vụ" : "Tạm hết"}</span>
+                <span>{product.slug}</span>
+              </div>
+
+              <Link to={`/products/detail/${product.slug}`} className="product-name">
+                {product.name}
+              </Link>
+
+              <p className="product-description">
+                {product.description || "Món ăn được trình bày gọn gàng, phù hợp cho order tại bàn."}
+              </p>
+
+              <div className="product-footer">
+                <strong className="product-price">{formatCurrency(product.price)}</strong>
+                <div className="product-actions">
+                  <button
+                    type="button"
+                    className="ghost-button"
+                    onClick={() => handleAddToCart(product._id)}
+                    disabled={isAdding}
+                  >
+                    {isAdding ? "Đang thêm..." : "Thêm giỏ"}
+                  </button>
+                  <button
+                    type="button"
+                    className="primary-button"
+                    onClick={() => handleAddToCart(product._id, true)}
+                    disabled={isAdding}
+                  >
+                    {isAdding ? "Đang xử lý..." : "Mua ngay"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
 }
 
 export default CardProducts;

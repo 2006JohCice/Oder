@@ -1,65 +1,49 @@
-import { useState,useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { formatCurrency, formatDateTime, getOrderTotal } from "../../utils/shop";
 
 function DoneOrder() {
   const [orders, setOrders] = useState([]);
-    const handleViewDetails = (orderId) => {
-      // Chuyển hướng đến trang chi tiết đơn hàng
-      if(orderId){
-      window.location.href = `/cart/checkout/success/${orderId}`;
-      }
-    }
 
   useEffect(() => {
-    fetch('/api/checkout/doneOrder')
-      .then(res => res.json())
-      .then(data => {
-        setOrders(data);
-      })
-      .catch(err => console.error('Lỗi khi lấy thông tin đơn hàng:', err));
+    fetch("/api/checkout/doneOrder")
+      .then((res) => res.json())
+      .then((data) => setOrders(Array.isArray(data) ? data : []))
+      .catch(() => setOrders([]));
   }, []);
-  console.log("orders", orders);
+
   return (
-    <div className="cart-container">
-      <h2>Đơn Hàng Của Bạn</h2>
+    <section className="section-shell">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">Lịch Sử Đơn Hàng</p>
+          <h2>Theo Dõi Đơn Hàng & Thông Tin Bàn Ăn</h2>
+        </div>
+      </div>
 
-      <table className="cart-table">
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Trạng Thái</th>
-            <th>Mã Hóa Đơn</th>
-            <th>Tổng tiền</th>
-            <th>Chi Tiết</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {orders?.map((order,index) => (
-            <tr key={order.id}>
-              <td>{index + 1}</td>
-              <td>
-                {order.status === "pending" ? (
-                  <span style={{ color: "orange" }}>Đang Xử Lý</span>
-                ) : (
-                  <span style={{ color: "green" }}>Đã Xử Lý</span>
-                )}
-              </td>
-              <td>{order.orderId}</td>
-              <td>{Array.isArray(order.products) ? order.products.reduce((sum, item) => sum + item.price * item.quantity, 0) : 0}$</td>
-              <td>
-                <button
-                className="btn-view-details"
-                  onClick={() => handleViewDetails(order._id)}
-                >
-                  Chi Tiết
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-    </div>
+      <div className="history-grid">
+        {orders.map((order) => (
+          <article className="history-card" key={order._id}>
+            <div className="history-card-top">
+              <span className={`status-pill ${order.orderStatus}`}>{order.orderStatus}</span>
+              <strong>{order.orderId}</strong>
+            </div>
+            <p>{formatDateTime(order.createdAt)}</p>
+            <p>Loai don: {order.orderType === "delivery" ? "Giao hang" : "An tai ban"}</p>
+            {order.tableInfo?.tableNumber && (
+              <p>
+                Bàn {order.tableInfo.tableNumber} - {order.tableInfo.area} - {order.tableInfo.guestCount} khach
+              </p>
+            )}
+            <strong>{formatCurrency(getOrderTotal(order.products))}</strong>
+            <Link to={`/cart/checkout/success/${order._id}`} className="secondary-button full-width no-underline ">
+              Xem chi tiết
+            </Link>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
+
 export default DoneOrder;
