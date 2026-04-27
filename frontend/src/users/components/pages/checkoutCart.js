@@ -3,9 +3,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../mixi/cart/CartContext";
 import {
   calculateLineTotal,
-  DINING_AREAS,
   formatCurrency,
-  TABLE_OPTIONS,
+  getTableLabel,
 } from "../../utils/shop";
 import FeaturedProducts from "../MainContents/products/featuredProducts";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
@@ -16,8 +15,8 @@ const defaultForm = {
   address: "",
   orderType: "dine_in",
   tableInfo: {
-    area: DINING_AREAS[0],
-    tableNumber: TABLE_OPTIONS[0],
+    area: "",
+    tableNumber: "",
     guestCount: 2,
     arrivalTime: "",
     note: "",
@@ -27,6 +26,8 @@ const defaultForm = {
 export default function CheckoutCart() {
   const [cartItems, setCartItems] = useState({});
   const [formData, setFormData] = useState(defaultForm);
+  const [availableTables, setAvailableTables] = useState([]);
+  const [isLoadingTables, setIsLoadingTables] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { fetchCart } = useCart();
@@ -52,6 +53,55 @@ export default function CheckoutCart() {
     loadCart();
   }, [navigate]);
 
+  useEffect(() => {
+    if (formData.orderType !== "dine_in") {
+      return;
+    }
+
+    const fetchAvailableTables = async () => {
+      setIsLoadingTables(true);
+      const res = await fetch("/api/tables/available");
+
+      if (res.status === 401) {
+        navigate("/user/auth/login");
+        return;
+      }
+
+      const data = await res.json();
+      const tables = Array.isArray(data.tables) ? data.tables : [];
+      setAvailableTables(tables);
+
+      setFormData((prev) => {
+        const tableStillAvailable = tables.find(
+          (table) => table.tableNumber === prev.tableInfo.tableNumber
+        );
+
+        if (tableStillAvailable) {
+          return {
+            ...prev,
+            tableInfo: {
+              ...prev.tableInfo,
+              area: tableStillAvailable.area,
+            },
+          };
+        }
+
+        return {
+          ...prev,
+          tableInfo: {
+            ...prev.tableInfo,
+            area: "",
+            tableNumber: "",
+          },
+        };
+      });
+
+      setIsLoadingTables(false);
+    };
+
+    fetchAvailableTables();
+  }, [formData.orderType, navigate]);
+
   const products = Array.isArray(cartItems?.products) ? cartItems.products : [];
   const totalQuantity = products.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -71,6 +121,17 @@ export default function CheckoutCart() {
     }));
   };
 
+  const handleSelectTable = (table) => {
+    setFormData((prev) => ({
+      ...prev,
+      tableInfo: {
+        ...prev.tableInfo,
+        tableNumber: table.tableNumber,
+        area: table.area,
+      },
+    }));
+  };
+
   const handleDonePay = async (event) => {
     event.preventDefault();
 
@@ -83,7 +144,7 @@ export default function CheckoutCart() {
     });
 
     if (res.status === 401) {
-      notifyApp("Vui lòng đăng nhập để đặt hàng", "info");
+      notifyApp("Vui long dang nhap de dat hang", "info");
       navigate("/user/auth/login");
       return;
     }
@@ -91,11 +152,16 @@ export default function CheckoutCart() {
     const data = await res.json();
     if (!res.ok) {
       notifyApp(data.message, "error");
+      if (formData.orderType === "dine_in") {
+        const tableRes = await fetch("/api/tables/available");
+        const tableData = await tableRes.json();
+        setAvailableTables(Array.isArray(tableData.tables) ? tableData.tables : []);
+      }
       return;
     }
 
     await fetchCart();
-    notifyApp("Đặt hàng thành công", "success");
+    notifyApp("Dat hang thanh cong", "success");
     navigate(`/cart/checkout/success/${data.orderId}`);
   };
 
@@ -107,15 +173,15 @@ export default function CheckoutCart() {
             <div className="success-icon">
               <i className="bi bi-basket3" />
             </div>
-            <p className="eyebrow">Chưa thể thanh toán</p>
-            <h1>Giỏ hàng hiện đang trống.</h1>
-            <p>Vui lòng thêm món ăn trước khi đi đến bước thanh toán hoặc đặt bàn.</p>
+            <p className="eyebrow">Chua the thanh toan</p>
+            <h1>Gio hang hien dang trong.</h1>
+            <p>Vui long them mon an truoc khi di den buoc thanh toan hoac dat ban.</p>
             <div className="empty-state-actions">
               <Link to="/products" className="primary-button no-underline ">
-                Đi tới sản phẩm
+                Di toi san pham
               </Link>
               <Link to="/" className="secondary-button no-underline ">
-                Về trang chủ
+                Ve trang chu
               </Link>
             </div>
           </article>
@@ -129,8 +195,8 @@ export default function CheckoutCart() {
     <section className="section-shell">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Thanh toán mới</p>
-          <h2>Thanh toán nhanh và giữ bàn ngay trong cùng một màn hình</h2>
+          <p className="eyebrow">Thanh toan moi</p>
+          <h2>Chon ban trong, xac nhan mon va gui don trong cung mot man hinh</h2>
         </div>
       </div>
 
@@ -142,7 +208,7 @@ export default function CheckoutCart() {
                 <img src={item.productInfo?.img} alt={item.productInfo?.name} />
                 <div className="order-item-copy">
                   <strong>{item.productInfo?.name}</strong>
-                  <span>Số lượng: {item.quantity}</span>
+                  <span>So luong: {item.quantity}</span>
                 </div>
                 <strong>{formatCurrency(calculateLineTotal(item))}</strong>
               </article>
@@ -157,62 +223,91 @@ export default function CheckoutCart() {
               className={formData.orderType === "dine_in" ? "toggle active" : "toggle"}
               onClick={() => setFormData((prev) => ({ ...prev, orderType: "dine_in" }))}
             >
-              Ăn tại bàn
+              An tai ban
             </button>
             <button
               type="button"
               className={formData.orderType === "delivery" ? "toggle active" : "toggle"}
               onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}
             >
-              Giao tận nơi
+              Giao tan noi
             </button>
           </div>
 
           <div className="form-grid">
             <label>
-              Họ và tên
+              Ho va ten
               <input name="fullName" value={formData.fullName} onChange={handleChange} required />
             </label>
             <label>
-              Số điện thoại
+              So dien thoai
               <input name="phone" value={formData.phone} onChange={handleChange} required />
             </label>
 
             {formData.orderType === "delivery" && (
               <label className="field-span">
-                Địa chỉ giao hàng
+                Dia chi giao hang
                 <input name="address" value={formData.address} onChange={handleChange} required />
               </label>
             )}
 
             {formData.orderType === "dine_in" && (
               <>
+                <div className="field-span">
+                  <span style={{ display: "block", marginBottom: 12, fontWeight: 600 }}>
+                    Danh sach ban trong
+                  </span>
+                  {isLoadingTables ? (
+                    <p>Dang tai danh sach ban...</p>
+                  ) : availableTables.length === 0 ? (
+                    <p>Hien khong con ban trong.</p>
+                  ) : (
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                        gap: 12,
+                      }}
+                    >
+                      {availableTables.map((table) => {
+                        const isSelected = formData.tableInfo.tableNumber === table.tableNumber;
+
+                        return (
+                          <button
+                            key={table._id || table.tableNumber}
+                            type="button"
+                            onClick={() => handleSelectTable(table)}
+                            style={{
+                              border: isSelected ? "2px solid #1f7a5a" : "1px solid #d9e3dc",
+                              borderRadius: 8,
+                              background: isSelected ? "#eef9f4" : "#fff",
+                              padding: 12,
+                              textAlign: "left",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <strong style={{ display: "block", marginBottom: 6 }}>{table.tableNumber}</strong>
+                            <span style={{ display: "block", fontSize: 13 }}>{table.area}</span>
+                            <span style={{ display: "block", marginTop: 6, fontSize: 13 }}>
+                              {table.capacity} khach
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
                 <label>
-                  Khu vực
-                  <select name="area" value={formData.tableInfo.area} onChange={handleTableChange}>
-                    {DINING_AREAS.map((area) => (
-                      <option key={area} value={area}>
-                        {area}
-                      </option>
-                    ))}
-                  </select>
+                  Ban da chon
+                  <input
+                    value={getTableLabel(formData.tableInfo.tableNumber ? formData.tableInfo : null)}
+                    readOnly
+                    placeholder="Chon mot ban trong"
+                  />
                 </label>
                 <label>
-                  Số bàn
-                  <select
-                    name="tableNumber"
-                    value={formData.tableInfo.tableNumber}
-                    onChange={handleTableChange}
-                  >
-                    {TABLE_OPTIONS.map((table) => (
-                      <option key={table} value={table}>
-                        {table}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Số khách
+                  So khach
                   <input
                     type="number"
                     min="1"
@@ -222,7 +317,7 @@ export default function CheckoutCart() {
                   />
                 </label>
                 <label>
-                  Giờ đến dự kiến
+                  Gio den du kien
                   <input
                     type="time"
                     name="arrivalTime"
@@ -231,13 +326,13 @@ export default function CheckoutCart() {
                   />
                 </label>
                 <label className="field-span">
-                  Ghi chú bàn ăn
+                  Ghi chu ban an
                   <textarea
                     rows="3"
                     name="note"
                     value={formData.tableInfo.note}
                     onChange={handleTableChange}
-                    placeholder="Sinh nhật, gần cửa sổ, thêm ghế em bé..."
+                    placeholder="Sinh nhat, can khong gian rieng, them ghe em be..."
                   />
                 </label>
               </>
@@ -245,15 +340,19 @@ export default function CheckoutCart() {
           </div>
 
           <div className="summary-row">
-            <span>Tổng số lượng</span>
+            <span>Tong so luong</span>
             <strong>{totalQuantity}</strong>
           </div>
           <div className="summary-row">
-            <span>Tổng tiền</span>
+            <span>Tong tien</span>
             <strong>{formatCurrency(cartItems?.totalCartPrice)}</strong>
           </div>
-          <button className="primary-button full-width" type="submit">
-            Xác nhận đơn hàng
+          <button
+            className="primary-button full-width"
+            type="submit"
+            disabled={formData.orderType === "dine_in" && !formData.tableInfo.tableNumber}
+          >
+            Xac nhan don hang
           </button>
         </form>
       </div>

@@ -1,14 +1,14 @@
 function Advertisement() {
   const promos = [
     {
-      title: "Dat ban nhom nhanh hon",
-      description: "Chon khu vuc, so khach va gio den ngay trong luong checkout moi.",
+      title: "Đặt Bàn Nhanh Hơn",
+      description: "Chọn khu vực, số khách giỏ hàng đến ngay trong lượt checkout mới.",
       image:
         "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80",
     },
     {
-      title: "Combo toi uu cho ban an gia dinh",
-      description: "Goi y mon noi bat va combo phu hop theo nhu cau order tai quan.",
+      title: "Combo tối ưu cho gia đình bạn",
+      description: "Món ăn gia đình oredr ngay tại đây.",
       image:
         "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80",
     },
@@ -18,18 +18,17 @@ function Advertisement() {
     <section className="promo-grid">
       <article className="promo-hero">
         <div className="promo-copy">
-          <p className="eyebrow">Khong gian an uong</p>
-          <h2>Lam moi trang dat mon theo phong cach nha hang hien dai.</h2>
+          <p className="eyebrow">Không gian ăn uống</p>
+          <h2>Sạch Sẽ, Sang Trọng.</h2>
           <p>
-            Giao dien uu tien thao tac nhanh, card mon an ro rang, checkout tach ro dat ban va
-            giao hang.
+            Đặt nhanh, card món ăn rõ ràng, checkout nhanh chóng đặt bàn & giao hàng tức thì.
           </p>
           <div className="promo-actions">
-            <a href="/products" className="primary-button">
-              Xem thuc don
+            <a href="/products" className="primary-button no-underline ">
+              Xem Thực Đơn
             </a>
-            <a href="/cart/checkout?mode=table" className="secondary-button">
-              Giu ban toi nay
+            <a href="/cart/checkout?mode=table" className="secondary-button no-underline" style ={{color:"black"}}>
+              Giữ Bàn Ngay
             </a>
           </div>
         </div>

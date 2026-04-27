@@ -1,52 +1,52 @@
 import { useState, useEffect } from "react";
 import AutoCloseNotification from "../alerts/AutoCloseNotification";
+import { formatCurrency, formatDateTime } from "../../../users/utils/shop";
 
 function Order() {
   const [orders, setOrders] = useState([]);
   const [idOrders, setIdOrder] = useState([]);
-  const [table, setTable] = useState(false);
-  const [messege , setMessege] = useState("")
-const handleChangeStatus = (orderId, status, orderCode) => {
-  setIdOrder((prev) => {
-    const existingIndex = prev.findIndex((item) => item[0] === orderId);
-    if (existingIndex !== -1) {
-      const updated = [...prev];
-      updated[existingIndex] = [orderId, status, orderCode];
-      return updated;
-    } else {
-      return [...prev, [orderId, status, orderCode]];
+  const [messege, setMessege] = useState("");
+
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch("/api/admin/checkout/doneOrder");
+      const data = await response.json();
+      setOrders(Array.isArray(data.orders) ? data.orders : []);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
     }
-  });
+  };
 
-  // Cập nhật trạng thái orderStatus trong orders để giao diện phản ứng ngay
-  setOrders((prevOrders) =>
-    prevOrders.map((order) =>
-      order._id === orderId ? { ...order, orderStatus: status } : order
-    )
-  );
-};
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await fetch("/api/admin/checkout/doneOrder");
-        const data = await response.json();
-        setOrders(data.orders);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
+  const handleChangeStatus = (orderId, status, orderCode) => {
+    setIdOrder((prev) => {
+      const existingIndex = prev.findIndex((item) => item[0] === orderId);
+      if (existingIndex !== -1) {
+        const updated = [...prev];
+        updated[existingIndex] = [orderId, status, orderCode];
+        return updated;
       }
-    };
+      return [...prev, [orderId, status, orderCode]];
+    });
 
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order._id === orderId ? { ...order, orderStatus: status } : order
+      )
+    );
+  };
+
+  useEffect(() => {
     fetchOrders();
   }, []);
 
   const statusOptions = [
-    { id: 1, value: "pending" },
-    { id: 2, value: "activating" },
-    { id: 3, value: "completed" },
+    { id: 1, value: "pending", label: "pending" },
+    { id: 2, value: "activating", label: "activating" },
+    { id: 3, value: "completed", label: "completed" },
   ];
+
   const handleClick = async () => {
-    let url = "/api/admin/authenOrder";
-    const response = await fetch(url, {
+    const response = await fetch("/api/admin/authenOrder", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -55,23 +55,20 @@ const handleChangeStatus = (orderId, status, orderCode) => {
     });
     const res = await response.json();
 
-        setMessege(res.message);
-        setTimeout(() => {
-          setMessege("");
-        }, 3000);
+    setMessege(res.message);
+    setIdOrder([]);
+    fetchOrders();
+    setTimeout(() => {
+      setMessege("");
+    }, 3000);
   };
 
   return (
     <>
       {messege && <AutoCloseNotification message={messege} />}
-      <div style={{ display: "flex", gap: "10px" }}>
-        <select
-          name="status"
-          className="admin-select"
-          style={{ width: "130px" }}
-        ></select>
-        <button className="btn-accent" onClick={handleClick}>
-          Áp Dụng
+      <div style={{ display: "flex", gap: "10px", marginBottom: 16 }}>
+        <button className="btn-accent" onClick={handleClick} disabled={idOrders.length === 0}>
+          Ap dung cap nhat
         </button>
       </div>
       <div className="products-table">
@@ -79,47 +76,56 @@ const handleChangeStatus = (orderId, status, orderCode) => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Trạng Thái</th>
-              <th>Mã Đơn Hàng</th>
-              <th>Số Tiền</th>
-              <th>Vị Trí</th>
-              <th>Ngày Tạo</th>
-              <th>Số Bàn</th>
-              <th>Hành Động</th>
+              <th>Trang thai</th>
+              <th>Ma don hang</th>
+              <th>Khach hang</th>
+              <th>Tong tien</th>
+              <th>Loai don</th>
+              <th>Ban</th>
+              <th>Ngay tao</th>
+              <th>Hanh dong</th>
             </tr>
           </thead>
 
           <tbody>
             {orders?.map((order, index) => (
-              <tr key={order.id}>
+              <tr key={order._id}>
                 <td>{index + 1}</td>
                 <td>
-                  {order.status === "pending" ? (
-                    <span style={{ color: "orange" }}>Đang Xử Lý</span>
-                  ) : (
-                    <span style={{ color: "green" }}>Đã Xử Lý</span>
-                  )}
+                  <span
+                    style={{
+                      color:
+                        order.orderStatus === "completed"
+                          ? "green"
+                          : order.orderStatus === "activating"
+                          ? "#0c63e7"
+                          : "orange",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {order.orderStatus}
+                  </span>
                 </td>
                 <td>{order.orderId}</td>
                 <td>
-                  {Array.isArray(order.products)
+                  <strong>{order.userInfo?.fullName || "N/A"}</strong>
+                  <div>{order.userInfo?.phone || "N/A"}</div>
+                </td>
+                <td>{formatCurrency(
+                  Array.isArray(order.products)
                     ? order.products.reduce(
                         (sum, item) => sum + item.price * item.quantity,
                         0
                       )
-                    : 0}
-                  $
+                    : 0
+                )}</td>
+                <td>{order.orderType === "delivery" ? "Giao hang" : "Tai ban"}</td>
+                <td>
+                  {order.orderType === "dine_in"
+                    ? `${order.tableInfo?.tableNumber || "N/A"} ${order.tableInfo?.area ? `- ${order.tableInfo.area}` : ""}`
+                    : "Khong ap dung"}
                 </td>
-                <td>{order.userInfo?.address || "N/A"}</td>
-                <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-                <td style={{ textAlign: "center" }}>
-                  <input
-                    style={{ width: "50px", textAlign: "center" }}
-                    type="text"
-                    value={order.tableNumber || "N/A"}
-                    onClick={() => setTable(true)}
-                  />
-                </td>
+                <td>{formatDateTime(order.createdAt)}</td>
                 <td>
                   <select
                     name="status"
@@ -136,7 +142,7 @@ const handleChangeStatus = (orderId, status, orderCode) => {
                   >
                     {statusOptions?.map((opt) => (
                       <option key={opt.id} value={opt.value}>
-                        {opt.value}
+                        {opt.label}
                       </option>
                     ))}
                   </select>
@@ -149,4 +155,5 @@ const handleChangeStatus = (orderId, status, orderCode) => {
     </>
   );
 }
+
 export default Order;

@@ -84,7 +84,7 @@ function Header() {
                 </button>
               </>
             ) : (
-              <Link to="/user/auth/login">Đăng Nhập</Link>
+              <Link to="/user/auth/login" className="no-underline">Đăng Nhập</Link>
             )}
           </div>
 
