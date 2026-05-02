@@ -20,7 +20,11 @@ const productSchema = new mongoose.Schema({
   },
   slug: { type: String, slug: "name", unique: true },
   description: String,
-
+  restaurant_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Restaurant",
+    default: null,
+  },
   deletedAt: Date,
   position: Number
 },

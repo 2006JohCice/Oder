@@ -26,6 +26,11 @@ const RegisterPageUser = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
+  const allFieldsFilled =
+    formData.email.trim() && formData.password.trim() && formData.confirmPassword.trim();
+  const passwordsMatch = formData.password === formData.confirmPassword;
+  const canSendOtp = allFieldsFilled && passwordsMatch;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -36,13 +41,22 @@ const RegisterPageUser = () => {
   const handlClickOtp = async (e) => {
     setMessage("");
     setMessagePassword("");
+    setAlert("");
+
+    if (!allFieldsFilled) {
+      setMessage("Vui lòng nhập Email và mật khẩu mới trước khi gửi OTP.");
+      return;
+    }
+    if (!passwordsMatch) {
+      setMessagePassword("Mật khẩu và xác nhận mật khẩu không khớp.");
+      return;
+    }
 
     const url = "/api/user/password/forgot";
     try {
       setTimeLeft(60);
       const res = await fetch(url, {
         method: "POST",
-        //   credentials: "include",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(formData),
       });
@@ -50,9 +64,12 @@ const RegisterPageUser = () => {
       setMessage(result.message);
       setMessagePassword(result.messagePassword);
       setAlert(result.alerts);
+      if (!res.ok) {
+        setTimeLeft(0);
+      }
     } catch (error) {
       console.error("Lỗi kết nối server Error:", error);
-      // setMessage("");
+      setTimeLeft(0);
     } finally {
       setIsLoading(false);
     }
@@ -156,17 +173,25 @@ const RegisterPageUser = () => {
                 onChange={handleChange}
                 required
               />
-              {/* <button type="button" className="btn btn-info" style={{ marginTop: "10px",borderRadius:"10px" }} onClick ={handlClickOtp}>Gửi OTP</button> */}
               <button
                 type="button"
                 className="btn btn-info"
                 style={{ marginTop: "10px", borderRadius: "10px" }}
                 onClick={handlClickOtp}
-                disabled={timeLeft > 0}
+                disabled={timeLeft > 0 || !canSendOtp}
               >
                 {timeLeft > 0 ? `Gửi lại sau (${timeLeft}s)` : "Gửi OTP"}
               </button>
             </div>
+            {!canSendOtp && (
+              <div className="hint-text" style={{ color: "#666", fontSize: 12, marginBottom: 12 }}>
+                {formData.email && !allFieldsFilled
+                  ? "Hoàn thành email và mật khẩu mới trước khi gửi OTP."
+                  : !passwordsMatch
+                  ? "Mật khẩu và xác nhận mật khẩu phải giống nhau."
+                  : "Nhập đủ email, mật khẩu và xác nhận mật khẩu để nhận OTP."}
+              </div>
+            )}
             <button type="submit" className="login-btn" disabled={isLoading}>
               {isLoading ? "Đang Ktra..." : "Thay Đổi"}
             </button>

@@ -11,6 +11,11 @@ const tableSchema = new mongoose.Schema(
       type: String,
       default: ""
     },
+    restaurant_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restaurant",
+      default: null,
+    },
     capacity: {
       type: Number,
       default: 4

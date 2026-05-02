@@ -6,6 +6,16 @@ const userSchema = new mongoose.Schema(
     fullname: String,
     email:String,
     password:String,
+    role: {
+      type: String,
+      enum: ["user", "owner", "staff", "admin"],
+      default: "user",
+    },
+    restaurant_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restaurant",
+      default: null,
+    },
     tokenUser:{
         type:String,
         default:generate.generateRandomString(20),

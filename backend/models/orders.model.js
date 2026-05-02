@@ -3,6 +3,11 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema(
     {
         cart_id: String,
+        restaurant_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Restaurant",
+          default: null,
+        },
         orderId: String,
         orderStatus: {
             type: String,

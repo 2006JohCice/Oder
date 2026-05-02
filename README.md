@@ -63,5 +63,5 @@ Done:
 <img width="1905" height="894" alt="image" src="https://github.com/user-attachments/assets/6fed0274-e59d-4baf-b134-664f7252e196" />
 
 ---------------------------
-<img width="984" height="912" alt="localhost_3000_ (1)" src="https://github.com/user-attachments/assets/23923fb7-bbf0-4662-b0b7-22266697a310" />
+<img width="1856" height="895" alt="image" src="https://github.com/user-attachments/assets/7aaa4d8b-5bfe-48ef-b825-57c05c5fadf9" />
 
