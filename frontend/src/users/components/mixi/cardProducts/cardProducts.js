@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../cart/CartContext";
 import { formatCurrency } from "../../../utils/shop";
 import { notifyApp } from "../../../../shared/notifications/ToastProvider";
+import CardLoading from "../CardLoading";
 
 function CardProducts({ data }) {
   const navigate = useNavigate();
@@ -50,11 +51,9 @@ function CardProducts({ data }) {
 
   if (!Array.isArray(data) || data.length === 0) {
     return (
-      <div className="empty-state">
-        <i className="bi bi-emoji-smile" />
-        <h3>Chưa có món ăn phù hợp</h3>
-        <p>Hãy thử bộ lọc khác hoặc quay lại sau khi cửa hàng cập nhật thực đơn.</p>
-      </div>
+      
+        <CardLoading/>
+    
     );
   }
 

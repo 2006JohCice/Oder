@@ -9,7 +9,7 @@
   --accent-dark: #8d3916;
   --accent-soft: #f3dcc9;
   --success: #2f6a4e;
-  --shadow: 0 20px 50px rgba(77, 47, 24, 0.12);
+  --shadow: 0 12px 18px rgba(77, 47, 24, 0.08);
   --radius-lg: 28px;
   --radius-md: 20px;
   --radius-sm: 14px;
@@ -27,9 +27,9 @@ body {
   margin: 0;
   color: var(--text);
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-  background:
+  /* background:
     radial-gradient(circle at top left, rgba(228, 173, 122, 0.35), transparent 28%),
-    linear-gradient(180deg, #f9f4ed 0%, #f5ede2 44%, #f8f5ef 100%);
+    linear-gradient(180deg, #f9f4ed 0%, #f5ede2 44%, #f8f5ef 100%); */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -87,10 +87,9 @@ button {
 .detail-shell,
 .hero-metrics article,
 .empty-state {
-  background: var(--panel);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
+  background: rgba(255, 252, 247, 0.96);
+  border: 1px solid rgba(71, 48, 31, 0.12);
+  box-shadow: 0 12px 24px rgba(77, 47, 24, 0.08);
 }
 
 .eyebrow {
@@ -277,7 +276,11 @@ button:disabled {
 .product-grid,
 .history-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+
+
   gap: 20px;
 }
 
@@ -701,7 +704,8 @@ body::-webkit-scrollbar-thumb {
 
   .product-grid,
   .history-grid {
-    grid-template-columns: 1fr;
+    /* grid-template-columns:250px 1fr; */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 16px;
   }
 

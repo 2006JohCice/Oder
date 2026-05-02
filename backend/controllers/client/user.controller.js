@@ -50,7 +50,88 @@ module.exports.passwordRegisterOtp = async (req, res) => {
   const forgotPassword = new ForgotPassword(objectForgotPassword);
   await forgotPassword.save();
   const subject = "Yêu Tạo Tài Khoản Mới Với Order Local ";
-  const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.`;
+  // const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.`;
+  const html = `
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+</head>
+
+<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, sans-serif;">
+
+  <table width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6f8; padding:20px;">
+    <tr>
+      <td align="center">
+
+        <table width="500" cellspacing="0" cellpadding="0"
+          style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+
+          <!-- Header Image -->
+          <tr>
+            <td>
+              <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="OTP" width="100%" style="    /* right: 31%; */
+    left: 45%;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    height: 50px;
+    width: 50px;
+    display: grid;
+    top: 6px;">
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding:30px; text-align:center;">
+
+              <h2 style="color:#333; margin-bottom:10px;">Xác thực tài khoản</h2>
+
+              <p style="color:#666; font-size:14px;">
+                Xin chào,<br>
+                Đây là mã OTP của bạn:
+              </p>
+
+              <div style="margin:20px 0;">
+                <span
+                  style="display:inline-block; background:#4CAF50; color:#fff; font-size:28px; letter-spacing:5px; padding:15px 25px; border-radius:8px; font-weight:bold;">
+                  ${otpRamdon}
+                </span>
+              </div>
+
+              <p style="color:#666; font-size:14px;">
+                Mã OTP sẽ hết hạn sau <b>1 phút</b>.
+              </p>
+
+              <p style="color:#999; font-size:12px; margin-top:20px;">
+                Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f0f0f0; padding:15px; text-align:center;">
+              <p style="margin:0; font-size:12px; color:#888;">
+                © ORDER SHOP
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+
+</html>
+`;
+
   // sendMailHelper.sendMail( req.body.email, subject, html);
   try {
     await sendMailHelper.sendMail(req.body.email, subject, html);
@@ -182,7 +263,88 @@ module.exports.forgotPassword = async (req, res) => {
   const forgotPassword = new ForgotPassword(objectForgotPassword);
   await forgotPassword.save();
   const subject = "Yêu Cầu Đặt Lại Mật Khẩu";
-  const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.`;
+  // const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.`;
+  const html = `
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+</head>
+
+<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, sans-serif;">
+
+  <table width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6f8; padding:20px;">
+    <tr>
+      <td align="center">
+
+        <table width="500" cellspacing="0" cellpadding="0"
+          style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+
+          <!-- Header Image -->
+          <tr>
+            <td>
+              <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="OTP" width="100%" style="    /* right: 31%; */
+    left: 45%;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    height: 50px;
+    width: 50px;
+    display: grid;
+    top: 6px;">
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding:30px; text-align:center;">
+
+              <h2 style="color:#333; margin-bottom:10px;">Xác thực tài khoản</h2>
+
+              <p style="color:#666; font-size:14px;">
+                Xin chào ,<br>
+                Đây là mã OTP của bạn:
+              </p>
+
+              <div style="margin:20px 0;">
+                <span
+                  style="display:inline-block; background:#4CAF50; color:#fff; font-size:28px; letter-spacing:5px; padding:15px 25px; border-radius:8px; font-weight:bold;">
+                  ${otpRamdon}
+                </span>
+              </div>
+
+              <p style="color:#666; font-size:14px;">
+                Mã OTP sẽ hết hạn sau <b>1 phút</b>.
+              </p>
+
+              <p style="color:#999; font-size:12px; margin-top:20px;">
+                Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f0f0f0; padding:15px; text-align:center;">
+              <p style="margin:0; font-size:12px; color:#888;">
+                © ORDER SHOP
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+
+</html>
+`;
+  
   sendMailHelper.sendMail(email, subject, html);
   return res.status(200).json({
     message: "Đã gửi OTP về email"
