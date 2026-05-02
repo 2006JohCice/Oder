@@ -1,0 +1,94 @@
+.restaurant-list {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.restaurant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.restaurant-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.restaurant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.restaurant-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.restaurant-info h3 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.restaurant-info p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.restaurant-info .address {
+  font-weight: 500;
+}
+
+.restaurant-info .phone {
+  color: #27ae60;
+}
+
+.restaurant-info .owner {
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.restaurant-info .owner small {
+  color: #95a5a6;
+}
+
+.restaurant-card .btn {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 50px 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.login-prompt p {
+  color: #666;
+  font-size: 16px;
+}
+
+.login-prompt a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.login-prompt a:hover {
+  text-decoration: underline;
+}

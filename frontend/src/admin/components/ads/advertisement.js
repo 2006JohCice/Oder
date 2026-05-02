@@ -1,6 +1,6 @@
 import "../../css/ads/advertisement.css";
 import { useRef, useState, useEffect } from "react";
-import AutoCloseNotification from "../alerts/AutoCloseNotification";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 function getRandomIndex(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -10,7 +10,6 @@ function Advertisement() {
     // ADS 1
     const ads1Ref = useRef([]);
     const [ads1Count, setAds1Count] = useState(1);
-    const [noTifi, setNoTifi] = useState("");
     const [dataUrlAds, setDataUrlAds] = useState(null);
 
     // ADS 2
@@ -79,11 +78,11 @@ function Advertisement() {
         })
             .then(response => response.json())
             .then(data => {
-                setNoTifi("Cập nhật quảng cáo thành công!");
+                notifyApp("Cập nhật quảng cáo thành công!", "success");
                 dataUrlAdsApi(); // reload lại dữ liệu mới
             })
             .catch((error) => {
-                setNoTifi("Cập nhật quảng cáo thất bại!");
+                notifyApp("Cập nhật quảng cáo thất bại!", "error");
             });
     };
 
@@ -92,11 +91,6 @@ function Advertisement() {
             <h2>Quản lý quảng cáo</h2>
 
             <div className="advertisement">
-                {noTifi && (<AutoCloseNotification
-                    key={noTifi}
-                    message={noTifi}
-                    onClose={() => setNoTifi("")}
-                />)}
                 <div className="advertisement-container">
 
                     {/*===== ADS LEFT==== */}

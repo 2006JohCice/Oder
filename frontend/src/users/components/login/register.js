@@ -1,5 +1,4 @@
-import { useState,useEffect } from "react";
-
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
@@ -10,13 +9,24 @@ const RegisterPageUser = () => {
     email: "",
     password: "",
     confirmPassword: "",
-     otp: "",
+    otp: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messagePassword, setMessagePassword] = useState("");
   const [alert, setAlert] = useState("");
   const [timeLeft, setTimeLeft] = useState(0);
+  const [sendOtp, setSendOtp] = useState(false);
+
+  // Validate passwords match whenever password fields change
+  useEffect(() => {
+    if (formData.password && formData.confirmPassword && formData.fullName && formData.email) {
+      setSendOtp(formData.password === formData.confirmPassword);
+    }else {
+    
+      setSendOtp(false);
+    }
+  }, [formData.password, formData.confirmPassword,formData.fullName,formData.email]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,11 +42,12 @@ const RegisterPageUser = () => {
     setMessage("");
     setMessagePassword("");
 
-    const url = "/api/user/register";
+    const url = `/api/user/register`;
+
     try {
       const res = await fetch(url, {
         method: "POST",
-        //   credentials: "include",
+        credentials: "include",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(formData),
       });
@@ -56,17 +67,17 @@ const RegisterPageUser = () => {
       setIsLoading(false);
     }
   };
-const handlClickOtp = async (e) => {
-    
+  const handlClickOtp = async (e) => {
+
     setMessage("");
     setMessagePassword("");
 
-    const url = "/api/user/register/passwordOtp";
+    const url = `/api/user/register/passwordOtp`;
     try {
       setTimeLeft(60);
       const res = await fetch(url, {
         method: "POST",
-        //   credentials: "include",
+        credentials: "include",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(formData),
       });
@@ -81,15 +92,15 @@ const handlClickOtp = async (e) => {
       setIsLoading(false);
     }
   };
-useEffect(() => {
-      if (timeLeft === 0) return;
-  
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-  
-      return () => clearInterval(timer);
-    }, [timeLeft]);
+  useEffect(() => {
+    if (timeLeft === 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
   return (
     <div className="login-wrapper">
       {/* LEFT */}
@@ -100,10 +111,9 @@ useEffect(() => {
               <img
                 className="admin-logo_login"
                 alt="Admin Logo"
-                src="/logo.jpg"
+                src="/Textlogo.png"
               />
-              {/* <h1 className="logo-text" style={{ color: "#c00" }}>ORDER</h1>
-                            <h1 className="logo-text" style={{ color: "#c00" }}>SHOP</h1> */}
+
             </div>
             <p className="subtitle" style={{ color: "#c00" }}>
               Order - Shop
@@ -159,7 +169,7 @@ useEffect(() => {
                 required
               />
             </div>
-           
+
             <div className="input-group">
               <input
                 type="text"
@@ -172,10 +182,10 @@ useEffect(() => {
               {/* <button type="button" className="btn btn-info" style={{ marginTop: "10px",borderRadius:"10px" }} onClick ={handlClickOtp}>Gửi OTP</button> */}
               <button
                 type="button"
-                className="btn btn-info"
-                style={{ marginTop: "10px", borderRadius: "10px" }}
+                
+                style={{ marginTop: "10px", borderRadius: "10px" ,backgroundColor: sendOtp ? "#007bff" : "#ccc", color: "#fff", border: "none", cursor: sendOtp ? "pointer" : "not-allowed" ,padding: "10px 20px" }}
                 onClick={handlClickOtp}
-                disabled={timeLeft > 0}
+                disabled={timeLeft > 0 || sendOtp === false}
               >
                 {timeLeft > 0 ? `Gửi lại sau (${timeLeft}s)` : "Gửi OTP"}
               </button>
@@ -216,11 +226,6 @@ useEffect(() => {
               style={{ width: "190px" }}
             ></img>
           </a>
-
-          <div className="mockup-area">
-            <img src="/avata-logo-right.jpg" alt="dashboard" />
-          </div>
-
           <h2>Nhanh - Gọn - Lẹ</h2>
           <p>Order Shop Đặt Món Nhanh Chóng. </p>
         </div>

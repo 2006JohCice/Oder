@@ -13,6 +13,7 @@ const auth = require ('./auth.route')
 const setting = require ('./setting.route')
 const advertisement = require ('./advertisement.route')
 const doneCart = require ('./doneCart')
+const restaurant = require('./restaurant.route')
 
 module.exports = (app) => {
     const prefixAdmin = systemConfig.prefixAdmin;
@@ -31,5 +32,6 @@ module.exports = (app) => {
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,account) // http://localhost:3000/admin/listAccount // đã fix
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,setting) // doing
     app.use("/api" + prefixAdmin ,advertisement);
+    app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,restaurant);
 
 }

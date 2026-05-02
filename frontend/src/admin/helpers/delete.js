@@ -1,6 +1,6 @@
 import { notifyApp } from "../../shared/notifications/ToastProvider";
 
-function Delete({ set, Id, setId, setNotifMessage, setLoading, setNotifKey }) {
+function Delete({ set, Id, setId, setLoading }) {
   const deleteItem = () => {
     const result = window.confirm("Ban co chac chan muon xoa?");
     if (!result) return;
@@ -11,7 +11,6 @@ function Delete({ set, Id, setId, setNotifMessage, setLoading, setNotifKey }) {
     }
 
     setLoading?.(true);
-    setNotifKey?.((prev) => prev + 1);
 
     fetch(`/api/admin/products/delete/${Id}`, {
       method: "DELETE",
@@ -23,11 +22,9 @@ function Delete({ set, Id, setId, setNotifMessage, setLoading, setNotifKey }) {
       .then((data) => {
         set?.((prev) => prev.filter((item) => item._id !== Id && item.id !== Id));
         setId?.(Id);
-        setNotifMessage?.(data?.message || "Xoa san pham thanh cong");
         notifyApp(data?.message || "Xoa san pham thanh cong", "success");
       })
       .catch(() => {
-        setNotifMessage?.("Loi ket noi may chu");
         notifyApp("Loi ket noi may chu", "error");
       })
       .finally(() => {

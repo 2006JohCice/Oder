@@ -1,6 +1,6 @@
 import { useState } from "react";
-
 import {Link} from "react-router-dom";
+
 
 import { useNavigate } from "react-router-dom";
 const LoginPageUser = () => {
@@ -27,8 +27,8 @@ const LoginPageUser = () => {
         setIsLoading(true);
         setMessage("");
         setMessagePassword("")
-
-        const url = '/api/user/login';
+        console.log("Submitting form with data:", formData);
+        const url = `/api/user/login`;
         try {
             const res = await fetch(url, {
                 method: "POST",
@@ -63,14 +63,11 @@ const LoginPageUser = () => {
                         <div className="icon-login">
                             <img
                                 className="admin-logo_login"
-                                alt="Admin Logo"
-                                src="/logo.jpg"
+                                alt=" Logo MyBox"
+                                src="/Textlogo.png"
                             />
-                            {/* <h1 className="logo-text" style={{ color: "#c00" }}>ORDER</h1>
-                            <h1 className="logo-text" style={{ color: "#c00" }}>SHOP</h1> */}
-
                         </div>
-                        <p className="subtitle"  style={{ color: "#c00" }}>Order - Shop</p>
+                        <p className="subtitle"  style={{ color: "#c00" }}>My Box</p>
                     </header>
 
                     <form className="login-form" onSubmit={handleSubmit}>
@@ -102,7 +99,6 @@ const LoginPageUser = () => {
                             {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
                         </button>
                     </form>
-
                     <div className="login-footer" style={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
                         <Link to="/user/auth/forgot-password" className="forgot-password">Quên mật khẩu?</Link>
                         <Link to="/user/auth/register" className="forgot-password">Đăng Ký</Link>
@@ -110,24 +106,21 @@ const LoginPageUser = () => {
                     </div>
                 </div>
             </div>
-
             {/* RIGHT */}
             <div className="login-right">
                 <div className="right-content">
                     {/* <h1 className="right-logo"><span>LO</span><span>GO</span></h1> */}
                     <a href="/" class="mb-0 mb-lg-12">
                         <img alt="Logo" src="/Textlogo.png" class="h-60px h-lg-75px" style={{width:"190px"}}></img>
-
                     </a>
-
                     <div className="mockup-area">
-                        <img src="/avata-logo-right.jpg" alt="dashboard" />
+                        <img src="/Textlogo.png" alt="dashboard" />
                     </div>
 
 
                     <h2>Nhanh - Gọn - Lẹ</h2>
                     <p>
-                        Order Shop Đặt Món Nhanh Chóng. </p>
+                        Nhanh Chóng Gửi Lời Thương Yêu . </p>
                 </div>
             </div>
         </div>

@@ -60,6 +60,7 @@ function Header() {
         </div>
 
         <div className={`desktop-nav ${menuOpen ? "is-open" : ""}`}>
+         
           <ListFood data={categories} totalQuantity={totalQuantity} onNavigate={closeMenu} />
         </div>
 

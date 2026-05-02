@@ -45,7 +45,7 @@ module.exports.passwordRegisterOtp = async (req, res) => {
     type: "register",
     expireAt: Date.now() + 60 * 1000,
   };
-  console.log(objectForgotPassword)
+  console.log("obj otp password",objectForgotPassword)
   // console.log("Forgot Password Object:", otpRamdon);
   const forgotPassword = new ForgotPassword(objectForgotPassword);
   await forgotPassword.save();
@@ -191,7 +191,7 @@ module.exports.register = async (req, res) => {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
-    console.log(user);
+    console.log("Newly registered user:", user);
     return res.status(201).json({ message: "Đăng ký thành công" });
   }
 };
@@ -224,7 +224,7 @@ module.exports.login = async (req, res) => {
     sameSite: "lax",
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
-  console.log(user);
+  console.log("Logged in user:", user);
   return res.status(200).json({ message: "Đăng nhập thành công" });
 };
 // [GET] api/user/logout
@@ -382,7 +382,7 @@ module.exports.otpPasswordPost = async (req, res) => {
 
     return res.status(200).json({});
   }
-  console.log(user);
+
 };
 
 //[GET] /api/user/me
@@ -392,5 +392,5 @@ module.exports.infoUser = async (req, res) => {
   } else {
     res.status(401).json({ message: "Chưa đăng nhập" });
   }
-  console.log(res.locals.user);
+  console.log("check user",res.locals.user);
 };

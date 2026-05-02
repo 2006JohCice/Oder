@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../../css/AddCategory/AddCategory.css";
 import ListCategory from "./list-category"
-import AutoCloseNotification from "../alerts/AutoCloseNotification";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 import { Link } from "react-router-dom";
 const EditCategory = () => {
   const id = window.location.pathname.split("/").pop();
@@ -18,7 +18,6 @@ const EditCategory = () => {
 
   });
 
-  const [nofity, setNotify] = useState("");
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -37,7 +36,7 @@ const EditCategory = () => {
     })
       .then(res => res.json())
       .then(result => {
-        setNotify(result.message);
+        notifyApp(result.message, "success");
       })
       .catch(err => console.error(err));
 
@@ -70,12 +69,6 @@ const EditCategory = () => {
 
 
     <div className="products-container">
-      {loading && (
-        <AutoCloseNotification
-          message={nofity}
-          onClose={() => setLoading(false)}
-        />
-      )}
       <div className="products-right">
 
         <div className="mb-3">

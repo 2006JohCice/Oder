@@ -23,6 +23,7 @@ import Account from "../components/account/account";
 import Advertisement from "../components/ads/advertisement";
 import { apiFetch } from "../../utils/apiFetch";
 import Order from "../components/order/order";
+import RestaurantManagement from "../components/restaurant/RestaurantManagement";
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -108,6 +109,10 @@ export default function AdminDashboard() {
                 <Route
                   path="/permission"
                   element={role?.permissions?.includes("role-permission") ? <PermissionPage /> : ""}
+                />
+                <Route
+                  path="/restaurants"
+                  element={role?.permissions?.includes("role-permission") ? <RestaurantManagement /> : ""}
                 />
               </>
             )}

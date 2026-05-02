@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import "../../css/user/user.css";
-import AutoCloseNotification from "../../components/alerts/AutoCloseNotification";
 import PaginationHelper from "../../helpers/pagination";
 import Delete from "../../helpers/delete";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../../../utils/apiFetch";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 function UsersAdmin() {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState(null);
-  const [showNotification, setShowNotification] = useState(false);
   const [showAddUser, setShowAddUser] = useState(false);
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
@@ -40,8 +39,7 @@ function UsersAdmin() {
       setUsers((prev) =>
         prev.map((u) => (u.id === selected.id ? selected : u))
       );
-      // alert("Đã lưu thay đổi!");
-      setShowNotification(true);
+      notifyApp("Đã lưu thay đổi!", "success");
     }
   };
 
@@ -99,13 +97,6 @@ function UsersAdmin() {
 
   return (
     <>
-      {showNotification && (
-        <AutoCloseNotification
-          message="Xác nhận thành công!"
-          onClose={() => setShowNotification(false)}
-        />
-      )}
-
       <section
         className="admin-content"
         style={{

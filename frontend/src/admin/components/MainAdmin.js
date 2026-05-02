@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
-import AutoCloseNotification from "./alerts/AutoCloseNotification";
 import PaginationHelper from "../helpers/pagination";
 import Delete from "../helpers/delete";
 import Loading from "../helpers/loading";
 import { apiFetch } from '../../utils/apiFetch';
 import { useNavigate } from "react-router-dom";
+import { notifyApp } from "../../shared/notifications/ToastProvider";
 function MainAdmin({ query }) {
 
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
-  const [showNotification, setShowNotification] = useState("");
   const [sumUsers, setSumUsers] = useState(0);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
@@ -40,7 +39,7 @@ function MainAdmin({ query }) {
                 .then((res) => res.json())
                 .then((data) => {
                     if (data.success) {
-                        setShowNotification("Thay Đổi Thành Công");
+                        notifyApp("Thay Đổi Thành Công", "success");
                         setSelected(null);
                     }
                 });
@@ -49,7 +48,7 @@ function MainAdmin({ query }) {
 
 
   const checkBoxSetting = () => {
-    setShowNotification(true);
+    notifyApp("Cài đặt đã được cập nhật", "success");
   }
 
 
@@ -142,7 +141,7 @@ function MainAdmin({ query }) {
 
       if (res.ok) {
         fetchUser();
-        setShowNotification("Cập nhật thành công!");
+        notifyApp("Cập nhật thành công!", "success");
         setSelected(null);
       }
     } catch (error) {
@@ -179,7 +178,7 @@ function MainAdmin({ query }) {
           .then((res) => res.json())
           .then((res) => {
             setIdUser(Id);
-            setShowNotification(res.message);
+            notifyApp(res.message, "success");
             fetchUser();
           })
           .catch((err) => {
@@ -202,9 +201,6 @@ function MainAdmin({ query }) {
           <div className="admin-page-title">
             <Loading message="Đang Thống Kê..." />
           </div> : <div>
-            {showNotification && <AutoCloseNotification
-              message={showNotification}
-              onClose={() => setShowNotification(false)} />}
             <section className="admin-grid">
               <div className="admin-card">
                 <h3>Users</h3>
@@ -240,7 +236,7 @@ function MainAdmin({ query }) {
                 <h3>Revenue</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">$ {revenue}</div>
+                    <div className="admin-big">₫ {revenue}</div>
                     <div className="admin-trend">This month</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">+12% vs last month</div></div>

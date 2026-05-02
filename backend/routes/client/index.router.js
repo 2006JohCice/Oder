@@ -7,6 +7,7 @@ const checkOutRouter = require("./checkout.route");
 const userRoure = require("./user.route");
 const foodSuggestionRouter = require("./foodsugGestion");
 const tableRouter = require("./table.route");
+const restaurantRouter = require("./restaurant.route");
 
 module.exports = (app) => {
     app.use("/api", homeRouter);
@@ -18,4 +19,5 @@ module.exports = (app) => {
     app.use("/api", userRoure);
     app.use("/api", foodSuggestionRouter);
     app.use("/api", tableRouter);
+    app.use("/api", restaurantRouter);
 };

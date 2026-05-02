@@ -3,7 +3,7 @@ import "../../css/creatProduct/CreateProducts.css";
 import ListCategory from "../AddCategory/list-category";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
-function CreateProducts({ setProducts, setNotifMessage, setLoading }) {
+function CreateProducts({ setProducts, setLoading }) {
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -53,7 +53,6 @@ function CreateProducts({ setProducts, setNotifMessage, setLoading }) {
         return;
       }
 
-      setNotifMessage?.(dataResponse.message);
       setLoading?.(true);
       setProducts((prev) => [...prev, dataResponse.product]);
       resetForm();

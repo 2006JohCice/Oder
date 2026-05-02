@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import MenuItem from "./MenuItem";
-
 function ListFood({ data, totalQuantity, onNavigate }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
   return (
     <nav className="site-nav">
       <div className="nav-dropdown">
@@ -25,6 +28,9 @@ function ListFood({ data, totalQuantity, onNavigate }) {
 
       <Link to="/" className="nav-link no-underline " onClick={onNavigate}>
         Trang chủ
+      </Link>
+      <Link to="/restaurants" className="nav-link no-underline" onClick={closeMenu}>
+        Nhà Hàng
       </Link>
       <Link to="/products" className="nav-link no-underline " onClick={onNavigate}>
         Món nổi bật

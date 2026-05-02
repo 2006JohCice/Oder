@@ -1,8 +1,5 @@
 import { useState } from "react";
 
-/**
- * Custom hook quản lý hiển thị AutoCloseNotification
- */
 export default function useNotification() {
   const [visible, setVisible] = useState(false);
   const [notifKey, setNotifKey] = useState(0);

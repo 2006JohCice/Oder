@@ -10,6 +10,9 @@ import SearchProduct from "../components/listSearchProducts/searchProducts";
 import OrderSuccess from "../components/pages/success";
 import CheckoutCart from "../components/pages/checkoutCart";
 import DoneOrder from "../components/pages/doneOrder";
+import RestaurantList from "../components/MainContents/RestaurantList";
+import RestaurantRegister from "../components/pages/RestaurantRegister";
+import RestaurantProducts from "../components/pages/RestaurantProducts";
 
 function DefaultLayout() {
   useEffect(() => {
@@ -30,6 +33,9 @@ function DefaultLayout() {
           <Route path="/cart/checkout" element={<CheckoutCart />} />
           <Route path="/cart/checkout/success/:orderId" element={<OrderSuccess />} />
           <Route path="/cart/doneOrder" element={<DoneOrder />} />
+          <Route path="/restaurants" element={<RestaurantList />} />
+          <Route path="/restaurant/register" element={<RestaurantRegister />} />
+          <Route path="/restaurant/:restaurantId/products" element={<RestaurantProducts />} />
         </Routes>
       </div>
     </main>

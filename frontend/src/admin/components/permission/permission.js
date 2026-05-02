@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "../../css/permission/permission.css";
-import AutoCloseNotification from "../alerts/AutoCloseNotification";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 import { apiFetch } from '../../../utils/apiFetch';
 import {useNavigate} from 'react-router-dom';
 const PermissionPage = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
      const [loading, setLoading] = useState(false);
-       const [notifMessage, setNotifMessage] = useState("");
     const permissionList = [];
     const fetchData = async () => {
         // try {
@@ -59,9 +58,8 @@ const PermissionPage = () => {
             .then((response) => response.json())
             .then((data) => {
                 console.log('Success:', data);
-                // alert("Cập nhật phân quyền thành công!")
+                notifyApp("Cập nhật phân quyền thành công!", "success");
                 setLoading(true);
-                setNotifMessage("Cập nhật phân quyền thành công!")
                 fetchData();
             })
             .catch((error) => {
@@ -77,11 +75,6 @@ const PermissionPage = () => {
 
     return (
         <div className="permission">
-            {loading && (<AutoCloseNotification
-                message={notifMessage}
-                onClose={() => setLoading(false)}
-            />)}
-
             <div className="permission-container">
                 <button className="permission-btn-update" onClick={hanldSubmit}>Cập nhật</button>
                 <h2 className="permission-title">Thiết lập phân quyền</h2>

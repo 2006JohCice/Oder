@@ -139,6 +139,17 @@ function SidebarAdmin({ menuOpen, setMenuOpen }) {
             </Link>
           )}
 
+          {hasPermission("role-permission") && (
+            <Link
+              to={`${prefixAdmin}admin/restaurants`}
+              className={pathname === "admin/restaurants" ? "active" : ""}
+              onClick={handleNavigate}
+            >
+              <i className="admin-ico bi bi-shop"></i>
+              <span>Restaurants</span>
+            </Link>
+          )}
+
           <Link
             to={`${prefixAdmin}admin/advertisement`}
             className={pathname === "admin/advertisement" ? "active" : ""}

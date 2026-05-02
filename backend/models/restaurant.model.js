@@ -23,8 +23,8 @@ const restaurantSchema = new mongoose.Schema(
     address: String,
     status: {
       type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
+      enum: ['active', 'inactive','pending'],
+      default: 'pending',
     },
     deleted: {
       type: Boolean,

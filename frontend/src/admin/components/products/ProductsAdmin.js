@@ -3,13 +3,13 @@ import "../../css/products/ProductsAdmin.css";
 import ButtonTabs from "../../helpers/filterStatus";
 import FilterListFood from "../../helpers/filterListFood";
 import PaginationHelper from "../../helpers/pagination";
-import AutoCloseNotification from "../alerts/AutoCloseNotification";
 import Delete from "../../helpers/delete";
 import CreatProducts from "../creatProduct/creatProducts";
 import EditProducts from "../creatProduct/editPtoducts";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from '../../../utils/apiFetch';
 import LoadingCart from "../mixi/loadingCart";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
 const ProductsAdmin = ({ query }) => {
   const [CardLoading ,setCardLoading] = useState(true);
@@ -22,20 +22,13 @@ const ProductsAdmin = ({ query }) => {
   const [notifMessage, setNotifMessage] = useState("");
   const [idDelete, setIdDelete] = useState("");
   const [idEdit, setIdEdit] = useState("");
-  const [newStatusListFood, setNewStatusListFood] = useState("");
+
   const [page, setPage] = useState(1);
   const [sortAim, setSortAim] = useState("");
-  const [totalPages, setTotalPages] = useState(null);
-  const [limitPage, setLimitPage] = useState(null);
-
-
-  console.log("activeTab và newStatusListFood ",activeTab, newStatusListFood)
-  // Xử lý phần frontend về thông báo
-
-
+  const [totalPages, setTotalPages] = useState(1);
+  const [limitPage, setLimitPage] = useState(10);
+  const [newStatusListFood, setNewStatusListFood] = useState("");
   const [notifKey, setNotifKey] = useState(0);
-
-  //Kết thúc Xử lý phần frontend về thông báo
 
   const [filters, setFilters] = useState({
     status: "",
@@ -296,14 +289,8 @@ const ProductsAdmin = ({ query }) => {
 
   return (
     <div className="products-page">
-      <CreatProducts setProducts={setProducts} setNotifMessage={setNotifMessage}
-        setLoading={setLoading} />
+      <CreatProducts setProducts={setProducts} setLoading={setLoading} />
       <EditProducts idEdit={idEdit} setProducts={setProducts} />
-      {loading && (<AutoCloseNotification
-        key={notifKey}
-        message={notifMessage}
-        onClose={() => setLoading(false)}
-      />)}
 
       <header className="products-header">
         <h1>Quản Trị Sản Phẩm</h1>
@@ -455,7 +442,7 @@ const ProductsAdmin = ({ query }) => {
                           onClick={() => setIdEdit(item._id)}
 
                         ><i className="bi bi-pen"></i></button>
-                        <Delete set={setProducts} Id={item._id} setId={setIdDelete} setNotifMessage={setNotifMessage} setLoading={setLoading} setNotifKey={setNotifKey} />
+                        <Delete set={setProducts} Id={item._id} setId={setIdDelete} setLoading={setLoading} />
                       </td>
                     </tr>
                   ))

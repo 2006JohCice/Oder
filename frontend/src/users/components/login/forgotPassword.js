@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-
 import { Link } from "react-router-dom";
-
 import { useNavigate } from "react-router-dom";
 const RegisterPageUser = () => {
   const navigate = useNavigate();
@@ -16,6 +14,18 @@ const RegisterPageUser = () => {
   const [messagePassword, setMessagePassword] = useState("");
   const [alert, setAlert] = useState("");
   const [timeLeft, setTimeLeft] = useState(0);
+  const [sendOtp, setSendOtp] = useState(false);
+
+  // Validate passwords match whenever password fields change
+  useEffect(() => {
+    if (formData.password && formData.confirmPassword && formData.email) {
+      setSendOtp(formData.password === formData.confirmPassword);
+    } else {
+
+      setSendOtp(false);
+    }
+  }, [formData.password, formData.confirmPassword, formData.email]);
+
   useEffect(() => {
     if (timeLeft === 0) return;
 
@@ -25,11 +35,6 @@ const RegisterPageUser = () => {
 
     return () => clearInterval(timer);
   }, [timeLeft]);
-
-  const allFieldsFilled =
-    formData.email.trim() && formData.password.trim() && formData.confirmPassword.trim();
-  const passwordsMatch = formData.password === formData.confirmPassword;
-  const canSendOtp = allFieldsFilled && passwordsMatch;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,22 +46,13 @@ const RegisterPageUser = () => {
   const handlClickOtp = async (e) => {
     setMessage("");
     setMessagePassword("");
-    setAlert("");
-
-    if (!allFieldsFilled) {
-      setMessage("Vui lòng nhập Email và mật khẩu mới trước khi gửi OTP.");
-      return;
-    }
-    if (!passwordsMatch) {
-      setMessagePassword("Mật khẩu và xác nhận mật khẩu không khớp.");
-      return;
-    }
 
     const url = "/api/user/password/forgot";
     try {
       setTimeLeft(60);
       const res = await fetch(url, {
         method: "POST",
+        //   credentials: "include",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(formData),
       });
@@ -64,12 +60,9 @@ const RegisterPageUser = () => {
       setMessage(result.message);
       setMessagePassword(result.messagePassword);
       setAlert(result.alerts);
-      if (!res.ok) {
-        setTimeLeft(0);
-      }
     } catch (error) {
       console.error("Lỗi kết nối server Error:", error);
-      setTimeLeft(0);
+      // setMessage("");
     } finally {
       setIsLoading(false);
     }
@@ -114,7 +107,7 @@ const RegisterPageUser = () => {
               <img
                 className="admin-logo_login"
                 alt="Admin Logo"
-                src="/logo.jpg"
+                src="/Textlogo.png"
               />
               {/* <h1 className="logo-text" style={{ color: "#c00" }}>ORDER</h1>
                             <h1 className="logo-text" style={{ color: "#c00" }}>SHOP</h1> */}
@@ -173,25 +166,17 @@ const RegisterPageUser = () => {
                 onChange={handleChange}
                 required
               />
+              {/* <button type="button" className="btn btn-info" style={{ marginTop: "10px",borderRadius:"10px" }} onClick ={handlClickOtp}>Gửi OTP</button> */}
               <button
                 type="button"
                 className="btn btn-info"
-                style={{ marginTop: "10px", borderRadius: "10px" }}
+                style={{ marginTop: "10px", borderRadius: "10px", backgroundColor: sendOtp ? "#007bff" : "#ccc", color: "#fff", border: "none", cursor: sendOtp ? "pointer" : "not-allowed", padding: "10px 20px" }}
                 onClick={handlClickOtp}
-                disabled={timeLeft > 0 || !canSendOtp}
+                disabled={timeLeft > 0 || sendOtp === false}
               >
                 {timeLeft > 0 ? `Gửi lại sau (${timeLeft}s)` : "Gửi OTP"}
               </button>
             </div>
-            {!canSendOtp && (
-              <div className="hint-text" style={{ color: "#666", fontSize: 12, marginBottom: 12 }}>
-                {formData.email && !allFieldsFilled
-                  ? "Hoàn thành email và mật khẩu mới trước khi gửi OTP."
-                  : !passwordsMatch
-                  ? "Mật khẩu và xác nhận mật khẩu phải giống nhau."
-                  : "Nhập đủ email, mật khẩu và xác nhận mật khẩu để nhận OTP."}
-              </div>
-            )}
             <button type="submit" className="login-btn" disabled={isLoading}>
               {isLoading ? "Đang Ktra..." : "Thay Đổi"}
             </button>
@@ -230,11 +215,11 @@ const RegisterPageUser = () => {
           </a>
 
           <div className="mockup-area">
-            <img src="/avata-logo-right.jpg" alt="dashboard" />
+            <img src="/Textlogo.png" alt="dashboard" />
           </div>
 
           <h2>Nhanh - Gọn - Lẹ</h2>
-          <p>Order Shop Đặt Món Nhanh Chóng. </p>
+          <p>Nếu Bạn Quên Gửi Lời Yêu Thương Xin Đừng Lo Chúng Tôi Sẽ Gửi Lời Yêu Thương Nhanh Nhất. </p>
         </div>
       </div>
     </div>
