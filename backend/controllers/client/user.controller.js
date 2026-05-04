@@ -21,10 +21,10 @@ module.exports.passwordRegisterOtp = async (req, res) => {
     !req.body.password ||
     !req.body.confirmPassword
   ) {
-    return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
+    return res.status(400).json({ message: "Nháº­p ThÃ´ng Tin Äáº§y Äá»§" });
   }
   if (req.body.password !== req.body.confirmPassword) {
-    return res.status(400).json({ messagePassword: "Mật Khẩu Không Khớp" });
+    return res.status(400).json({ messagePassword: "Máº­t Kháº©u KhÃ´ng Khá»›p" });
   }
 
 
@@ -35,7 +35,7 @@ module.exports.passwordRegisterOtp = async (req, res) => {
   });
 
   if (existEmail.length > 0) {
-    return res.status(400).json({ message: "Email đã tồn tại" });
+    return res.status(400).json({ message: "Email Ä‘Ã£ tá»“n táº¡i" });
   }
   const otpRamdon = generateHelper.generateRandomNumber(6);
 
@@ -49,8 +49,8 @@ module.exports.passwordRegisterOtp = async (req, res) => {
   // console.log("Forgot Password Object:", otpRamdon);
   const forgotPassword = new ForgotPassword(objectForgotPassword);
   await forgotPassword.save();
-  const subject = "Yêu Tạo Tài Khoản Mới Với Order Local ";
-  // const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.`;
+  const subject = "YÃªu Táº¡o TÃ i Khoáº£n Má»›i Vá»›i Order Local ";
+  // const html = `MÃ£ OTP cá»§a báº¡n lÃ : <b>${otpRamdon}</b>. MÃ£ OTP nÃ y sáº½ háº¿t háº¡n sau 1 phÃºt. Náº¿u báº¡n khÃ´ng yÃªu cáº§u táº¡o tÃ i khoáº£n, vui lÃ²ng bá» qua email nÃ y.`;
   const html = `
 <!DOCTYPE html>
 <html lang="vi">
@@ -87,11 +87,11 @@ module.exports.passwordRegisterOtp = async (req, res) => {
           <tr>
             <td style="padding:30px; text-align:center;">
 
-              <h2 style="color:#333; margin-bottom:10px;">Xác thực tài khoản</h2>
+              <h2 style="color:#333; margin-bottom:10px;">XÃ¡c thá»±c tÃ i khoáº£n</h2>
 
               <p style="color:#666; font-size:14px;">
-                Xin chào,<br>
-                Đây là mã OTP của bạn:
+                Xin chÃ o,<br>
+                ÄÃ¢y lÃ  mÃ£ OTP cá»§a báº¡n:
               </p>
 
               <div style="margin:20px 0;">
@@ -102,11 +102,11 @@ module.exports.passwordRegisterOtp = async (req, res) => {
               </div>
 
               <p style="color:#666; font-size:14px;">
-                Mã OTP sẽ hết hạn sau <b>1 phút</b>.
+                MÃ£ OTP sáº½ háº¿t háº¡n sau <b>1 phÃºt</b>.
               </p>
 
               <p style="color:#999; font-size:12px; margin-top:20px;">
-                Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.
+                Náº¿u báº¡n khÃ´ng yÃªu cáº§u táº¡o tÃ i khoáº£n, vui lÃ²ng bá» qua email nÃ y.
               </p>
 
             </td>
@@ -116,7 +116,7 @@ module.exports.passwordRegisterOtp = async (req, res) => {
           <tr>
             <td style="background:#f0f0f0; padding:15px; text-align:center;">
               <p style="margin:0; font-size:12px; color:#888;">
-                © ORDER SHOP
+                Â© ORDER SHOP
               </p>
             </td>
           </tr>
@@ -137,12 +137,12 @@ module.exports.passwordRegisterOtp = async (req, res) => {
     await sendMailHelper.sendMail(req.body.email, subject, html);
 
     return res.status(200).json({
-      message: "Đã gửi OTP về email"
+      message: "ÄÃ£ gá»­i OTP vá» email"
     });
 
   } catch (error) {
     return res.status(500).json({
-      message: "Gửi email thất bại"
+      message: "Gá»­i email tháº¥t báº¡i"
     });
   }
 
@@ -158,10 +158,10 @@ module.exports.register = async (req, res) => {
     !req.body.confirmPassword ||
     !req.body.otp
   ) {
-    return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
+    return res.status(400).json({ message: "Nháº­p ThÃ´ng Tin Äáº§y Äá»§" });
   }
   if (req.body.password !== req.body.confirmPassword) {
-    return res.status(400).json({ messagePassword: "Mật Khẩu Không Khớp" });
+    return res.status(400).json({ messagePassword: "Máº­t Kháº©u KhÃ´ng Khá»›p" });
   }
 
   const existEmail = await User.find({
@@ -170,7 +170,7 @@ module.exports.register = async (req, res) => {
   });
 
   if (existEmail.length > 0) {
-    return res.status(400).json({ message: "Email đã tồn tại" });
+    return res.status(400).json({ message: "Email Ä‘Ã£ tá»“n táº¡i" });
   }
 
   const userRegister = await ForgotPassword.findOne({
@@ -180,7 +180,7 @@ module.exports.register = async (req, res) => {
   });
   if (!userRegister) {
     return res.status(400).json({
-      message: "Xác Thực Không Thành Công Kiểm Tra Lại Email Hoặc OTP",
+      message: "XÃ¡c Thá»±c KhÃ´ng ThÃ nh CÃ´ng Kiá»ƒm Tra Láº¡i Email Hoáº·c OTP",
     });
   } else {
     req.body.password = md5(req.body.password);
@@ -192,7 +192,7 @@ module.exports.register = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     console.log("Newly registered user:", user);
-    return res.status(201).json({ message: "Đăng ký thành công" });
+    return res.status(201).json({ message: "ÄÄƒng kÃ½ thÃ nh cÃ´ng" });
   }
 };
 
@@ -200,7 +200,7 @@ module.exports.register = async (req, res) => {
 module.exports.login = async (req, res) => {
   console.log("Login user:", req.body);
   if (!req.body || !req.body.email || !req.body.password) {
-    return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
+    return res.status(400).json({ message: "Nháº­p ThÃ´ng Tin Äáº§y Äá»§" });
   }
 
   const user = await User.findOne({
@@ -210,13 +210,13 @@ module.exports.login = async (req, res) => {
   });
 
   if (!user) {
-    return res.status(400).json({ message: "Email hoặc Mật Khẩu Không Đúng" });
+    return res.status(400).json({ message: "Email hoáº·c Máº­t Kháº©u KhÃ´ng ÄÃºng" });
   }
 
   if (user.status !== "active") {
     return res
       .status(400)
-      .json({ alerts: "Tài khoản của bạn không còn hoạt động" });
+      .json({ alerts: "TÃ i khoáº£n cá»§a báº¡n khÃ´ng cÃ²n hoáº¡t Ä‘á»™ng" });
   }
   res.cookie("tokenUser", user.tokenUser, {
     httpOnly: true,
@@ -225,22 +225,22 @@ module.exports.login = async (req, res) => {
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
   console.log("Logged in user:", user);
-  return res.status(200).json({ message: "Đăng nhập thành công" });
+  return res.status(200).json({ message: "ÄÄƒng nháº­p thÃ nh cÃ´ng" });
 };
 // [GET] api/user/logout
 module.exports.logout = async (req, res) => {
   res.clearCookie("tokenUser");
-  return res.status(200).json({ message: "Đăng xuất thành công" });
+  return res.status(200).json({ message: "ÄÄƒng xuáº¥t thÃ nh cÃ´ng" });
 };
 // Create OTP For Forgot Password
 //[POST] /api/user/password/forgot
 module.exports.forgotPassword = async (req, res) => {
   const { email, password, confirmPassword, otp } = req.body;
   if (!email || !confirmPassword || !password) {
-    return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
+    return res.status(400).json({ message: "Nháº­p ThÃ´ng Tin Äáº§y Äá»§" });
   }
   if (password != confirmPassword) {
-    return res.status(400).json({ messagePassword: "Mật Khẩu Không Khớp" });
+    return res.status(400).json({ messagePassword: "Máº­t Kháº©u KhÃ´ng Khá»›p" });
   }
   const user = await User.findOne({
     email: email,
@@ -249,7 +249,7 @@ module.exports.forgotPassword = async (req, res) => {
   // console.log(user)
   if (!user) {
     return res.status(400).json({
-      alerts: "Tài Khoản Email Không Tồn Tại",
+      alerts: "TÃ i Khoáº£n Email KhÃ´ng Tá»“n Táº¡i",
     });
   }
   const otpRamdon = generateHelper.generateRandomNumber(6);
@@ -262,8 +262,8 @@ module.exports.forgotPassword = async (req, res) => {
   // console.log(objectForgotPassword)
   const forgotPassword = new ForgotPassword(objectForgotPassword);
   await forgotPassword.save();
-  const subject = "Yêu Cầu Đặt Lại Mật Khẩu";
-  // const html = `Mã OTP của bạn là: <b>${otpRamdon}</b>. Mã OTP này sẽ hết hạn sau 1 phút. Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.`;
+  const subject = "YÃªu Cáº§u Äáº·t Láº¡i Máº­t Kháº©u";
+  // const html = `MÃ£ OTP cá»§a báº¡n lÃ : <b>${otpRamdon}</b>. MÃ£ OTP nÃ y sáº½ háº¿t háº¡n sau 1 phÃºt. Náº¿u báº¡n khÃ´ng yÃªu cáº§u Ä‘áº·t láº¡i máº­t kháº©u, vui lÃ²ng bá» qua email nÃ y.`;
   const html = `
 <!DOCTYPE html>
 <html lang="vi">
@@ -300,11 +300,11 @@ module.exports.forgotPassword = async (req, res) => {
           <tr>
             <td style="padding:30px; text-align:center;">
 
-              <h2 style="color:#333; margin-bottom:10px;">Xác thực tài khoản</h2>
+              <h2 style="color:#333; margin-bottom:10px;">XÃ¡c thá»±c tÃ i khoáº£n</h2>
 
               <p style="color:#666; font-size:14px;">
-                Xin chào ,<br>
-                Đây là mã OTP của bạn:
+                Xin chÃ o ,<br>
+                ÄÃ¢y lÃ  mÃ£ OTP cá»§a báº¡n:
               </p>
 
               <div style="margin:20px 0;">
@@ -315,11 +315,11 @@ module.exports.forgotPassword = async (req, res) => {
               </div>
 
               <p style="color:#666; font-size:14px;">
-                Mã OTP sẽ hết hạn sau <b>1 phút</b>.
+                MÃ£ OTP sáº½ háº¿t háº¡n sau <b>1 phÃºt</b>.
               </p>
 
               <p style="color:#999; font-size:12px; margin-top:20px;">
-                Nếu bạn không yêu cầu tạo tài khoản, vui lòng bỏ qua email này.
+                Náº¿u báº¡n khÃ´ng yÃªu cáº§u táº¡o tÃ i khoáº£n, vui lÃ²ng bá» qua email nÃ y.
               </p>
 
             </td>
@@ -329,7 +329,7 @@ module.exports.forgotPassword = async (req, res) => {
           <tr>
             <td style="background:#f0f0f0; padding:15px; text-align:center;">
               <p style="margin:0; font-size:12px; color:#888;">
-                © ORDER SHOP
+                Â© ORDER SHOP
               </p>
             </td>
           </tr>
@@ -347,7 +347,7 @@ module.exports.forgotPassword = async (req, res) => {
   
   sendMailHelper.sendMail(email, subject, html);
   return res.status(200).json({
-    message: "Đã gửi OTP về email"
+    message: "ÄÃ£ gá»­i OTP vá» email"
   });
 };
 
@@ -355,10 +355,10 @@ module.exports.forgotPassword = async (req, res) => {
 module.exports.otpPasswordPost = async (req, res) => {
   const { email, password, confirmPassword, otp } = req.body;
   if (!email || !confirmPassword || !password || !otp) {
-    return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
+    return res.status(400).json({ message: "Nháº­p ThÃ´ng Tin Äáº§y Äá»§" });
   }
   if (password != confirmPassword) {
-    return res.status(400).json({ messagePassword: "Mật Khẩu Không Khớp" });
+    return res.status(400).json({ messagePassword: "Máº­t Kháº©u KhÃ´ng Khá»›p" });
   }
   const user = await ForgotPassword.findOne({
     email: email,
@@ -367,7 +367,7 @@ module.exports.otpPasswordPost = async (req, res) => {
   // console.log(user)
   if (!user) {
     return res.status(400).json({
-      alerts: "Xác Thực Không Thành Công Kiểm Tra Lại Email, Mật Khẩu Hoặc OTP",
+      alerts: "XÃ¡c Thá»±c KhÃ´ng ThÃ nh CÃ´ng Kiá»ƒm Tra Láº¡i Email, Máº­t Kháº©u Hoáº·c OTP",
     });
   } else {
     const users = await User.updateOne(
@@ -390,7 +390,42 @@ module.exports.infoUser = async (req, res) => {
   if (res.locals.user) {
     res.json({ user: res.locals.user });
   } else {
-    res.status(401).json({ message: "Chưa đăng nhập" });
+    res.status(401).json({ message: "ChÆ°a Ä‘Äƒng nháº­p" });
   }
   console.log("check user",res.locals.user);
+};
+
+// [PATCH] /api/user/profile
+module.exports.updateProfile = async (req, res) => {
+  try {
+    const currentUser = res.locals.user;
+    if (!currentUser) {
+      return res.status(401).json({ message: "Chưa đăng nhập" });
+    }
+
+    const { fullname, phone, avatar } = req.body || {};
+    const updateData = {};
+
+    if (typeof fullname === "string") {
+      updateData.fullname = fullname.trim();
+    }
+
+    if (typeof phone === "string") {
+      updateData.phone = phone.trim();
+    }
+
+    if (typeof avatar === "string") {
+      updateData.avatar = avatar.trim();
+    }
+
+    await User.updateOne({ _id: currentUser._id }, updateData);
+    const user = await User.findById(currentUser._id).select("-password");
+
+    return res.status(200).json({
+      message: "Cập nhật thông tin thành công",
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Lỗi máy chủ" });
+  }
 };

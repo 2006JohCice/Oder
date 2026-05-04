@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import { useState, useEffect } from "react";
 import "../../css/products/ProductsAdmin.css";
 import ButtonTabs from "../../helpers/filterStatus";
@@ -16,8 +17,8 @@ const ProductsAdmin = ({ query }) => {
   const navigate = useNavigate();
   // console.log("Query in ProductsAdmin:", query);
   const [products, setProducts] = useState([]);
-  const [activeTab, setActiveTab] = useState(1); // mặc định là "All"
-  const [activeName, setActiveName] = useState(1); // mặc định là "All"
+  const [activeTab, setActiveTab] = useState(1); // mÃ¡ÂºÂ·c Ã„â€˜Ã¡Â»â€¹nh lÃƒÂ  "All"
+  const [activeName, setActiveName] = useState(1); // mÃ¡ÂºÂ·c Ã„â€˜Ã¡Â»â€¹nh lÃƒÂ  "All"
   const [loading, setLoading] = useState(false);
   const [notifMessage, setNotifMessage] = useState("");
   const [idDelete, setIdDelete] = useState("");
@@ -94,7 +95,7 @@ const ProductsAdmin = ({ query }) => {
     let status = "";
     let category = "";
 
-    // tab → xác định trạng thái
+    // tab Ã¢â€ â€™ xÃƒÂ¡c Ã„â€˜Ã¡Â»â€¹nh trÃ¡ÂºÂ¡ng thÃƒÂ¡i
     if (activeTab === 2) status = "active";
     else if (activeTab === 3) status = "inactive";
 
@@ -115,7 +116,7 @@ const ProductsAdmin = ({ query }) => {
   // Change status
   const handleChangeStatus = async (id, status) => {
     setLoading(true);
-    setNotifMessage("Thay Đổi Trạng Thái Thành Công!")
+    setNotifMessage("Thay Ã„ÂÃ¡Â»â€¢i TrÃ¡ÂºÂ¡ng ThÃƒÂ¡i ThÃƒÂ nh CÃƒÂ´ng!")
     setNotifKey((prev) => prev + 1);
 
     const statusChange = status === "active" ? "inactive" : "active";
@@ -138,12 +139,12 @@ const ProductsAdmin = ({ query }) => {
     })
       .then(res => res.json())
       .then(result => {
-        console.log("Cập nhật xong:", result);
+        console.log("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t xong:", result);
         fetchProducts();
       })
       .catch(err => {
-        console.error("Lỗi khi cập nhật:", err);
-        alert("Cập nhật thất bại!");
+        console.error("LÃ¡Â»â€”i khi cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t:", err);
+        alert("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
       })
     // .finally(() => {
     //   setLoading(false);
@@ -165,10 +166,10 @@ const ProductsAdmin = ({ query }) => {
 
 
   const sortAims = [
-    { id: 1, value: "price_asc", title: "Giá Tăng Dần" },
-    { id: 2, value: "price_desc", title: "Giá Giảm Dần" },
-    { id: 3, value: "position_asc", title: "Vị Trí Tăng Dân" },
-    { id: 4, value: "position_desc", title: "Vị Trí Giảm Dần" },
+    { id: 1, value: "price_asc", title: "GiÃƒÂ¡ TÃ„Æ’ng DÃ¡ÂºÂ§n" },
+    { id: 2, value: "price_desc", title: "GiÃƒÂ¡ GiÃ¡ÂºÂ£m DÃ¡ÂºÂ§n" },
+    { id: 3, value: "position_asc", title: "VÃ¡Â»â€¹ TrÃƒÂ­ TÃ„Æ’ng DÃƒÂ¢n" },
+    { id: 4, value: "position_desc", title: "VÃ¡Â»â€¹ TrÃƒÂ­ GiÃ¡ÂºÂ£m DÃ¡ÂºÂ§n" },
   ]
 
   // Change-multi
@@ -206,7 +207,7 @@ const ProductsAdmin = ({ query }) => {
 
 
 
-    // lấy ra item vừa thay đổi
+    // lÃ¡ÂºÂ¥y ra item vÃ¡Â»Â«a thay Ã„â€˜Ã¡Â»â€¢i
     const changedItem = updatePosition[index]
     // console.log(changedItem)
 
@@ -242,10 +243,10 @@ const ProductsAdmin = ({ query }) => {
   const handleUpdateChangeMulti = async () => {
 
 
-    /* Xóa nhiều sản phẩm */
+    /* XÃƒÂ³a nhiÃ¡Â»Âu sÃ¡ÂºÂ£n phÃ¡ÂºÂ©m */
     if (newStatus === "delete-all") {
       // eslint-disable-next-line no-restricted-globals
-      const result = confirm("Bạn có chắc chắn");
+      const result = confirm("BÃ¡ÂºÂ¡n cÃƒÂ³ chÃ¡ÂºÂ¯c chÃ¡ÂºÂ¯n");
       if (!result) {
         return
       }
@@ -253,7 +254,7 @@ const ProductsAdmin = ({ query }) => {
 
     if (newStatus === "change-position") {
       // eslint-disable-next-line no-restricted-globals
-      const result = confirm("Bạn có chắc chắn");
+      const result = confirm("BÃ¡ÂºÂ¡n cÃƒÂ³ chÃ¡ÂºÂ¯c chÃ¡ÂºÂ¯n");
       if (!result) {
         return
       }
@@ -261,9 +262,9 @@ const ProductsAdmin = ({ query }) => {
 
 
     if (!newStatus) {
-      alert("Chọn trạng thái")
+      alert("ChÃ¡Â»Ân trÃ¡ÂºÂ¡ng thÃƒÂ¡i")
     }
-    if (selectedIds.length === 0) return alert("chưa có sản phẩm nào được chọn")
+    if (selectedIds.length === 0) return alert("chÃ†Â°a cÃƒÂ³ sÃ¡ÂºÂ£n phÃ¡ÂºÂ©m nÃƒÂ o Ã„â€˜Ã†Â°Ã¡Â»Â£c chÃ¡Â»Ân")
 
 
     fetch(`/api/admin/products/change-multi`, {
@@ -280,8 +281,8 @@ const ProductsAdmin = ({ query }) => {
         fetchProducts();
       })
       .catch(err => {
-        console.error("Lỗi khi cập nhật:", err);
-        alert("Cập nhật thất bại!");
+        console.error("LÃ¡Â»â€”i khi cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t:", err);
+        alert("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
       })
   }
   //Endl change-multi
@@ -293,7 +294,7 @@ const ProductsAdmin = ({ query }) => {
       <EditProducts idEdit={idEdit} setProducts={setProducts} />
 
       <header className="products-header">
-        <h1>Quản Trị Sản Phẩm</h1>
+        <h1>QuÃ¡ÂºÂ£n TrÃ¡Â»â€¹ SÃ¡ÂºÂ£n PhÃ¡ÂºÂ©m</h1>
         <div >
 
           <ButtonTabs
@@ -318,10 +319,10 @@ const ProductsAdmin = ({ query }) => {
 
 
           </select>
-          <button className="btn-accent" onClick={() => setSortAim("")}>Xóa Lọc</button>
+          <button className="btn-accent" onClick={() => setSortAim("")}>XÃƒÂ³a LÃ¡Â»Âc</button>
 
           <button className="btn-accent" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBackdrop" aria-controls="offcanvasWithBackdrop">
-            + Thêm Sản Phẩm
+            + ThÃƒÂªm SÃ¡ÂºÂ£n PhÃ¡ÂºÂ©m
           </button>
 
         </div>
@@ -356,7 +357,7 @@ const ProductsAdmin = ({ query }) => {
 
           </select>
 
-          <button className="btn-accent" onClick={handleUpdateChangeMulti}>Áp Dụng</button>
+          <button className="btn-accent" onClick={handleUpdateChangeMulti}>ÃƒÂp DÃ¡Â»Â¥ng</button>
 
         </div>
 
@@ -374,13 +375,13 @@ const ProductsAdmin = ({ query }) => {
               /></th>
 
               <th>ID</th>
-              <th>Ảnh</th>
-              <th>Tên Sản Phẩm</th>
-              <th>Giá (VNĐ)</th>
-              <th>Trạng Thái</th>
-              <th>Vị Trí</th>
-              <th>Tồn Kho</th>
-              <th>Hành Động</th>
+              <th>Ã¡ÂºÂ¢nh</th>
+              <th>TÃƒÂªn SÃ¡ÂºÂ£n PhÃ¡ÂºÂ©m</th>
+              <th>GiÃƒÂ¡ (VNÃ„Â)</th>
+              <th>TrÃ¡ÂºÂ¡ng ThÃƒÂ¡i</th>
+              <th>VÃ¡Â»â€¹ TrÃƒÂ­</th>
+              <th>TÃ¡Â»â€œn Kho</th>
+              <th>HÃƒÂ nh Ã„ÂÃ¡Â»â„¢ng</th>
             </tr>
           </thead>
           <tbody>
@@ -415,13 +416,13 @@ const ProductsAdmin = ({ query }) => {
                         data-id={item.id}
                         onClick={() => handleChangeStatus(item._id, item.status)}
 
-                      >Hoạt Động</a></td> : <td style={{ color: "red" }}> <a
+                      >HoÃ¡ÂºÂ¡t Ã„ÂÃ¡Â»â„¢ng</a></td> : <td style={{ color: "red" }}> <a
                         style={{ cursor: "pointer" }}
                         data-status={item.status}
                         data-id={item.id}
                         onClick={() => handleChangeStatus(item._id, item.status)}
 
-                      >Ngừng Bán</a></td>}
+                      >NgÃ¡Â»Â«ng BÃƒÂ¡n</a></td>}
                       <td>
                         <input
                           type="number"
@@ -449,7 +450,7 @@ const ProductsAdmin = ({ query }) => {
                 ) : (
                   <tr>
                     <td colSpan="9" style={{ textAlign: "center" }}>
-                      Không có dữ liệu sản phẩm.
+                      KhÃƒÂ´ng cÃƒÂ³ dÃ¡Â»Â¯ liÃ¡Â»â€¡u sÃ¡ÂºÂ£n phÃ¡ÂºÂ©m.
                     </td>
                   </tr>
                 )

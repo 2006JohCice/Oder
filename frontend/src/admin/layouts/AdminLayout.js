@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../layouts/AdminLayout.css";
+import "../css/admin.css";
 import SidebarAdmin from "../components/SidebarAdmin";
 import HeaderAdmin from "../components/HeaderAdmin";
 import { Routes, Route } from "react-router-dom";
@@ -30,6 +31,8 @@ export default function AdminDashboard() {
   const [role, setRole] = useState(null);
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState("light");
+  const [searchType, setSearchType] = useState("all");
 
   useEffect(() => {
     apiFetch("/api/admin/auth/login/me")
@@ -44,16 +47,16 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="admin-app">
+    <div className={`admin-app ${theme === 'dark' ? 'admin-dark' : 'admin-light'}`}>
       <div className="admin-container">
         <SidebarAdmin menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
         <main className="admin-main">
-          <HeaderAdmin query={query} setQuery={setQuery} setMenuOpen={setMenuOpen} user={user} />
+          <HeaderAdmin query={query} setQuery={setQuery} setMenuOpen={setMenuOpen} user={user} theme={theme} setTheme={setTheme} searchType={searchType} setSearchType={setSearchType} />
           <Routes>
             {role && role.permissions.length > 0 && (
               <>
-                <Route path="/" element={<MainAdmin query={query} />} />
+                <Route path="/" element={<MainAdmin query={query} searchType={searchType} />} />
                 <Route
                   path="/productsAdmin"
                   element={role?.permissions?.includes("products-view") ? <ProductsAdmin query={query} /> : ""}
@@ -85,7 +88,7 @@ export default function AdminDashboard() {
                 <Route path="/deailCloud" element={<Could />} />
                 <Route path="/setting" element={<SettingsAdmin />} />
                 <Route path="/chatting" element={<ChatUI />} />
-                <Route path="/advertisement" element={<Advertisement />} />
+                <Route path="/advertisement" element={role?.permissions?.includes("advertisement-view") ? <Advertisement /> : ""} />
                 <Route
                   path="/myeditor"
                   element={role?.permissions?.includes("products-category-view") ? <MyEditor /> : ""}

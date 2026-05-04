@@ -1,4 +1,4 @@
-const Table = require("../../models/table.model");
+﻿const Table = require("../../models/table.model");
 const TABLE_CATALOG = require("../../helpers/tableCatalog");
 
 const ensureTables = async () => {
@@ -17,13 +17,19 @@ module.exports.ensureTables = ensureTables;
 
 module.exports.available = async (req, res) => {
   try {
-    await ensureTables();
+    const { restaurantId } = req.query;
 
-    const tables = await Table.find({ status: "available" }).sort({ area: 1, tableNumber: 1 });
+    if (!restaurantId) {
+      return res.status(200).json({ tables: [] });
+    }
+
+    const tables = await Table.find({
+      restaurant_id: restaurantId,
+      status: "available",
+    }).sort({ area: 1, displayName: 1, tableNumber: 1 });
 
     return res.status(200).json({ tables });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ message: "Khong the lay danh sach ban trong" });
   }
 };

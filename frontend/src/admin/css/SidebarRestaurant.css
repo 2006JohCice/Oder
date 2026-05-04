@@ -1,0 +1,99 @@
+﻿/* Sidebar Restaurant */
+.sidebar-restaurant {
+  width: 280px;
+  background: linear-gradient(180deg, var(--panel), rgba(255, 255, 255, 0.1));
+  border-right: 2px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 120;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-restaurant.is-open {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  padding: 28px 24px;
+  border-bottom: 2px solid var(--line);
+  background: linear-gradient(135deg, var(--accent-soft), rgba(191, 91, 44, 0.1));
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 24px;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  font-weight: 500;
+}
+
+.sidebar-link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.sidebar-link.active::before {
+  transform: scaleY(1);
+}
+
+.sidebar-link i {
+  font-size: 1.2rem;
+  width: 20px;
+}
+
+.sidebar-footer {
+  padding: 12px 0;
+  border-top: 2px solid var(--line);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 110;
+}
+
+@media (min-width: 769px) {
+  .sidebar-restaurant {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: none;
+  }
+}

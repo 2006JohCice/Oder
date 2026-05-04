@@ -1,5 +1,6 @@
+/* eslint-disable unicode-bom */
 import { useState } from "react";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Search() {
   const navigate = useNavigate();
@@ -25,18 +26,18 @@ function Search() {
       <form className="search-panel" onSubmit={handleSubmit}>
         <div className="search-heading">
           <p className="eyebrow">Tìm Nhanh Món Phù Hợp</p>
-          <h1>Thực Đơn Đẹp, Đặt Bàn Nhanh, Xử Lý Nhanh Cho Bạn.</h1>
+          <h1>Thực đơn hấp dẫn, đặt bàn nhanh, xử lý nhanh cho bạn.</h1>
         </div>
 
         <div className="search-grid">
           <div className="search-field search-field-wide">
-            <label htmlFor="search-keyword">Món Ăn & Tên ComBo</label>
+            <label htmlFor="search-keyword">Món ăn & tên combo</label>
             <div className="search-input-wrap">
               <i className="bi bi-search" />
               <input
                 id="search-keyword"
                 type="text"
-                placeholder="Vi du: lau thai, nuong han quoc, combo 4 nguoi"
+                placeholder="Ví dụ: lẩu thái, nem rán Hà Nội, combo 4 người"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
               />
@@ -44,13 +45,9 @@ function Search() {
           </div>
 
           <div className="search-field">
-            <label htmlFor="search-location">Khu Vực</label>
-            <select
-              id="search-location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            >
-              <option value="">Chọn Khu Vực</option>
+            <label htmlFor="search-location">Khu vực</label>
+            <select id="search-location" value={location} onChange={(e) => setLocation(e.target.value)}>
+              <option value="">Chọn khu vực</option>
               <option value="Ha Noi">Hà Nội</option>
               <option value="Ho Chi Minh">Hồ Chí Minh</option>
               <option value="Thanh Hoa">Thanh Hóa</option>
@@ -58,9 +55,9 @@ function Search() {
           </div>
 
           <div className="search-field">
-            <label htmlFor="search-price">Mức Giá</label>
+            <label htmlFor="search-price">Mức giá</label>
             <select id="search-price" value={price} onChange={(e) => setPrice(e.target.value)}>
-              <option value="">Chọn Mức Giá</option>
+              <option value="">Chọn mức giá</option>
               <option value="Duoi 100k">Dưới 100k</option>
               <option value="100k - 200k">100k - 200k</option>
               <option value="200k - 300k">200k - 300k</option>
@@ -70,13 +67,13 @@ function Search() {
           </div>
 
           <div className="search-field">
-            <label htmlFor="search-meal">Loại Bửa</label>
+            <label htmlFor="search-meal">Loại bữa</label>
             <select id="search-meal" value={meal} onChange={(e) => setMeal(e.target.value)}>
-              <option value="">Chọn bữa ăn</option>
+              <option value="">Chọn bữa</option>
               <option value="Bua sang">Bữa sáng</option>
               <option value="Bua trua">Bữa trưa</option>
               <option value="Bua toi">Bữa tối</option>
-              <option value="Lau">Lẫu</option>
+              <option value="Lau">Lẩu</option>
               <option value="Nuong">Nướng</option>
               <option value="Combo">Combo</option>
             </select>
@@ -85,20 +82,14 @@ function Search() {
 
         <div className="search-actions">
           <button type="submit" className="primary-button">
-            Tìm Món Ăn
+            Tìm món ăn
           </button>
-          <LinkButton />
+          <a href="/cart/checkout?mode=table" className="secondary-button no-underline">
+            Ưu đãi đặt bàn
+          </a>
         </div>
       </form>
     </section>
-  );
-}
-
-function LinkButton() {
-  return (
-    <a href="/cart/checkout?mode=table" className="secondary-button no-underline ">
-      Ưu Tiên Đặt Bàn
-    </a>
   );
 }
 

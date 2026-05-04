@@ -27,9 +27,9 @@ body {
   margin: 0;
   color: var(--text);
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-  /* background:
+  background:
     radial-gradient(circle at top left, rgba(228, 173, 122, 0.35), transparent 28%),
-    linear-gradient(180deg, #f9f4ed 0%, #f5ede2 44%, #f8f5ef 100%); */
+    linear-gradient(180deg, #f9f4ed 0%, #f5ede2 44%, #f8f5ef 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -453,6 +453,42 @@ button:disabled {
   display: grid;
   gap: 4px;
   flex: 1;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.quantity-controls button {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line);
+  background: var(--background);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.quantity-controls button:hover {
+  background: var(--accent-soft);
+}
+
+.quantity-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity-controls span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 500;
 }
 
 .danger-link {

@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../mixi/cart/CartContext";
-import {
-  calculateLineTotal,
-  formatCurrency,
-  getTableLabel,
-} from "../../utils/shop";
+import { calculateLineTotal, formatCurrency, getTableLabel } from "../../utils/shop";
 import FeaturedProducts from "../MainContents/products/featuredProducts";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
@@ -25,6 +21,7 @@ const defaultForm = {
 
 export default function CheckoutCart() {
   const [cartItems, setCartItems] = useState({});
+  const [cartRestaurantId, setCartRestaurantId] = useState("");
   const [formData, setFormData] = useState(defaultForm);
   const [availableTables, setAvailableTables] = useState([]);
   const [isLoadingTables, setIsLoadingTables] = useState(false);
@@ -47,20 +44,23 @@ export default function CheckoutCart() {
       }
 
       const data = await res.json();
-      setCartItems(data);
+      setCartItems(data || {});
+      setCartRestaurantId(data?.restaurant_id || "");
     };
 
     loadCart();
   }, [navigate]);
 
   useEffect(() => {
-    if (formData.orderType !== "dine_in") {
+    if (formData.orderType !== "dine_in") return;
+    if (!cartRestaurantId) {
+      setAvailableTables([]);
       return;
     }
 
     const fetchAvailableTables = async () => {
       setIsLoadingTables(true);
-      const res = await fetch("/api/tables/available");
+      const res = await fetch(`/api/tables/available?restaurantId=${cartRestaurantId}`);
 
       if (res.status === 401) {
         navigate("/user/auth/login");
@@ -72,27 +72,17 @@ export default function CheckoutCart() {
       setAvailableTables(tables);
 
       setFormData((prev) => {
-        const tableStillAvailable = tables.find(
-          (table) => table.tableNumber === prev.tableInfo.tableNumber
-        );
-
+        const tableStillAvailable = tables.find((table) => table.tableNumber === prev.tableInfo.tableNumber);
         if (tableStillAvailable) {
           return {
             ...prev,
-            tableInfo: {
-              ...prev.tableInfo,
-              area: tableStillAvailable.area,
-            },
+            tableInfo: { ...prev.tableInfo, area: tableStillAvailable.area },
           };
         }
 
         return {
           ...prev,
-          tableInfo: {
-            ...prev.tableInfo,
-            area: "",
-            tableNumber: "",
-          },
+          tableInfo: { ...prev.tableInfo, area: "", tableNumber: "" },
         };
       });
 
@@ -100,7 +90,7 @@ export default function CheckoutCart() {
     };
 
     fetchAvailableTables();
-  }, [formData.orderType, navigate]);
+  }, [formData.orderType, navigate, cartRestaurantId]);
 
   const products = Array.isArray(cartItems?.products) ? cartItems.products : [];
   const totalQuantity = products.reduce((sum, item) => sum + item.quantity, 0);
@@ -137,9 +127,7 @@ export default function CheckoutCart() {
 
     const res = await fetch("/api/checkout/order", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
 
@@ -152,8 +140,8 @@ export default function CheckoutCart() {
     const data = await res.json();
     if (!res.ok) {
       notifyApp(data.message, "error");
-      if (formData.orderType === "dine_in") {
-        const tableRes = await fetch("/api/tables/available");
+      if (formData.orderType === "dine_in" && cartRestaurantId) {
+        const tableRes = await fetch(`/api/tables/available?restaurantId=${cartRestaurantId}`);
         const tableData = await tableRes.json();
         setAvailableTables(Array.isArray(tableData.tables) ? tableData.tables : []);
       }
@@ -170,19 +158,13 @@ export default function CheckoutCart() {
       <div className="page-stack">
         <section className="success-shell">
           <article className="success-card">
-            <div className="success-icon">
-              <i className="bi bi-basket3" />
-            </div>
+            <div className="success-icon"><i className="bi bi-basket3" /></div>
             <p className="eyebrow">Chua the thanh toan</p>
             <h1>Gio hang hien dang trong.</h1>
             <p>Vui long them mon an truoc khi di den buoc thanh toan hoac dat ban.</p>
             <div className="empty-state-actions">
-              <Link to="/products" className="primary-button no-underline ">
-                Di toi san pham
-              </Link>
-              <Link to="/" className="secondary-button no-underline ">
-                Ve trang chu
-              </Link>
+              <Link to="/products" className="primary-button no-underline ">Di toi san pham</Link>
+              <Link to="/" className="secondary-button no-underline ">Ve trang chu</Link>
             </div>
           </article>
         </section>
@@ -218,79 +200,35 @@ export default function CheckoutCart() {
 
         <form className="summary-card checkout-form" onSubmit={handleDonePay}>
           <div className="toggle-row">
-            <button
-              type="button"
-              className={formData.orderType === "dine_in" ? "toggle active" : "toggle"}
-              onClick={() => setFormData((prev) => ({ ...prev, orderType: "dine_in" }))}
-            >
-              An tai ban
-            </button>
-            <button
-              type="button"
-              className={formData.orderType === "delivery" ? "toggle active" : "toggle"}
-              onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}
-            >
-              Giao tan noi
-            </button>
+            <button type="button" className={formData.orderType === "dine_in" ? "toggle active" : "toggle"} onClick={() => setFormData((prev) => ({ ...prev, orderType: "dine_in" }))}>An tai ban</button>
+            <button type="button" className={formData.orderType === "delivery" ? "toggle active" : "toggle"} onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}>Giao tan noi</button>
           </div>
 
           <div className="form-grid">
-            <label>
-              Ho va ten
-              <input name="fullName" value={formData.fullName} onChange={handleChange} required />
-            </label>
-            <label>
-              So dien thoai
-              <input name="phone" value={formData.phone} onChange={handleChange} required />
-            </label>
+            <label>Ho va ten<input name="fullName" value={formData.fullName} onChange={handleChange} required /></label>
+            <label>So dien thoai<input name="phone" value={formData.phone} onChange={handleChange} required /></label>
 
             {formData.orderType === "delivery" && (
-              <label className="field-span">
-                Dia chi giao hang
-                <input name="address" value={formData.address} onChange={handleChange} required />
-              </label>
+              <label className="field-span">Dia chi giao hang<input name="address" value={formData.address} onChange={handleChange} required /></label>
             )}
 
             {formData.orderType === "dine_in" && (
               <>
                 <div className="field-span">
-                  <span style={{ display: "block", marginBottom: 12, fontWeight: 600 }}>
-                    Danh sach ban trong
-                  </span>
+                  <span style={{ display: "block", marginBottom: 12, fontWeight: 600 }}>Danh sach ban trong</span>
                   {isLoadingTables ? (
                     <p>Dang tai danh sach ban...</p>
                   ) : availableTables.length === 0 ? (
                     <p>Hien khong con ban trong.</p>
                   ) : (
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-                        gap: 12,
-                      }}
-                    >
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
                       {availableTables.map((table) => {
                         const isSelected = formData.tableInfo.tableNumber === table.tableNumber;
-
                         return (
-                          <button
-                            key={table._id || table.tableNumber}
-                            type="button"
-                            onClick={() => handleSelectTable(table)}
-                            style={{
-                              border: isSelected ? "2px solid #1f7a5a" : "1px solid #d9e3dc",
-                              borderRadius: 8,
-                              background: isSelected ? "#eef9f4" : "#fff",
-                              padding: 12,
-                              textAlign: "left",
-                              cursor: "pointer",
-                            }}
-                          >
-                            <strong style={{ display: "block", marginBottom: 6 }}>{table.tableNumber}</strong>
+                          <button key={table._id || table.tableNumber} type="button" onClick={() => handleSelectTable(table)} style={{ border: isSelected ? "2px solid #1f7a5a" : "1px solid #d9e3dc", borderRadius: 8, background: isSelected ? "#eef9f4" : "#fff", padding: 12, textAlign: "left", cursor: "pointer" }}>
+                            <strong style={{ display: "block", marginBottom: 6 }}>{table.displayName || table.tableNumber}</strong>
                             <span style={{ display: "block", fontSize: 13 }}>{table.area}</span>
-                            <span style={{ display: "block", marginTop: 6, fontSize: 13 }}>
-                              {table.capacity} khach
-                            </span>
+                            <span style={{ display: "block", marginTop: 6, fontSize: 13 }}>{table.capacity} khach</span>
                           </button>
                         );
                       })}
@@ -298,62 +236,17 @@ export default function CheckoutCart() {
                   )}
                 </div>
 
-                <label>
-                  Ban da chon
-                  <input
-                    value={getTableLabel(formData.tableInfo.tableNumber ? formData.tableInfo : null)}
-                    readOnly
-                    placeholder="Chon mot ban trong"
-                  />
-                </label>
-                <label>
-                  So khach
-                  <input
-                    type="number"
-                    min="1"
-                    name="guestCount"
-                    value={formData.tableInfo.guestCount}
-                    onChange={handleTableChange}
-                  />
-                </label>
-                <label>
-                  Gio den du kien
-                  <input
-                    type="time"
-                    name="arrivalTime"
-                    value={formData.tableInfo.arrivalTime}
-                    onChange={handleTableChange}
-                  />
-                </label>
-                <label className="field-span">
-                  Ghi chu ban an
-                  <textarea
-                    rows="3"
-                    name="note"
-                    value={formData.tableInfo.note}
-                    onChange={handleTableChange}
-                    placeholder="Sinh nhat, can khong gian rieng, them ghe em be..."
-                  />
-                </label>
+                <label>Ban da chon<input value={getTableLabel(formData.tableInfo.tableNumber ? formData.tableInfo : null)} readOnly placeholder="Chon mot ban trong" /></label>
+                <label>So khach<input type="number" min="1" name="guestCount" value={formData.tableInfo.guestCount} onChange={handleTableChange} /></label>
+                <label>Gio den du kien<input type="time" name="arrivalTime" value={formData.tableInfo.arrivalTime} onChange={handleTableChange} /></label>
+                <label className="field-span">Ghi chu ban an<textarea rows="3" name="note" value={formData.tableInfo.note} onChange={handleTableChange} placeholder="Sinh nhat, can khong gian rieng..." /></label>
               </>
             )}
           </div>
 
-          <div className="summary-row">
-            <span>Tong so luong</span>
-            <strong>{totalQuantity}</strong>
-          </div>
-          <div className="summary-row">
-            <span>Tong tien</span>
-            <strong>{formatCurrency(cartItems?.totalCartPrice)}</strong>
-          </div>
-          <button
-            className="primary-button full-width"
-            type="submit"
-            disabled={formData.orderType === "dine_in" && !formData.tableInfo.tableNumber}
-          >
-            Xac nhan don hang
-          </button>
+          <div className="summary-row"><span>Tong so luong</span><strong>{totalQuantity}</strong></div>
+          <div className="summary-row"><span>Tong tien</span><strong>{formatCurrency(cartItems?.totalCartPrice)}</strong></div>
+          <button className="primary-button full-width" type="submit" disabled={formData.orderType === "dine_in" && !formData.tableInfo.tableNumber}>Xac nhan don hang</button>
         </form>
       </div>
     </section>

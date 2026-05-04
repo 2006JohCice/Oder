@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import { useEffect, useState } from "react";
 import "../../css/user/user.css";
 import PaginationHelper from "../../helpers/pagination";
@@ -26,30 +27,30 @@ function UsersAdmin() {
     status: "Pending",
   });
 
-  // --- Chọn người dùng để chỉnh sửa ---
+  // --- ChÃ¡Â»Ân ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng Ã„â€˜Ã¡Â»Æ’ chÃ¡Â»â€°nh sÃ¡Â»Â­a ---
   const handleSelect = (user) => {
     // console.log(user);
     setSelected(user);
     setShowAddUser(false);
   };
 
-  // --- Cập nhật thông tin người dùng ---
+  // --- CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃƒÂ´ng tin ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng ---
   const handleSave = () => {
     if (selected) {
       setUsers((prev) =>
         prev.map((u) => (u.id === selected.id ? selected : u))
       );
-      notifyApp("Đã lưu thay đổi!", "success");
+      notifyApp("Ã„ÂÃƒÂ£ lÃ†Â°u thay Ã„â€˜Ã¡Â»â€¢i!", "success");
     }
   };
 
-  // --- Thêm người dùng mới ---
+  // --- ThÃƒÂªm ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng mÃ¡Â»â€ºi ---
   const handlAddAcount = () => {
     setSelected(null);
     setShowAddUser(true);
   };
 
-  // --- Thêm người dùng mới ---
+  // --- ThÃƒÂªm ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng mÃ¡Â»â€ºi ---
   const handleAddUser = () => {
     const newId = users.length + 1;
     setUsers([...users, { ...newUser, id: newId }]);
@@ -61,10 +62,10 @@ function UsersAdmin() {
       role: "User",
       status: "Pending",
     });
-    alert("Đã thêm người dùng mới!");
+    alert("Ã„ÂÃƒÂ£ thÃƒÂªm ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng mÃ¡Â»â€ºi!");
   };
 
-  // --- lấy dử liệu (list account) từ backend ---
+  // --- lÃ¡ÂºÂ¥y dÃ¡Â»Â­ liÃ¡Â»â€¡u (list account) tÃ¡Â»Â« backend ---
 // console.log(page)
 
   const fetchUsersAccounts = () => {
@@ -183,7 +184,7 @@ function UsersAdmin() {
               >
                 <input
                   className="admin-input"
-                  placeholder="Tên người dùng"
+                  placeholder="TÃƒÂªn ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng"
                   value={newUser.name}
                   onChange={(e) =>
                     setNewUser({ ...newUser, name: e.target.value })
@@ -207,7 +208,7 @@ function UsersAdmin() {
                 />
                 <input
                   className="admin-input"
-                  placeholder="Mật khẩu"
+                  placeholder="MÃ¡ÂºÂ­t khÃ¡ÂºÂ©u"
                   type="password"
                   value={newUser.password}
                   onChange={(e) =>
@@ -242,7 +243,7 @@ function UsersAdmin() {
                   className="admin-btn admin-primary"
                   onClick={handleAddUser}
                 >
-                  Tạo tài khoản
+                  TÃ¡ÂºÂ¡o tÃƒÂ i khoÃ¡ÂºÂ£n
                 </button>
               </div>
             </section>

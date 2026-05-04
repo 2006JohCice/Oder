@@ -1,12 +1,38 @@
+/* Light theme variables */
+.admin-light {
+  --admin-bg: radial-gradient(circle at top left, rgba(35, 109, 161, 0.24), transparent 26%), linear-gradient(180deg, #071029 0%, #081428 100%);
+  --admin-text: #e6eef8;
+  --admin-muted: #94a3b8;
+  --admin-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  --admin-border: rgba(148, 163, 184, 0.14);
+  --admin-input-bg: rgba(255, 255, 255, 0.04);
+  --admin-btn-bg: rgba(255, 255, 255, 0.06);
+  --admin-btn-border: rgba(255, 255, 255, 0.08);
+  --admin-primary-bg: linear-gradient(135deg, #34d399, #22c55e);
+  --admin-primary-text: #082032;
+}
+
+/* Dark theme variables */
+.admin-dark {
+  --admin-bg: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  --admin-text: #e2e8f0;
+  --admin-muted: #64748b;
+  --admin-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+  --admin-border: rgba(148, 163, 184, 0.2);
+  --admin-input-bg: rgba(255, 255, 255, 0.06);
+  --admin-btn-bg: rgba(255, 255, 255, 0.08);
+  --admin-btn-border: rgba(255, 255, 255, 0.12);
+  --admin-primary-bg: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  --admin-primary-text: #ffffff;
+}
+
 .admin-app {
   width: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 20px;
-  color: #e6eef8;
-  background:
-    radial-gradient(circle at top left, rgba(35, 109, 161, 0.24), transparent 26%),
-    linear-gradient(180deg, #071029 0%, #081428 100%);
+  color: var(--admin-text);
+  background: var(--admin-bg);
 }
 
 .admin-app button {
@@ -36,8 +62,8 @@
   flex-wrap: wrap;
   padding: 16px 18px;
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
-  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
   box-shadow: 0 20px 40px rgba(2, 6, 23, 0.35);
 }
 
@@ -56,7 +82,7 @@
 }
 
 .admin-topbar-sub {
-  color: #94a3b8;
+  color: var(--admin-muted);
   font-size: 0.92rem;
 }
 
@@ -67,8 +93,8 @@
   min-width: 320px;
   padding: 10px 14px;
   border-radius: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--admin-border);
+  background: var(--admin-input-bg);
 }
 
 .admin-search input {
@@ -82,15 +108,15 @@
 .admin-btn {
   padding: 8px 12px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--admin-btn-bg);
+  border: 1px solid var(--admin-btn-border);
   cursor: pointer;
 }
 
 .admin-btn.admin-primary {
-  background: linear-gradient(135deg, #34d399, #22c55e);
+  background: var(--admin-primary-bg);
   border: 0;
-  color: #082032;
+  color: var(--admin-primary-text);
   font-weight: 700;
 }
 
@@ -101,8 +127,8 @@
   min-height: 42px;
   padding: 0 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: var(--admin-btn-bg);
+  border: 1px solid var(--admin-border);
 }
 
 .admin-grid {
@@ -112,16 +138,16 @@
 }
 
 .admin-card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  background: var(--admin-card-bg);
   padding: 16px;
   border-radius: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.08);
+  border: 1px solid var(--admin-border);
   box-shadow: 0 12px 28px rgba(2, 6, 23, 0.3);
 }
 
 .admin-card h3 {
   margin: 0 0 8px;
-  color: #cbd5e1;
+  color: var(--admin-text);
   font-weight: 600;
 }
 
@@ -138,7 +164,7 @@
 
 .admin-trend {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--admin-muted);
 }
 
 .admin-content {
@@ -155,21 +181,79 @@
 .admin-table table {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .admin-table thead th {
   text-align: left;
   padding: 12px;
-  color: #94a3b8;
+  color: var(--admin-text);
   font-size: 13px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+  background: var(--admin-btn-bg);
+  border-bottom: 1px solid var(--admin-border);
 }
 
 .admin-table tbody td {
   padding: 12px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--admin-border);
+  font-size: 14px;
+  color: var(--admin-text);
+}
+
+.admin-table tbody tr {
+  /* background: var(--admin-card-bg); */
+  transition: background 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: var(--admin-btn-bg);
+}
+
+
+/* Quản Lý sản phẩm table phần user */
+
+.admin-table-user {
+  overflow: auto;
+}
+
+.admin-table-user table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.admin-table-user thead th {
+  text-align: left;
+  padding: 12px;
+  font-size: 13px;
+  background: var(--admin-btn-bg);
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-table-user tbody td {
+  padding: 12px;
+  border-bottom: 1px solid var(--admin-border);
   font-size: 14px;
 }
+
+.admin-table-user tbody tr {
+  /* background: var(--admin-card-bg); */
+  transition: background 0.2s ease;
+}
+
+.admin-table-user tbody tr:hover {
+  background: var(--admin-btn-bg);
+}
+
+
+
+/*End Quản Lý sản phẩm table phần user */
+
+
+
+
 
 .admin-badge {
   display: inline-block;
@@ -214,8 +298,8 @@
   width: 100%;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--admin-border);
+  background: var(--admin-input-bg);
   color: inherit;
 }
 
@@ -239,7 +323,7 @@
 .admin-footer {
   padding: 16px;
   text-align: center;
-  color: #94a3b8;
+  color: var(--admin-muted);
   font-size: 13px;
 }
 
@@ -250,7 +334,7 @@
 }
 
 .admin-muted {
-  color: #94a3b8;
+  color: var(--admin-muted);
   font-size: 14px;
 }
 
@@ -259,8 +343,8 @@
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--admin-border);
+  background: var(--admin-btn-bg);
 }
 
 @media (max-width: 1000px) {

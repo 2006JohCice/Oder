@@ -1,4 +1,6 @@
+/* eslint-disable unicode-bom */
 import { useEffect } from "react";
+import "../css/user.css";
 import Header from "../components/Header";
 import MainContent from "../components/HouseMain";
 import { Routes, Route } from "react-router-dom";
@@ -13,6 +15,8 @@ import DoneOrder from "../components/pages/doneOrder";
 import RestaurantList from "../components/MainContents/RestaurantList";
 import RestaurantRegister from "../components/pages/RestaurantRegister";
 import RestaurantProducts from "../components/pages/RestaurantProducts";
+import RestaurantManagement from "../components/pages/RestaurantManagement";
+import UserSettings from "../components/pages/UserSettings";
 
 function DefaultLayout() {
   useEffect(() => {
@@ -36,6 +40,8 @@ function DefaultLayout() {
           <Route path="/restaurants" element={<RestaurantList />} />
           <Route path="/restaurant/register" element={<RestaurantRegister />} />
           <Route path="/restaurant/:restaurantId/products" element={<RestaurantProducts />} />
+          <Route path="/restaurant/manage" element={<RestaurantManagement />} />
+          <Route path="/user/settings" element={<UserSettings />} />
         </Routes>
       </div>
     </main>

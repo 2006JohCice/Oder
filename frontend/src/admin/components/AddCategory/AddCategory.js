@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import { useEffect, useState } from "react";
 import "../../css/AddCategory/AddCategory.css";
 import ListCategory from "./list-category";

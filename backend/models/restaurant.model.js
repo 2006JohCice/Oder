@@ -1,4 +1,4 @@
-const { mongoose } = require('../config/database');
+﻿const { mongoose } = require('../config/database');
 const slug = require('mongoose-slug-updater');
 
 mongoose.plugin(slug);
@@ -8,6 +8,7 @@ const restaurantSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
     slug: {
       type: String,
@@ -21,9 +22,21 @@ const restaurantSchema = new mongoose.Schema(
     },
     phone: String,
     address: String,
+    description: {
+      type: String,
+      default: '',
+    },
+    locationLabel: {
+      type: String,
+      default: '',
+    },
+    tableCount: {
+      type: Number,
+      default: 0,
+    },
     status: {
       type: String,
-      enum: ['active', 'inactive','pending'],
+      enum: ['active', 'inactive', 'pending'],
       default: 'pending',
     },
     deleted: {

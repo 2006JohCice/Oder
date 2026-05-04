@@ -1,0 +1,54 @@
+﻿.user-settings-page {
+  width: min(760px, 100%);
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.user-settings-page h2 {
+  margin-top: 0;
+}
+
+.user-settings-form {
+  display: grid;
+  gap: 10px;
+}
+
+.avatar-block {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  margin-bottom: 8px;
+}
+
+.avatar-block img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+.user-settings-form input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.user-settings-form button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #fff;
+  background: var(--accent);
+  font-weight: 600;
+}
+
+.settings-message {
+  margin: 0;
+  color: var(--accent-dark);
+  font-weight: 600;
+}

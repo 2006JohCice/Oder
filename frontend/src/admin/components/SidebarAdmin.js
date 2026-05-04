@@ -150,14 +150,16 @@ function SidebarAdmin({ menuOpen, setMenuOpen }) {
             </Link>
           )}
 
-          <Link
-            to={`${prefixAdmin}admin/advertisement`}
-            className={pathname === "admin/advertisement" ? "active" : ""}
-            onClick={handleNavigate}
-          >
-            <i className="admin-ico bi bi-megaphone"></i>
-            <span>Advertisement</span>
-          </Link>
+          {hasPermission("advertisement-view") && (
+            <Link
+              to={`${prefixAdmin}admin/advertisement`}
+              className={pathname === "admin/advertisement" ? "active" : ""}
+              onClick={handleNavigate}
+            >
+              <i className="admin-ico bi bi-megaphone"></i>
+              <span>Advertisement</span>
+            </Link>
+          )}
 
           <Link
             to={`${prefixAdmin}admin/chatting`}

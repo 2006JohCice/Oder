@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import { useState, useEffect } from "react";
 import "../../css/products/ProductsAdmin.css";
 import PaginationHelper from "../../helpers/pagination";
@@ -11,8 +12,8 @@ const ProductsBackUp = ({ query }) => {
     const navigate = useNavigate();
     // console.log("Query in ProductsAdmin:", query);
     const [products, setProducts] = useState([]);
-    const [activeTab, setActiveTab] = useState(1); // mặc định là "All"
-    const [activeName, setActiveName] = useState(1); // mặc định là "All"
+    const [activeTab, setActiveTab] = useState(1); // mÃ¡ÂºÂ·c Ã„â€˜Ã¡Â»â€¹nh lÃƒÂ  "All"
+    const [activeName, setActiveName] = useState(1); // mÃ¡ÂºÂ·c Ã„â€˜Ã¡Â»â€¹nh lÃƒÂ  "All"
     const [loading, setLoading] = useState();
     const [notifMessage, setNotifMessage] = useState("");
     const [idDelete, setIdDelete] = useState("");
@@ -21,7 +22,7 @@ const ProductsBackUp = ({ query }) => {
     const [totalPages, setTotalPages] = useState(null);
     const [tab, setTab] = useState(1)
     const [idCategory, setIdCategory] = useState([])
-    // Xử lý phần frontend về thông báo thì nó ở phần loading và notifi để xư lý
+    // XÃ¡Â»Â­ lÃƒÂ½ phÃ¡ÂºÂ§n frontend vÃ¡Â»Â thÃƒÂ´ng bÃƒÂ¡o thÃƒÂ¬ nÃƒÂ³ Ã¡Â»Å¸ phÃ¡ÂºÂ§n loading vÃƒÂ  notifi Ã„â€˜Ã¡Â»Æ’ xÃ†Â° lÃƒÂ½
     console.log(products)
 
 
@@ -75,12 +76,12 @@ const ProductsBackUp = ({ query }) => {
                 setLoading(true);
                 setNotifMessage(data.message);
             } else {
-                alert(data.message || "Cập nhật thất bại!");
+                alert(data.message || "CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
             }
 
         } catch (error) {
             console.error(error);
-            alert("Cập nhật thất bại!");
+            alert("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
         }
     };
 
@@ -103,12 +104,12 @@ const ProductsBackUp = ({ query }) => {
                 setLoading(true);
                 setNotifMessage(data.message);
             } else {
-                alert(data.message || "Cập nhật thất bại!");
+                alert(data.message || "CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
             }
 
         } catch (error) {
             console.error(error);
-            alert("Cập nhật thất bại!");
+            alert("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
         }
     }
 
@@ -118,7 +119,7 @@ const ProductsBackUp = ({ query }) => {
     // option 
     const statusOptions = [
         { id: 1, value: "Delete" },
-        { id: 2, value: "Khôi Phục" },
+        { id: 2, value: "KhÃƒÂ´i PhÃ¡Â»Â¥c" },
 
     ];
 
@@ -164,7 +165,7 @@ const ProductsBackUp = ({ query }) => {
 
 
 
-        // lấy ra item vừa thay đổi
+        // lÃ¡ÂºÂ¥y ra item vÃ¡Â»Â«a thay Ã„â€˜Ã¡Â»â€¢i
         const changedItem = updatePosition[index]
         // console.log(changedItem)
 
@@ -195,10 +196,10 @@ const ProductsBackUp = ({ query }) => {
     const handleUpdateChangeMulti = async () => {
 
 
-        /* Xóa nhiều sản phẩm */
+        /* XÃƒÂ³a nhiÃ¡Â»Âu sÃ¡ÂºÂ£n phÃ¡ÂºÂ©m */
         if (newStatus === "delete-all") {
             // eslint-disable-next-line no-restricted-globals
-            const result = confirm("Bạn có chắc chắn");
+            const result = confirm("BÃ¡ÂºÂ¡n cÃƒÂ³ chÃ¡ÂºÂ¯c chÃ¡ÂºÂ¯n");
             if (!result) {
                 return
             }
@@ -206,7 +207,7 @@ const ProductsBackUp = ({ query }) => {
 
         if (newStatus === "change-position") {
             // eslint-disable-next-line no-restricted-globals
-            const result = confirm("Bạn có chắc chắn");
+            const result = confirm("BÃ¡ÂºÂ¡n cÃƒÂ³ chÃ¡ÂºÂ¯c chÃ¡ÂºÂ¯n");
             if (!result) {
                 return
             }
@@ -214,9 +215,9 @@ const ProductsBackUp = ({ query }) => {
 
 
         if (!newStatus) {
-            alert("Chọn trạng thái")
+            alert("ChÃ¡Â»Ân trÃ¡ÂºÂ¡ng thÃƒÂ¡i")
         }
-        if (selectedIds.length === 0) return alert("chưa có sản phẩm nào được chọn")
+        if (selectedIds.length === 0) return alert("chÃ†Â°a cÃƒÂ³ sÃ¡ÂºÂ£n phÃ¡ÂºÂ©m nÃƒÂ o Ã„â€˜Ã†Â°Ã¡Â»Â£c chÃ¡Â»Ân")
 
 
         fetch(`/api/admin/products/change-multi`, {
@@ -233,8 +234,8 @@ const ProductsBackUp = ({ query }) => {
 
             })
             .catch(err => {
-                console.error("Lỗi khi cập nhật:", err);
-                alert("Cập nhật thất bại!");
+                console.error("LÃ¡Â»â€”i khi cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t:", err);
+                alert("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
             })
     }
     //Endl change-multi
@@ -255,7 +256,7 @@ const ProductsBackUp = ({ query }) => {
             />)}
 
             <header className="products-header">
-                <h1>Khôi Phục</h1>
+                <h1>KhÃƒÂ´i PhÃ¡Â»Â¥c</h1>
                 <div >
                     <div style={{ display: "flex", gap: "10px" }}>
                         {buttonTabs.map((tab) => (
@@ -287,7 +288,7 @@ const ProductsBackUp = ({ query }) => {
 
                     </select>
 
-                    <button className="btn-accent" onClick={handleUpdateChangeMulti}>Áp Dụng</button>
+                    <button className="btn-accent" onClick={handleUpdateChangeMulti}>ÃƒÂp DÃ¡Â»Â¥ng</button>
 
                 </div>
 
@@ -312,11 +313,11 @@ const ProductsBackUp = ({ query }) => {
                             /></th>
 
                             <th>ID</th>
-                            <th>Ảnh</th>
-                            <th>Tên Sản Phẩm</th>
-                            <th>Giá (VNĐ)</th>
-                            <th>Loại Đồ Ăn</th>
-                            <th>Hành Động</th>
+                            <th>Ã¡ÂºÂ¢nh</th>
+                            <th>TÃƒÂªn SÃ¡ÂºÂ£n PhÃ¡ÂºÂ©m</th>
+                            <th>GiÃƒÂ¡ (VNÃ„Â)</th>
+                            <th>LoÃ¡ÂºÂ¡i Ã„ÂÃ¡Â»â€œ Ã„â€šn</th>
+                            <th>HÃƒÂ nh Ã„ÂÃ¡Â»â„¢ng</th>
                         </tr>
                     </thead>
                     <tbody>

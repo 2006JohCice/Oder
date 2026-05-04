@@ -1,0 +1,155 @@
+/* Restaurant Orders */
+.restaurant-orders {
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--line);
+}
+
+.page-header h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.orders-container {
+  background: var(--background);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid var(--line);
+}
+
+.no-orders {
+  text-align: center;
+  padding: 60px 40px;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+/* Restaurant Settings */
+.restaurant-settings {
+  padding: 24px;
+}
+
+.settings-container {
+  max-width: 700px;
+}
+
+.form-section {
+  background: linear-gradient(135deg, var(--panel), rgba(255,255,255,0.3));
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 24px;
+  border: 2px solid var(--line);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.form-section h3 {
+  margin: 0 0 24px 0;
+  color: var(--text);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+  letter-spacing: -0.2px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  font-size: 15px;
+  background: var(--background);
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(191,91,44,0.1);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 28px;
+  border-top: 2px solid var(--line);
+}
+
+.btn {
+  padding: 11px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  letter-spacing: -0.2px;
+}
+
+.btn-primary {
+  /* background: linear-gradient(135deg, var(--accent), var(--accent-dark)); */
+  color: white;
+  box-shadow: 0 4px 12px rgba(191,91,44,0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(191,91,44,0.35);
+}
+
+.btn-primary:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+/* cursor: not-allowed; */
+
+
+.btn-view {
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  padding: 7px 14px;
+  font-size: 0.9rem;
+}
+
+.btn-view:hover {
+  background: linear-gradient(135deg, var(--accent-soft), rgba(191,91,44,0.3));
+  color: var(--accent);
+}

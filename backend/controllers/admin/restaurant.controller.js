@@ -1,50 +1,50 @@
-const Restaurant = require("../../models/restaurant.model");
+﻿const Restaurant = require("../../models/restaurant.model");
+const User = require("../../models/user.model");
 
 module.exports.getRestaurants = async (req, res) => {
   try {
     const { status } = req.query;
     const filter = { deleted: false };
-
-    if (status) {
-      filter.status = status;
-    }
+    if (status) filter.status = status;
 
     const restaurants = await Restaurant.find(filter)
-      .populate("owner_id", "fullname email phone")
+      .populate("owner_id", "fullname email phone role")
       .sort({ createdAt: -1 });
 
-    res.status(200).json({ restaurants });
+    return res.status(200).json({ restaurants });
   } catch (error) {
-    console.error("Error fetching restaurants:", error);
-    res.status(500).json({ message: "Lỗi server" });
+    return res.status(500).json({ message: "Loi server" });
   }
 };
 
 module.exports.updateRestaurantStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status } = req.body || {};
 
     if (!["active", "inactive", "pending"].includes(status)) {
-      return res.status(400).json({ message: "Trạng thái không hợp lệ" });
+      return res.status(400).json({ message: "Trang thai khong hop le" });
     }
 
-    const restaurant = await Restaurant.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+    const restaurant = await Restaurant.findByIdAndUpdate(id, { status }, { new: true });
+    if (!restaurant) return res.status(404).json({ message: "Nha hang khong ton tai" });
 
-    if (!restaurant) {
-      return res.status(404).json({ message: "Nhà hàng không tồn tại" });
+    if (status === "active") {
+      await User.updateOne(
+        { _id: restaurant.owner_id },
+        { role: "owner", restaurant_id: restaurant._id }
+      );
     }
 
-    res.status(200).json({
-      message: "Cập nhật trạng thái thành công",
-      restaurant
-    });
+    if (status === "inactive") {
+      await User.updateOne(
+        { _id: restaurant.owner_id },
+        { role: "user", restaurant_id: null }
+      );
+    }
+
+    return res.status(200).json({ message: "Cap nhat trang thai thanh cong", restaurant });
   } catch (error) {
-    console.error("Error updating restaurant status:", error);
-    res.status(500).json({ message: "Lỗi server" });
+    return res.status(500).json({ message: "Loi server" });
   }
 };

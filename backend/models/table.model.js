@@ -1,15 +1,23 @@
-const mongoose = require("mongoose");
+﻿const mongoose = require("mongoose");
 
 const tableSchema = new mongoose.Schema(
   {
     tableNumber: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
+    },
+    displayName: {
+      type: String,
+      default: "",
     },
     area: {
       type: String,
-      default: ""
+      default: "",
+    },
+    note: {
+      type: String,
+      default: "",
     },
     restaurant_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -18,20 +26,20 @@ const tableSchema = new mongoose.Schema(
     },
     capacity: {
       type: Number,
-      default: 4
+      default: 4,
     },
     status: {
       type: String,
       enum: ["available", "occupied"],
-      default: "available"
+      default: "available",
     },
     currentOrderId: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

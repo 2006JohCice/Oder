@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import "../../css/setting/setting.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,7 @@ function SettingsAdmin() {
   const [darkMode, setDarkMode] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState(true);
 
-  // GỘP HẾT PASSWORD VÀO FORM
+  // GÃ¡Â»ËœP HÃ¡ÂºÂ¾T PASSWORD VÃƒâ‚¬O FORM
   const [form, setForm] = useState({
     fullname: "",
     email: "",
@@ -63,15 +64,15 @@ function SettingsAdmin() {
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
-          alert("Cập nhật thành công!");
+          alert("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃƒÂ nh cÃƒÂ´ng!");
         } else {
-          alert(res.message || "Cập nhật thất bại!");
+          alert(res.message || "CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
         }
       });
   };
 
   const handleClickLogOut = async () => {
-    const isConfirm = window.confirm("Bạn có muốn đăng xuất chứ?");
+    const isConfirm = window.confirm("BÃ¡ÂºÂ¡n cÃƒÂ³ muÃ¡Â»â€˜n Ã„â€˜Ã„Æ’ng xuÃ¡ÂºÂ¥t chÃ¡Â»Â©?");
     if (!isConfirm) return;
 
     try {
@@ -83,13 +84,13 @@ function SettingsAdmin() {
         navigate("/admin/auth/login");
       }
     } catch (error) {
-      console.log("Lỗi server");
+      console.log("LÃ¡Â»â€”i server");
     }
   };
 
   return (
     <section>
-      <h2>⚙️ Settings Panel</h2>
+      <h2>Ã¢Å¡â„¢Ã¯Â¸Â Settings Panel</h2>
 
       {/* Tabs */}
       <div className="admin-btn-group">
@@ -214,7 +215,7 @@ function SettingsAdmin() {
                 />
                 {!confirmPassword && (
                   <span style={{ color: "red" }}>
-                    Mật khẩu không khớp!
+                    MÃ¡ÂºÂ­t khÃ¡ÂºÂ©u khÃƒÂ´ng khÃ¡Â»â€ºp!
                   </span>
                 )}
               </div>
@@ -233,8 +234,8 @@ function SettingsAdmin() {
           <div style={{ display: "flex", gap: "20px" }}>
             <label>System Language</label>
             <select className="admin-select">
-              <option>🇻🇳 Vietnamese</option>
-              <option>🇬🇧 English</option>
+              <option>Ã°Å¸â€¡Â»Ã°Å¸â€¡Â³ Vietnamese</option>
+              <option>Ã°Å¸â€¡Â¬Ã°Å¸â€¡Â§ English</option>
             </select>
           </div>
 

@@ -38,6 +38,24 @@ export function CartProvider({ children }) {
     }
   }, []);
 
+  const updateQuantity = useCallback(async (productId, quantity) => {
+    try {
+      const res = await fetch(`/api/cart/update/${productId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity }),
+      });
+
+      if (res.ok) {
+        await fetchCart();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }, [fetchCart]);
+
   //  load 1 lần khi app start
   useEffect(() => {
     fetchCart();
@@ -48,8 +66,9 @@ export function CartProvider({ children }) {
     cartItems,
     totalQuantity,
     loading,
-    fetchCart
-  }), [cartItems, totalQuantity, loading, fetchCart]);
+    fetchCart,
+    updateQuantity
+  }), [cartItems, totalQuantity, loading, fetchCart, updateQuantity]);
 
   return (
     <CartContext.Provider value={value}>

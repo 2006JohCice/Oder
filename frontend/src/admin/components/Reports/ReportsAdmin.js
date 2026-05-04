@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import React, { useEffect, useState } from "react";
 import "../../css/reports/reports.css";
 import * as XLSX from "xlsx";
@@ -22,12 +23,12 @@ function ReportsAdmin() {
     const [activeIndex, setActiveIndex] = useState(-1);
     const [year, setYear] = useState([2026, 2025, 2024]);
     const [selectedMonth, setSelectedMonth] = useState("October 2025");
-    const [selectedReportType, setSelectedReportType] = useState(1); // 1: Thông tin tổng quan đơn hàng, 2: Thống kê sản phẩm
+    const [selectedReportType, setSelectedReportType] = useState(1); // 1: ThÃƒÂ´ng tin tÃ¡Â»â€¢ng quan Ã„â€˜Ã†Â¡n hÃƒÂ ng, 2: ThÃ¡Â»â€˜ng kÃƒÂª sÃ¡ÂºÂ£n phÃ¡ÂºÂ©m
     const [infoOrder, setInfoOrder] = useState([]);
 
     const navigate = useNavigate();
 
-    // Lấy dử liệu từ database
+    // LÃ¡ÂºÂ¥y dÃ¡Â»Â­ liÃ¡Â»â€¡u tÃ¡Â»Â« database
 
     const fetchExportInfoOrder = () => {
         let url = '/api/admin/infoOrder';
@@ -49,10 +50,10 @@ function ReportsAdmin() {
 
 
 
-    //End Lấy dử liệu từ database
+    //End LÃ¡ÂºÂ¥y dÃ¡Â»Â­ liÃ¡Â»â€¡u tÃ¡Â»Â« database
 
 
-    // 🔹 Dữ liệu doanh thu theo tháng
+    // Ã°Å¸â€Â¹ DÃ¡Â»Â¯ liÃ¡Â»â€¡u doanh thu theo thÃƒÂ¡ng
     const revenueData = [
         { month: "Jan", revenue: 104500000 },
         { month: "Feb", revenue: 98500000 },
@@ -66,7 +67,7 @@ function ReportsAdmin() {
         { month: "Oct", revenue: 145000000 },
     ];
 
-    // 🔹 Dữ liệu người dùng theo trạng thái
+    // Ã°Å¸â€Â¹ DÃ¡Â»Â¯ liÃ¡Â»â€¡u ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng theo trÃ¡ÂºÂ¡ng thÃƒÂ¡i
     const userStatus = [
         { name: "Active", value: 600 },
         { name: "Pending", value: 200 },
@@ -75,7 +76,7 @@ function ReportsAdmin() {
 
     const COLORS = ["#16a34a", "#eab308", "#dc2626"];
 
-    // 🔹 Dữ liệu chi tiết báo cáo
+    // Ã°Å¸â€Â¹ DÃ¡Â»Â¯ liÃ¡Â»â€¡u chi tiÃ¡ÂºÂ¿t bÃƒÂ¡o cÃƒÂ¡o
     const reportTable = [
         {
             id: 1,
@@ -88,7 +89,7 @@ function ReportsAdmin() {
             id: 2,
             date: "2025-10-05",
             reportType: "Revenue Growth",
-            value: "₫ 24,500,000",
+            value: "Ã¢â€šÂ« 24,500,000",
             trend: "+8%",
         },
         {
@@ -104,7 +105,7 @@ function ReportsAdmin() {
         {
             id: 1,
             orderId: "ORD001",
-            productName: "Bò lúc lắc",
+            productName: "BÃƒÂ² lÃƒÂºc lÃ¡ÂºÂ¯c",
             quantity: 2,
             unitPrice: 120000,
             shippingFee: 0,
@@ -113,7 +114,7 @@ function ReportsAdmin() {
         {
             id: 2,
             orderId: "ORD001",
-            productName: "Nước ép cam",
+            productName: "NÃ†Â°Ã¡Â»â€ºc ÃƒÂ©p cam",
             quantity: 2,
             unitPrice: 55000,
             shippingFee: 0,
@@ -122,7 +123,7 @@ function ReportsAdmin() {
         {
             id: 3,
             orderId: "ORD002",
-            productName: "Phở bò tái",
+            productName: "PhÃ¡Â»Å¸ bÃƒÂ² tÃƒÂ¡i",
             quantity: 3,
             unitPrice: 120000,
             shippingFee: 0,
@@ -131,7 +132,7 @@ function ReportsAdmin() {
         {
             id: 4,
             orderId: "ORD002",
-            productName: "Trà sữa trân châu",
+            productName: "TrÃƒÂ  sÃ¡Â»Â¯a trÃƒÂ¢n chÃƒÂ¢u",
             quantity: 2,
             unitPrice: 45000,
             shippingFee: 0,
@@ -139,7 +140,7 @@ function ReportsAdmin() {
         },
     ];
 
-    // 🔹 Xuất dữ liệu bảng ra CSV
+    // Ã°Å¸â€Â¹ XuÃ¡ÂºÂ¥t dÃ¡Â»Â¯ liÃ¡Â»â€¡u bÃ¡ÂºÂ£ng ra CSV
     const handleExportExcel = () => {
 
         // ===== SHEET 1: ORDER SUMMARY =====
@@ -148,20 +149,20 @@ function ReportsAdmin() {
                 Array.isArray(infoOrder) && infoOrder.map((r, index) => ({
                 "#": index + 1,
                 "Order ID": r._id,
-                "Ngày đặt": r.date,
-                "Khách hàng": r.customerName,
-                "SĐT": r.phone,
-                "Phí ship": r.shippingFee,
-                "Giảm giá": r.discount,
-                "Tổng": r.total,
-                "Trạng thái": r.status,
-                "Vận đơn": r.trackingCode,
-                "Đơn vị VC": r.shippingUnit,
-                "Ghi chú": r.note,
+                "NgÃƒÂ y Ã„â€˜Ã¡ÂºÂ·t": r.date,
+                "KhÃƒÂ¡ch hÃƒÂ ng": r.customerName,
+                "SÃ„ÂT": r.phone,
+                "PhÃƒÂ­ ship": r.shippingFee,
+                "GiÃ¡ÂºÂ£m giÃƒÂ¡": r.discount,
+                "TÃ¡Â»â€¢ng": r.total,
+                "TrÃ¡ÂºÂ¡ng thÃƒÂ¡i": r.status,
+                "VÃ¡ÂºÂ­n Ã„â€˜Ã†Â¡n": r.trackingCode,
+                "Ã„ÂÃ†Â¡n vÃ¡Â»â€¹ VC": r.shippingUnit,
+                "Ghi chÃƒÂº": r.note,
             }))
         );
 
-        // Set chiều rộng cột
+        // Set chiÃ¡Â»Âu rÃ¡Â»â„¢ng cÃ¡Â»â„¢t
         summarySheet["!cols"] = [
             { wch: 5 },
             { wch: 15 },
@@ -183,15 +184,15 @@ function ReportsAdmin() {
             reportProducts.map((p, index) => ({
                 "#": index + 1,
                 "Order ID": p.orderId,
-                "Sản phẩm": p.productName,
+                "SÃ¡ÂºÂ£n phÃ¡ÂºÂ©m": p.productName,
                 "SL": p.quantity,
-                "Đơn giá": p.unitPrice,
-                "Chi phí ship": p.shippingFee,
-                "Thành tiền": p.total,
+                "Ã„ÂÃ†Â¡n giÃƒÂ¡": p.unitPrice,
+                "Chi phÃƒÂ­ ship": p.shippingFee,
+                "ThÃƒÂ nh tiÃ¡Â»Ân": p.total,
             }))
         );
 
-        // Set chiều rộng cột
+        // Set chiÃ¡Â»Âu rÃ¡Â»â„¢ng cÃ¡Â»â„¢t
         productSheet["!cols"] = [
             { wch: 5 },
             { wch: 15 },
@@ -206,11 +207,11 @@ function ReportsAdmin() {
         // ===== CREATE WORKBOOK =====
         const workbook = XLSX.utils.book_new();
 
-        // Thêm 2 sheet:
+        // ThÃƒÂªm 2 sheet:
         XLSX.utils.book_append_sheet(workbook, summarySheet, "Order Summary");
         XLSX.utils.book_append_sheet(workbook, productSheet, "Order Products");
 
-        // Xuất file
+        // XuÃ¡ÂºÂ¥t file
         const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
         const blob = new Blob([excelBuffer], {
@@ -221,7 +222,7 @@ function ReportsAdmin() {
     };
 
 
-    // End Xuất dữ liệu bảng ra CSV
+    // End XuÃ¡ÂºÂ¥t dÃ¡Â»Â¯ liÃ¡Â»â€¡u bÃ¡ÂºÂ£ng ra CSV
 
     return (
         <>
@@ -230,7 +231,7 @@ function ReportsAdmin() {
                     <h3>Total Revenue</h3>
                     <div className="admin-stat">
                         <div>
-                            <div className="admin-big">₫ 145,000,000</div>
+                            <div className="admin-big">Ã¢â€šÂ« 145,000,000</div>
                             <div className="admin-trend">{selectedMonth}</div>
                         </div>
                         <div className="admin-right">
@@ -267,7 +268,7 @@ function ReportsAdmin() {
             </section>
 
             <section className="admin-content" style={{ gridTemplateColumns: "2fr 1fr" }}>
-                {/* 🔸 Biểu đồ đường doanh thu */}
+                {/* Ã°Å¸â€Â¸ BiÃ¡Â»Æ’u Ã„â€˜Ã¡Â»â€œ Ã„â€˜Ã†Â°Ã¡Â»Âng doanh thu */}
                 <div className="admin-card">
                     <div className="flex justify-between items-center mb-2">
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -317,7 +318,7 @@ function ReportsAdmin() {
 
                             <YAxis
                                 tickFormatter={(value) =>
-                                    `${value.toLocaleString("vi-VN")}đ`
+                                    `${value.toLocaleString("vi-VN")}Ã„â€˜`
 
                                 }
                             />
@@ -332,7 +333,7 @@ function ReportsAdmin() {
                                 formatter={(value) =>
                                     value.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
                                 }
-                                labelFormatter={(label) => `Tháng ${label}`}
+                                labelFormatter={(label) => `ThÃƒÂ¡ng ${label}`}
                             />
 
                             <Line
@@ -346,7 +347,7 @@ function ReportsAdmin() {
 
                 </div>
 
-                {/* 🔸 Biểu đồ tròn trạng thái người dùng */}
+                {/* Ã°Å¸â€Â¸ BiÃ¡Â»Æ’u Ã„â€˜Ã¡Â»â€œ trÃƒÂ²n trÃ¡ÂºÂ¡ng thÃƒÂ¡i ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng */}
                 <div className="admin-card">
                     <h3>User Status Overview</h3>
                     <ResponsiveContainer width="100%" height={300}>
@@ -366,7 +367,7 @@ function ReportsAdmin() {
                                         {/* <text x={props.cx} y={props.cy + 10} textAnchor="middle" fill="#94a3b8">
                                             {(props.percent * 100).toFixed(0)}%
                                         </text> */}
-                                        {/* Khi hover sẽ phóng to lát thêm 8px */}
+                                        {/* Khi hover sÃ¡ÂºÂ½ phÃƒÂ³ng to lÃƒÂ¡t thÃƒÂªm 8px */}
                                         <Sector
                                             {...props}
                                             outerRadius={props.outerRadius + 8}
@@ -374,8 +375,8 @@ function ReportsAdmin() {
                                         />
                                     </g>
                                 )}
-                                onMouseEnter={(_, index) => setActiveIndex(index)} //  thêm sự kiện hover
-                                onMouseLeave={() => setActiveIndex(-1)} // bỏ hover thì trở lại bình thường
+                                onMouseEnter={(_, index) => setActiveIndex(index)} //  thÃƒÂªm sÃ¡Â»Â± kiÃ¡Â»â€¡n hover
+                                onMouseLeave={() => setActiveIndex(-1)} // bÃ¡Â»Â hover thÃƒÂ¬ trÃ¡Â»Å¸ lÃ¡ÂºÂ¡i bÃƒÂ¬nh thÃ†Â°Ã¡Â»Âng
                             >
                                 {userStatus.map((entry, index) => (
                                     <Cell
@@ -394,8 +395,8 @@ function ReportsAdmin() {
                                     border: "1px solid #475569",
                                     borderRadius: "8px",
                                 }}
-                                labelStyle={{ color: "#facc15" }} // màu chữ của tiêu đề (thường là label)
-                                itemStyle={{ color: "#f8fafc" }} // màu chữ của giá trị
+                                labelStyle={{ color: "#facc15" }} // mÃƒÂ u chÃ¡Â»Â¯ cÃ¡Â»Â§a tiÃƒÂªu Ã„â€˜Ã¡Â»Â (thÃ†Â°Ã¡Â»Âng lÃƒÂ  label)
+                                itemStyle={{ color: "#f8fafc" }} // mÃƒÂ u chÃ¡Â»Â¯ cÃ¡Â»Â§a giÃƒÂ¡ trÃ¡Â»â€¹
                             />
 
                         </PieChart>
@@ -404,7 +405,7 @@ function ReportsAdmin() {
                 </div>
             </section>
 
-            {/* 🔸 Bảng chi tiết báo cáo */}
+            {/* Ã°Å¸â€Â¸ BÃ¡ÂºÂ£ng chi tiÃ¡ÂºÂ¿t bÃƒÂ¡o cÃƒÂ¡o */}
             <section className="admin-card admin-table mt-4">
                 <div className="flex justify-between items-center mb-3">
                     <h3>Detailed Reports</h3>
@@ -417,8 +418,8 @@ function ReportsAdmin() {
                             value={selectedReportType}
                             onChange={(e) => setSelectedReportType(Number(e.target.value))}
                         >
-                            <option value={1}>Thông tin tổng quan đơn hàng</option>
-                            <option value={2}>Thống kê sản phẩm </option>
+                            <option value={1}>ThÃƒÂ´ng tin tÃ¡Â»â€¢ng quan Ã„â€˜Ã†Â¡n hÃƒÂ ng</option>
+                            <option value={2}>ThÃ¡Â»â€˜ng kÃƒÂª sÃ¡ÂºÂ£n phÃ¡ÂºÂ©m </option>
 
                         </select>
 
@@ -455,16 +456,16 @@ function ReportsAdmin() {
                         <tr>
                             <th>#</th>
                             <th>Order ID</th>
-                            <th>Ngày đặt</th>
-                            <th>Khách hàng</th>
-                            <th>SĐT</th>
-                            <th>Phí ship</th>
-                            <th>Giảm giá</th>
-                            <th>Tổng</th>
-                            <th>Trạng thái</th>
-                            <th>Vận đơn</th>
-                            <th>Đơn vị VC</th>
-                            <th>Ghi chú</th>
+                            <th>NgÃƒÂ y Ã„â€˜Ã¡ÂºÂ·t</th>
+                            <th>KhÃƒÂ¡ch hÃƒÂ ng</th>
+                            <th>SÃ„ÂT</th>
+                            <th>PhÃƒÂ­ ship</th>
+                            <th>GiÃ¡ÂºÂ£m giÃƒÂ¡</th>
+                            <th>TÃ¡Â»â€¢ng</th>
+                            <th>TrÃ¡ÂºÂ¡ng thÃƒÂ¡i</th>
+                            <th>VÃ¡ÂºÂ­n Ã„â€˜Ã†Â¡n</th>
+                            <th>Ã„ÂÃ†Â¡n vÃ¡Â»â€¹ VC</th>
+                            <th>Ghi chÃƒÂº</th>
                         </tr>
                     </thead>
 
@@ -491,11 +492,11 @@ function ReportsAdmin() {
                         <tr>
                             <th>#</th>
                             <th>Order ID</th>
-                            <th>Sản phẩm</th>
+                            <th>SÃ¡ÂºÂ£n phÃ¡ÂºÂ©m</th>
                             <th>SL</th>
-                            <th>Đơn giá</th>
-                            <th>Chi phí ship</th>
-                            <th>Thành tiền</th>
+                            <th>Ã„ÂÃ†Â¡n giÃƒÂ¡</th>
+                            <th>Chi phÃƒÂ­ ship</th>
+                            <th>ThÃƒÂ nh tiÃ¡Â»Ân</th>
                         </tr>
                     </thead>
 
@@ -506,9 +507,9 @@ function ReportsAdmin() {
                                 <td>{p._id}</td>
                                 <td>{p.productName}</td>
                                 <td>{p.quantity}</td>
-                                <td>{p.unitPrice}₫</td>
-                                <td>{p.shippingFee}₫</td>
-                                <td>{p.total}₫</td>
+                                <td>{p.unitPrice}Ã¢â€šÂ«</td>
+                                <td>{p.shippingFee}Ã¢â€šÂ«</td>
+                                <td>{p.total}Ã¢â€šÂ«</td>
                             </tr>
                         ))}
                     </tbody>

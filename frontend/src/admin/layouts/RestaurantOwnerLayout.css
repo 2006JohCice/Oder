@@ -1,0 +1,51 @@
+﻿.restaurant-owner-app {
+  min-height: 100vh;
+  background: var(--background);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.restaurant-owner-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.restaurant-owner-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  margin-left: 280px;
+}
+
+.restaurant-owner-content {
+  flex: 1;
+  margin-top: 80px;
+  padding: 18px;
+  background: var(--panel);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .restaurant-owner-main {
+    margin-left: 0;
+  }
+
+  .restaurant-owner-content {
+    margin-top: 72px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 14px;
+    border-radius: 10px;
+  }
+}

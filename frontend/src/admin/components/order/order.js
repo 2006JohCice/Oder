@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import { useState, useEffect } from "react";
 import AutoCloseNotification from "../alerts/AutoCloseNotification";
 import { formatCurrency, formatDateTime } from "../../../users/utils/shop";

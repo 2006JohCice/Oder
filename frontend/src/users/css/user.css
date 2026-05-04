@@ -1,0 +1,66 @@
+/* User-specific styles */
+/* These styles are specific to user-facing components */
+
+/* Override admin styles if needed */
+.admin-app,
+.admin-container,
+.admin-main,
+.admin-sidebar,
+.admin-header {
+  /* Reset admin styles for user context */
+}
+
+/* User cart styles */
+.order-item-copy {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.quantity-controls button {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line);
+  background: var(--background);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.quantity-controls button:hover {
+  background: var(--accent-soft);
+}
+
+.quantity-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity-controls span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* User header styles */
+.manage-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+.manage-link:hover {
+  text-decoration: underline;
+}

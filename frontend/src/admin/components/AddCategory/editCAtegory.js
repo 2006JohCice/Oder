@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import { useEffect, useState } from "react";
 import "../../css/AddCategory/AddCategory.css";
 import ListCategory from "./list-category"
@@ -58,11 +59,11 @@ const EditCategory = () => {
         });
       })
 
-    // Lấy cây danh mục cha
+    // LÃ¡ÂºÂ¥y cÃƒÂ¢y danh mÃ¡Â»Â¥c cha
     fetch("/api/admin/category")
       .then(res => res.json())
-      .then(res => setData(res)) // res là mảng cây danh mục
-      .catch((err) => console.error("Lỗi khi lấy cây danh mục:", err));
+      .then(res => setData(res)) // res lÃƒÂ  mÃ¡ÂºÂ£ng cÃƒÂ¢y danh mÃ¡Â»Â¥c
+      .catch((err) => console.error("LÃ¡Â»â€”i khi lÃ¡ÂºÂ¥y cÃƒÂ¢y danh mÃ¡Â»Â¥c:", err));
   }, [id]);
 
   return (
@@ -72,12 +73,12 @@ const EditCategory = () => {
       <div className="products-right">
 
         <div className="mb-3">
-          <label className="form-label">Tiêu đề</label>
+          <label className="form-label">TiÃƒÂªu Ã„â€˜Ã¡Â»Â</label>
           <input
             type="text"
             name="name"
             className="form-control createProducts-input"
-            placeholder="Nhập tiêu đề..."
+            placeholder="NhÃ¡ÂºÂ­p tiÃƒÂªu Ã„â€˜Ã¡Â»Â..."
             value={formData.name}
             onChange={handleChange}
           />
@@ -92,7 +93,7 @@ const EditCategory = () => {
             value={formData.father_id}
             onChange={handleChange}
           >
-            <option value="">Lựa chọn của bạn</option>
+            <option value="">LÃ¡Â»Â±a chÃ¡Â»Ân cÃ¡Â»Â§a bÃ¡ÂºÂ¡n</option>
             {data.map((item) => (
               <ListCategory key={item._id} node={item} />
             ))}
@@ -101,11 +102,11 @@ const EditCategory = () => {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Mô tả</label>
+          <label className="form-label">MÃƒÂ´ tÃ¡ÂºÂ£</label>
           <textarea
             name="description"
             className="form-control createProducts-input"
-            placeholder="Nhập mô tả..."
+            placeholder="NhÃ¡ÂºÂ­p mÃƒÂ´ tÃ¡ÂºÂ£..."
             rows="3"
             value={formData.description}
             onChange={handleChange}
@@ -113,32 +114,32 @@ const EditCategory = () => {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Ảnh (URL)</label>
+          <label className="form-label">Ã¡ÂºÂ¢nh (URL)</label>
           <input
             type="url"
             name="img"
             className="form-control createProducts-input"
-            placeholder="Dán link ảnh vào đây..."
+            placeholder="DÃƒÂ¡n link Ã¡ÂºÂ£nh vÃƒÂ o Ã„â€˜ÃƒÂ¢y..."
             value={formData.img}
             onChange={handleChange}
           />
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Vị trí</label>
+          <label className="form-label">VÃ¡Â»â€¹ trÃƒÂ­</label>
           <input
             type="number"
             name="position"
             className="form-control createProducts-input"
-            placeholder="Nhập vị trí hiển thị"
+            placeholder="NhÃ¡ÂºÂ­p vÃ¡Â»â€¹ trÃƒÂ­ hiÃ¡Â»Æ’n thÃ¡Â»â€¹"
             value={formData.position}
             onChange={handleChange}
           />
         </div>
 
-        {/* Trạng thái */}
+        {/* TrÃ¡ÂºÂ¡ng thÃƒÂ¡i */}
         <div className="mb-3">
-          <label className="form-label">Trạng thái</label>
+          <label className="form-label">TrÃ¡ÂºÂ¡ng thÃƒÂ¡i</label>
           <div>
             <div className="form-check form-check-inline">
               <input
@@ -149,7 +150,7 @@ const EditCategory = () => {
                 checked={formData.status === "active"}
                 onChange={handleChange}
               />
-              <label className="form-check-label">Hoạt động</label>
+              <label className="form-check-label">HoÃ¡ÂºÂ¡t Ã„â€˜Ã¡Â»â„¢ng</label>
             </div>
 
             <div className="form-check form-check-inline">
@@ -162,7 +163,7 @@ const EditCategory = () => {
                 onChange={handleChange}
               />
               <label className="form-check-label">
-                Dừng hoạt động
+                DÃ¡Â»Â«ng hoÃ¡ÂºÂ¡t Ã„â€˜Ã¡Â»â„¢ng
               </label>
             </div>
           </div>
@@ -174,7 +175,7 @@ const EditCategory = () => {
             className="btn createProducts-btn"
             onClick={editCategory}
           >
-            Lưu danh mục
+            LÃ†Â°u danh mÃ¡Â»Â¥c
           </button>
         {/* </Link> */}
       </div>

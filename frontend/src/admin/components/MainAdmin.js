@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 import { useState, useEffect } from "react";
 import PaginationHelper from "../helpers/pagination";
 import Delete from "../helpers/delete";
@@ -5,7 +6,7 @@ import Loading from "../helpers/loading";
 import { apiFetch } from '../../utils/apiFetch';
 import { useNavigate } from "react-router-dom";
 import { notifyApp } from "../../shared/notifications/ToastProvider";
-function MainAdmin({ query }) {
+function MainAdmin({ query, searchType }) {
 
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function MainAdmin({ query }) {
   const [revenue, setRevenue] = useState(0);
 
     
-    // --- Cập nhật thông tin người dùng ---
+    // --- CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃƒÂ´ng tin ngÃ†Â°Ã¡Â»Âi dÃƒÂ¹ng ---
     const handleSave = (e) => {
         e.preventDefault();
         if (selected) {
@@ -39,7 +40,7 @@ function MainAdmin({ query }) {
                 .then((res) => res.json())
                 .then((data) => {
                     if (data.success) {
-                        notifyApp("Thay Đổi Thành Công", "success");
+                        notifyApp("Thay Ã„ÂÃ¡Â»â€¢i ThÃƒÂ nh CÃƒÂ´ng", "success");
                         setSelected(null);
                     }
                 });
@@ -48,7 +49,7 @@ function MainAdmin({ query }) {
 
 
   const checkBoxSetting = () => {
-    notifyApp("Cài đặt đã được cập nhật", "success");
+    notifyApp("CÃƒÂ i Ã„â€˜Ã¡ÂºÂ·t Ã„â€˜ÃƒÂ£ Ã„â€˜Ã†Â°Ã¡Â»Â£c cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t", "success");
   }
 
 
@@ -141,7 +142,7 @@ function MainAdmin({ query }) {
 
       if (res.ok) {
         fetchUser();
-        notifyApp("Cập nhật thành công!", "success");
+        notifyApp("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃƒÂ nh cÃƒÂ´ng!", "success");
         setSelected(null);
       }
     } catch (error) {
@@ -164,7 +165,7 @@ function MainAdmin({ query }) {
   const idDeleteUser = (Id) => {
 
     // eslint-disable-next-line no-restricted-globals
-    const result = confirm("Bạn có chắc chắn muốn xóa user này?");
+    const result = confirm("BÃ¡ÂºÂ¡n cÃƒÂ³ chÃ¡ÂºÂ¯c chÃ¡ÂºÂ¯n muÃ¡Â»â€˜n xÃƒÂ³a user nÃƒÂ y?");
     if (result) {
       if (Id) {
         const url = `/api/admin/userAdmin/delete/${Id}`;
@@ -199,7 +200,7 @@ function MainAdmin({ query }) {
       {
         (users && users.length === 0) ?
           <div className="admin-page-title">
-            <Loading message="Đang Thống Kê..." />
+            <Loading message="Ã„Âang ThÃ¡Â»â€˜ng KÃƒÂª..." />
           </div> : <div>
             <section className="admin-grid">
               <div className="admin-card">
@@ -236,7 +237,7 @@ function MainAdmin({ query }) {
                 <h3>Revenue</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">₫ {revenue}</div>
+                    <div className="admin-big">Ã¢â€šÂ« {revenue}</div>
                     <div className="admin-trend">This month</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">+12% vs last month</div></div>
@@ -247,7 +248,7 @@ function MainAdmin({ query }) {
                   Spending</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">₫ </div>
+                    <div className="admin-big">Ã¢â€šÂ« </div>
                     <div className="admin-trend">This month</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">0% vs last month</div></div>
@@ -259,7 +260,7 @@ function MainAdmin({ query }) {
                   Reserves & Investments </h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">₫ </div>
+                    <div className="admin-big">Ã¢â€šÂ« </div>
                     <div className="admin-trend">This month</div>
 
                   </div>
@@ -387,7 +388,7 @@ function MainAdmin({ query }) {
                             </form>
                         </div>
                     ) : (
-                    <div className="admin-muted">Chọn một user từ bảng để chỉnh sửa.</div>
+                    <div className="admin-muted">ChÃ¡Â»Ân mÃ¡Â»â„¢t user tÃ¡Â»Â« bÃ¡ÂºÂ£ng Ã„â€˜Ã¡Â»Æ’ chÃ¡Â»â€°nh sÃ¡Â»Â­a.</div>
                     )}
                 </div>
                 <div className="admin-card">

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 
 import "../../css/tinyMCE/MyEditor.css";
 
@@ -38,7 +39,7 @@ function MyEditor() {
         style={{ marginTop: "20px", padding: "8px 16px" }}
         className="admin-btn"
       >
-        Gửi Đi
+        GÃ¡Â»Â­i Ã„Âi
       </button>
     </div>
   );

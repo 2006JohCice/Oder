@@ -5,7 +5,7 @@ import FeaturedProducts from "../MainContents/products/featuredProducts";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
 export default function CartPage() {
-  const { cartItems, totalQuantity, fetchCart, loading } = useCart();
+  const { cartItems, totalQuantity, fetchCart, loading, updateQuantity } = useCart();
   const navigate = useNavigate();
 
   const handleRemove = async (id) => {
@@ -26,6 +26,16 @@ export default function CartPage() {
     }
 
     notifyApp("Không thể xóa sản phẩm khỏi giỏ hàng", "error");
+  };
+
+  const handleUpdateQuantity = async (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+    const success = await updateQuantity(productId, newQuantity);
+    if (success) {
+      notifyApp("Cập nhật số lượng thành công", "success");
+    } else {
+      notifyApp("Không thể cập nhật số lượng", "error");
+    }
   };
 
   if (loading) {
@@ -78,7 +88,22 @@ export default function CartPage() {
                   <Link to={`/products/detail/${item.productInfo?.slug}`}>
                     {item.productInfo?.name}
                   </Link>
-                  <span>Số lượng: {item.quantity}</span>
+                  <div className="quantity-controls">
+                    <button
+                      type="button"
+                      onClick={() => handleUpdateQuantity(item.product_id, item.quantity - 1)}
+                      disabled={item.quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleUpdateQuantity(item.product_id, item.quantity + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
                 <strong>{formatCurrency(calculateLineTotal(item))}</strong>
                 <button

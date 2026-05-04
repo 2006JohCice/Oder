@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 // import { useState, useEffect } from "react";
 import "../../css/products/ProductsAdmin.css";
 import { Link } from "react-router-dom";
@@ -53,12 +54,12 @@ const RoleHome = () => {
     <div className="products-page">
 
       <header className="products-header">
-        <h1>Quản Trị Sản Phẩm</h1>
+        <h1>QuÃ¡ÂºÂ£n TrÃ¡Â»â€¹ SÃ¡ÂºÂ£n PhÃ¡ÂºÂ©m</h1>
           <div div style={{ display: "flex", gap: "10px" }}>
 
         <Link to = {`/admin/role/create`}>
         <button className="btn-accent" type="button" >
-            + Thêm Sản Phẩm
+            + ThÃƒÂªm SÃ¡ÂºÂ£n PhÃ¡ÂºÂ©m
           </button>
         </Link>
           
@@ -74,9 +75,9 @@ const RoleHome = () => {
           <thead>
             <tr>
               <th>STT </th>
-              <th>Nhóm Quyền</th>
-              <th>Miêu tả</th>
-              <th>Hành Động</th>
+              <th>NhÃƒÂ³m QuyÃ¡Â»Ân</th>
+              <th>MiÃƒÂªu tÃ¡ÂºÂ£</th>
+              <th>HÃƒÂ nh Ã„ÂÃ¡Â»â„¢ng</th>
             </tr>
           </thead>
           <tbody>
@@ -87,10 +88,10 @@ const RoleHome = () => {
                 <td>{item.description}</td>
                 <td style={{ display: "flex", gap: "5px" }}>
                   <Link to={`/admin/role/edit/${item._id}`}>
-                  <button className="admin-btn">Sửa</button>
+                  <button className="admin-btn">SÃ¡Â»Â­a</button>
                   </Link>
                  
-                  <button className="admin-btn" onClick={() => handlDelete(item._id)}>Xóa</button>
+                  <button className="admin-btn" onClick={() => handlDelete(item._id)}>XÃƒÂ³a</button>
                 </td>
               </tr>
             ))}

@@ -3,7 +3,7 @@
   min-height: calc(100vh - 40px);
   padding: 18px;
   border-radius: 24px;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(8, 20, 40, 0.95));
+  background: var(--admin-card-bg);
   box-shadow: 0 20px 40px rgba(2, 6, 23, 0.4);
   position: sticky;
   top: 20px;
@@ -37,7 +37,7 @@
 }
 
 .admin-brand-sub {
-  color: #94a3b8;
+  color: var(--admin-muted);
   font-size: 0.88rem;
 }
 
@@ -69,15 +69,15 @@
   gap: 12px;
   padding: 10px 12px;
   border-radius: 12px;
-  color: #cbd5e1;
+  color: var(--admin-text);
   text-decoration: none;
   margin-bottom: 6px;
 }
 
 .admin-menu a.active,
 .admin-menu a:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #34d399;
+  background: var(--admin-btn-bg);
+  /* color: var(--admin-primary-text); */
 }
 
 .admin-menu a .admin-ico {
@@ -89,7 +89,7 @@
 .admin-profile {
   margin-top: auto;
   padding-top: 12px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  border-top: 1px dashed var(--admin-border);
   display: flex;
   gap: 12px;
   align-items: center;

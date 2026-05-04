@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 function ButtonNotifi() {
     return (
         <>
@@ -9,7 +10,7 @@ function ButtonNotifi() {
                 <li><a className="dropdown-item" href="#">Something else here</a></li>
                 <li><hr className="dropdown-divider" /></li>
                 <li><a className="dropdown-item" href="#">Separated link</a></li>
-                <a className="text-center" href="#">Xem tất cả thông báo</a>
+                <a className="text-center" href="#">Xem tÃ¡ÂºÂ¥t cÃ¡ÂºÂ£ thÃƒÂ´ng bÃƒÂ¡o</a>
             </ul>
 
 
@@ -26,12 +27,12 @@ function ButtonNotifi() {
                 className="dropdown-menu notification-dropdown show"
                 style={{ transform: "translate3d(990px, 150px, 0px)", width: "190px" }}
             >
-                <li><a className="dropdown-item" href="#">Thông báo mới 1</a></li>
-                <li><a className="dropdown-item" href="#">Thông báo mới 2</a></li>
-                <li><a className="dropdown-item" href="#">Thông báo mới 3</a></li>
+                <li><a className="dropdown-item" href="#">ThÃƒÂ´ng bÃƒÂ¡o mÃ¡Â»â€ºi 1</a></li>
+                <li><a className="dropdown-item" href="#">ThÃƒÂ´ng bÃƒÂ¡o mÃ¡Â»â€ºi 2</a></li>
+                <li><a className="dropdown-item" href="#">ThÃƒÂ´ng bÃƒÂ¡o mÃ¡Â»â€ºi 3</a></li>
                 <li><hr className="dropdown-divider" /></li>
                 <li className="text-center mt-2">
-                    <a href="#" className="see-all-link">Xem tất cả thông báo</a>
+                    <a href="#" className="see-all-link">Xem tÃ¡ÂºÂ¥t cÃ¡ÂºÂ£ thÃƒÂ´ng bÃƒÂ¡o</a>
                 </li>
             </ul> */}
 

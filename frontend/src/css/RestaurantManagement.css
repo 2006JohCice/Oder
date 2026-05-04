@@ -1,0 +1,207 @@
+.restaurant-management {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.restaurant-management .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.restaurant-management .header h2 {
+  margin: 0;
+  color: var(--text);
+}
+
+.products-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.product-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+}
+
+.product-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 16px;
+  flex: 1;
+}
+
+.product-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.product-info .price {
+  font-weight: bold;
+  color: var(--accent);
+  margin: 0 0 8px 0;
+}
+
+.product-info .description {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-actions {
+  padding: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.product-actions .btn {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: center;
+}
+
+.btn-edit {
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+.btn-edit:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-delete {
+  background: #fee;
+  color: #b42318;
+}
+
+.btn-delete:hover {
+  background: #b42318;
+  color: white;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  margin: 0 0 20px 0;
+  color: var(--text);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent-dark);
+}
+
+.btn-secondary {
+  background: var(--background);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.btn-secondary:hover {
+  background: var(--line);
+}
+
+.no-products {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+}
+
+.manage-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+.manage-link:hover {
+  text-decoration: underline;
+}
