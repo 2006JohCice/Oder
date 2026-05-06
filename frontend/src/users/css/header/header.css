@@ -112,7 +112,7 @@
 }
 
 .nav-dropdown:hover .nav-dropdown-menu,
-.nav-submenu-item:hover > .nav-submenu {
+.nav-submenu-item:hover>.nav-submenu {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
@@ -206,6 +206,9 @@
   }
 
   .desktop-nav.is-open {
+    height: 60vh;
+    overflow: auto;
+    order: 3;
     display: block;
   }
 
@@ -231,6 +234,7 @@
 }
 
 @media (max-width: 720px) {
+
   .topbar,
   .app-header {
     width: min(100% - 20px, 1200px);
@@ -240,11 +244,13 @@
   .header-actions {
     flex-wrap: wrap;
   }
-  .topbar span{
+
+  .topbar span {
     display: none;
   }
 
   .header-actions {
+    order: 2;
     width: 100%;
     justify-content: space-between;
   }
