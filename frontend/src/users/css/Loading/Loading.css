@@ -1,0 +1,34 @@
+:root {
+  --bg: #f7f1e8;
+  --text: #2e251d;
+  --accent: #bf5b2c;
+}
+
+/* full màn hình */
+.loading-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg);
+}
+
+/* text typing */
+.typing-text {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+/* con trỏ nhấp nháy */
+.cursor {
+  margin-left: 5px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}

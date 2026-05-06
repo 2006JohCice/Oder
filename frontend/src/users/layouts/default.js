@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import MainContent from "../components/HouseMain";
 import { Routes, Route } from "react-router-dom";
@@ -14,14 +14,39 @@ import RestaurantList from "../components/MainContents/RestaurantList";
 import RestaurantRegister from "../components/pages/RestaurantRegister";
 import RestaurantProducts from "../components/pages/RestaurantProducts";
 
+
+import Loading from "../utils/Loading";
+
 function DefaultLayout() {
+
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    fetch("/api/init-cart").catch(() => {});
+    const initApp = async () => {
+      try {
+        await fetch("/api/init-cart").catch(() => {});
+      } catch (error) {
+        console.error("Lỗi init:", error);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000); 
+      }
+    };
+
+    initApp();
   }, []);
+
+  // loading screen
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <main className="site-shell">
       <Header />
+
       <div className="site-main">
         <Routes>
           <Route path="/" element={<MainContent />} />
@@ -36,8 +61,10 @@ function DefaultLayout() {
           <Route path="/restaurants" element={<RestaurantList />} />
           <Route path="/restaurant/register" element={<RestaurantRegister />} />
           <Route path="/restaurant/:restaurantId/products" element={<RestaurantProducts />} />
+  
         </Routes>
       </div>
+
     </main>
   );
 }
