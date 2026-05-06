@@ -54,12 +54,12 @@ const RoleHome = () => {
     <div className="products-page">
 
       <header className="products-header">
-        <h1>QuÃ¡ÂºÂ£n TrÃ¡Â»â€¹ SÃ¡ÂºÂ£n PhÃ¡ÂºÂ©m</h1>
+        <h1>Quản lý phân quyền</h1>
           <div div style={{ display: "flex", gap: "10px" }}>
 
         <Link to = {`/admin/role/create`}>
         <button className="btn-accent" type="button" >
-            + ThÃƒÂªm SÃ¡ÂºÂ£n PhÃ¡ÂºÂ©m
+            + Thêm Quyền
           </button>
         </Link>
           
@@ -75,9 +75,9 @@ const RoleHome = () => {
           <thead>
             <tr>
               <th>STT </th>
-              <th>NhÃƒÂ³m QuyÃ¡Â»Ân</th>
-              <th>MiÃƒÂªu tÃ¡ÂºÂ£</th>
-              <th>HÃƒÂ nh Ã„ÂÃ¡Â»â„¢ng</th>
+              <th>Nhóm Quyền</th>
+              <th>Miêu tả</th>
+              <th>Hình ảnh</th>
             </tr>
           </thead>
           <tbody>
@@ -88,10 +88,10 @@ const RoleHome = () => {
                 <td>{item.description}</td>
                 <td style={{ display: "flex", gap: "5px" }}>
                   <Link to={`/admin/role/edit/${item._id}`}>
-                  <button className="admin-btn">SÃ¡Â»Â­a</button>
+                  <button className="admin-btn">Sửa</button>
                   </Link>
                  
-                  <button className="admin-btn" onClick={() => handlDelete(item._id)}>XÃƒÂ³a</button>
+                  <button className="admin-btn" onClick={() => handlDelete(item._id)}>Xóa</button>
                 </td>
               </tr>
             ))}

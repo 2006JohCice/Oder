@@ -10,7 +10,6 @@ import LayoutLoginUser from './users/components/login/layoutLogin';
 import ScrollToTop from './ScrollToTop';
 function App() {
 
-
   return (
     <BrowserRouter>
       <ScrollToTop />

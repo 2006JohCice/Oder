@@ -200,7 +200,7 @@ function MainAdmin({ query, searchType }) {
       {
         (users && users.length === 0) ?
           <div className="admin-page-title">
-            <Loading message="Ã„Âang ThÃ¡Â»â€˜ng KÃƒÂª..." />
+            <Loading message="Đang tải thông tin..." />
           </div> : <div>
             <section className="admin-grid">
               <div className="admin-card">
@@ -237,7 +237,7 @@ function MainAdmin({ query, searchType }) {
                 <h3>Revenue</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">Ã¢â€šÂ« {revenue}</div>
+                    <div className="admin-big">VNĐ {revenue}</div>
                     <div className="admin-trend">This month</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">+12% vs last month</div></div>
@@ -248,7 +248,7 @@ function MainAdmin({ query, searchType }) {
                   Spending</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">Ã¢â€šÂ« </div>
+                    <div className="admin-big">VNĐ </div>
                     <div className="admin-trend">This month</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">0% vs last month</div></div>
@@ -260,7 +260,7 @@ function MainAdmin({ query, searchType }) {
                   Reserves & Investments </h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">Ã¢â€šÂ« </div>
+                    <div className="admin-big">VNĐ </div>
                     <div className="admin-trend">This month</div>
 
                   </div>
@@ -388,7 +388,7 @@ function MainAdmin({ query, searchType }) {
                             </form>
                         </div>
                     ) : (
-                    <div className="admin-muted">ChÃ¡Â»Ân mÃ¡Â»â„¢t user tÃ¡Â»Â« bÃ¡ÂºÂ£ng Ã„â€˜Ã¡Â»Æ’ chÃ¡Â»â€°nh sÃ¡Â»Â­a.</div>
+                    <div className="admin-muted">Chọn một user từ bảng để chỉnh sửa.</div>
                     )}
                 </div>
                 <div className="admin-card">

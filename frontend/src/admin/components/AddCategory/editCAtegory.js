@@ -73,12 +73,12 @@ const EditCategory = () => {
       <div className="products-right">
 
         <div className="mb-3">
-          <label className="form-label">TiÃƒÂªu Ã„â€˜Ã¡Â»Â</label>
+          <label className="form-label">Tiêu đề danh mục</label>
           <input
             type="text"
             name="name"
             className="form-control createProducts-input"
-            placeholder="NhÃ¡ÂºÂ­p tiÃƒÂªu Ã„â€˜Ã¡Â»Â..."
+            placeholder="Nhập tiêu đề..."
             value={formData.name}
             onChange={handleChange}
           />
@@ -93,7 +93,7 @@ const EditCategory = () => {
             value={formData.father_id}
             onChange={handleChange}
           >
-            <option value="">LÃ¡Â»Â±a chÃ¡Â»Ân cÃ¡Â»Â§a bÃ¡ÂºÂ¡n</option>
+            <option value="">Lựa chọn danh mục con</option>
             {data.map((item) => (
               <ListCategory key={item._id} node={item} />
             ))}
@@ -102,11 +102,11 @@ const EditCategory = () => {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">MÃƒÂ´ tÃ¡ÂºÂ£</label>
+          <label className="form-label">Miêu tả danh mục</label>
           <textarea
             name="description"
             className="form-control createProducts-input"
-            placeholder="NhÃ¡ÂºÂ­p mÃƒÂ´ tÃ¡ÂºÂ£..."
+            placeholder="Nhập mô tả..."
             rows="3"
             value={formData.description}
             onChange={handleChange}
@@ -114,32 +114,32 @@ const EditCategory = () => {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Ã¡ÂºÂ¢nh (URL)</label>
+          <label className="form-label">Ảnh (URL)</label>
           <input
             type="url"
             name="img"
             className="form-control createProducts-input"
-            placeholder="DÃƒÂ¡n link Ã¡ÂºÂ£nh vÃƒÂ o Ã„â€˜ÃƒÂ¢y..."
+            placeholder="Dán link ảnh vào đây..."
             value={formData.img}
             onChange={handleChange}
           />
         </div>
 
         <div className="mb-3">
-          <label className="form-label">VÃ¡Â»â€¹ trÃƒÂ­</label>
+          <label className="form-label">Vị trí</label>
           <input
             type="number"
             name="position"
             className="form-control createProducts-input"
-            placeholder="NhÃ¡ÂºÂ­p vÃ¡Â»â€¹ trÃƒÂ­ hiÃ¡Â»Æ’n thÃ¡Â»â€¹"
+            placeholder="Nhập vị trí hiển thị"
             value={formData.position}
             onChange={handleChange}
           />
         </div>
 
-        {/* TrÃ¡ÂºÂ¡ng thÃƒÂ¡i */}
+        {/* Trạng thái */}
         <div className="mb-3">
-          <label className="form-label">TrÃ¡ÂºÂ¡ng thÃƒÂ¡i</label>
+          <label className="form-label">Trạng thái</label>
           <div>
             <div className="form-check form-check-inline">
               <input
@@ -150,7 +150,7 @@ const EditCategory = () => {
                 checked={formData.status === "active"}
                 onChange={handleChange}
               />
-              <label className="form-check-label">HoÃ¡ÂºÂ¡t Ã„â€˜Ã¡Â»â„¢ng</label>
+              <label className="form-check-label">Hoạt động</label>
             </div>
 
             <div className="form-check form-check-inline">
@@ -163,7 +163,7 @@ const EditCategory = () => {
                 onChange={handleChange}
               />
               <label className="form-check-label">
-                DÃ¡Â»Â«ng hoÃ¡ÂºÂ¡t Ã„â€˜Ã¡Â»â„¢ng
+                Dừng hoạt động
               </label>
             </div>
           </div>
@@ -175,7 +175,7 @@ const EditCategory = () => {
             className="btn createProducts-btn"
             onClick={editCategory}
           >
-            LÃ†Â°u danh mÃ¡Â»Â¥c
+            Lưu danh mục
           </button>
         {/* </Link> */}
       </div>
