@@ -16,11 +16,33 @@
   gap: 10px;
 }
 
+.radio-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
 .avatar-block {
   display: grid;
   gap: 10px;
   justify-items: start;
   margin-bottom: 8px;
+}
+
+.user-settings-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  resize: vertical;
+  min-height: 140px;
 }
 
 .avatar-block img {

@@ -6,6 +6,7 @@ import Loading from "../helpers/loading";
 import { apiFetch } from '../../utils/apiFetch';
 import { useNavigate } from "react-router-dom";
 import { notifyApp } from "../../shared/notifications/ToastProvider";
+import { formatCurrency } from "../helpers/shop";
 function MainAdmin({ query, searchType }) {
 
   const [users, setUsers] = useState([]);
@@ -237,7 +238,8 @@ function MainAdmin({ query, searchType }) {
                 <h3>Revenue</h3>
                 <div className="admin-stat">
                   <div>
-                    <div className="admin-big">VNĐ {revenue}</div>
+
+                    <div className="admin-big">{formatCurrency(revenue)}</div>
                     <div className="admin-trend">This month</div>
                   </div>
                   <div className="admin-right"><div className="admin-trend">+12% vs last month</div></div>

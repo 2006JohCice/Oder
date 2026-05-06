@@ -1,12 +1,14 @@
 ﻿import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCart } from "../mixi/cart/CartContext";
+import { Link, useNavigate } from "react-router-dom";
 import "../../css/RestaurantProducts.css";
+import CardProducts from "../mixi/cardProducts/cardProducts";
 
 const RestaurantProducts = () => {
   const { restaurantId } = useParams();
   const { fetchCart } = useCart();
-
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [restaurant, setRestaurant] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,18 +65,111 @@ const RestaurantProducts = () => {
   };
 
   if (loading) return <div className="loading">Đang tải sản phẩm...</div>;
+  if (!restaurant) return <div className="loading">Không tìm thấy nhà hàng.</div>;
 
   return (
     <div className="restaurant-products">
-      {restaurant && (
+      {/* {restaurant && (
         <div className="restaurant-header">
           <h2>{restaurant.name}</h2>
           <p className="address">{restaurant.address}</p>
           <p className="phone">{restaurant.phone}</p>
         </div>
-      )}
+      )} */}
 
-      <div className="products-grid">
+      <div className="topbar">
+        <span>{restaurant.name}</span>
+        <span className="address">ADDRESS: {restaurant.address}</span>
+        <span className="phone">CSKH-TEL: {restaurant.phone}</span>
+        {/* <Link to="/cart/checkout?mode=table" className="no-underline">Dat ban ngay</Link> */}
+      </div>
+
+      <header className="app-header">
+        <div className="brand-group">
+          <Link to="/" className="logo no-underline">{restaurant.name}</Link>
+        </div>
+        <div className="header-actions">
+          <nav className="site-nav">
+            <div className="nav-dropdown">
+              <button type="button" className="nav-link nav-link-button">
+                Danh mục
+                <i className="bi bi-chevron-down" />
+              </button>
+
+              <ul className="nav-dropdown-menu">
+                <li>
+                  <Link to="/products" className="nav-dropdown-link no-underline" >
+                    Xem thêm
+                  </Link>
+                </li>
+                {/* {Array.isArray(data) && data.map((item) => <MenuItem key={item._id} item={item} />)} */}
+              </ul>
+            </div>
+
+            <Link to="/" className="nav-link no-underline" >
+              Trang chủ
+            </Link>
+            <Link to="/restaurants" className="nav-link no-underline" >
+              Nhà hàng
+            </Link>
+            <Link to="/products" className="nav-link no-underline" >
+              Món nổi bật
+            </Link>
+            <Link to="/cart/checkout?mode=table" className="nav-link no-underline" >
+              Đặt bàn
+            </Link>
+            <Link to="/cart/doneOrder" className="nav-link no-underline" >
+              Đơn đặt
+            </Link>
+
+          </nav>
+        </div>
+
+        <div className="header-actions">
+          <div className="user-chip" >
+            <i className="bi bi-person-circle" />
+
+            <div className="user-menu-wrap">
+              <button type="button" className="user-menu-toggle" onClick={() => setUserMenuOpen((prev) => !prev)}>
+                Reviewer
+                <i className="bi bi-chevron-down" />
+              </button>
+              {userMenuOpen && (
+                <ul className="user-dropdown-menu">
+
+                  <li>
+                    <Link to="/user/reports" className="user-dropdown-link no-underline" onClick={() => setUserMenuOpen(false)}>
+                      Báo Cáo Nhà Hàng
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/user/feedback" className="user-dropdown-link no-underline" title="Góp ý cho nhà hàng">
+                      Góp ý Cho Nhà Hàng
+                    </Link>
+                  </li>
+                </ul>
+              )}
+
+            </div>
+
+          </div>
+
+          {/* <button
+            type="button"
+            className="mobile-menu-toggle"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label="Mo menu"
+          >
+            <i className="bi bi-list" />
+          </button> */}
+        </div>
+
+
+
+      </header>
+
+
+      {/* <div className="products-grid">
         {products.map((product) => (
           <div key={product._id} className="product-card">
             <img src={product.img || "/default-food.jpg"} alt={product.name} className="product-image" loading="lazy" />
@@ -88,8 +183,10 @@ const RestaurantProducts = () => {
             </button>
           </div>
         ))}
-      </div>
+      </div> */}
+        <CardProducts data={products} />
 
+     
       {products.length === 0 && (
         <div className="no-products">
           <p>Nhà hàng chưa có sản phẩm nào.</p>

@@ -103,6 +103,18 @@ const RestaurantDashboard = ({ restaurant }) => {
               <i className="bi bi-receipt"></i>
               <span>Xem đơn hàng</span>
             </button>
+             <button className="action-card" onClick={() => window.location.href = '/restaurant-owner/tables'}>
+              <i className="bi bi-grid-3x3-gap"></i>
+              <span>Quản lý bàn</span>
+            </button>
+            <button className="action-card" onClick={() => window.location.href = '/restaurant-owner/feedbacks'}>
+              <i className="bi bi-chat-left-dots"></i>
+              <span>Phản hồi</span>
+            </button>
+            <button className="action-card" onClick={() => window.location.href = '/restaurant-owner/reports'}>
+              <i className="bi bi-flag"></i>
+              <span>Báo cáo</span>
+            </button>
             <button className="action-card" onClick={() => window.location.href = '/restaurant-owner/settings'}>
               <i className="bi bi-gear"></i>
               <span>Cài đặt</span>

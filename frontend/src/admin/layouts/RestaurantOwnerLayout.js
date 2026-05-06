@@ -7,6 +7,8 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import RestaurantProducts from "../components/restaurant/RestaurantProducts";
 import RestaurantDashboard from "../components/restaurant/RestaurantDashboard";
 import RestaurantOrders from "../components/restaurant/RestaurantOrders";
+import RestaurantFeedbacks from "../components/restaurant/RestaurantFeedbacks";
+import RestaurantReports from "../components/restaurant/RestaurantReports";
 import RestaurantSettings from "../components/restaurant/RestaurantSettings";
 import RestaurantTables from "../components/restaurant/RestaurantTables";
 
@@ -73,6 +75,8 @@ export default function RestaurantOwnerLayout() {
               <Route path="/" element={<RestaurantDashboard restaurant={restaurant} />} />
               <Route path="/products" element={<RestaurantProducts restaurant={restaurant} />} />
               <Route path="/orders" element={<RestaurantOrders restaurant={restaurant} />} />
+              <Route path="/feedbacks" element={<RestaurantFeedbacks restaurant={restaurant} />} />
+              <Route path="/reports" element={<RestaurantReports restaurant={restaurant} />} />
               <Route path="/tables" element={<RestaurantTables restaurant={restaurant} />} />
               <Route path="/settings" element={<RestaurantSettings restaurant={restaurant} />} />
             </Routes>

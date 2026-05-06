@@ -8,6 +8,8 @@ const SidebarRestaurant = ({ menuOpen, setMenuOpen }) => {
     { path: "/restaurant-owner", label: "Tổng quan", icon: "bi bi-house-door" },
     { path: "/restaurant-owner/products", label: "Quản lý menu", icon: "bi bi-box-seam" },
     { path: "/restaurant-owner/orders", label: "Đơn hàng", icon: "bi bi-receipt" },
+    { path: "/restaurant-owner/feedbacks", label: "Phản hồi khách", icon: "bi bi-chat-left-dots" },
+    { path: "/restaurant-owner/reports", label: "Báo cáo nhà hàng", icon: "bi bi-flag" },
     { path: "/restaurant-owner/tables", label: "Quản lý bàn ăn", icon: "bi bi-grid-3x3-gap" },
     { path: "/restaurant-owner/settings", label: "Cài đặt", icon: "bi bi-gear" },
   ];

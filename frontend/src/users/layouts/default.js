@@ -1,5 +1,4 @@
-/* eslint-disable unicode-bom */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "../css/user.css";
 import Header from "../components/Header";
 import MainContent from "../components/HouseMain";
@@ -17,15 +16,58 @@ import RestaurantRegister from "../components/pages/RestaurantRegister";
 import RestaurantProducts from "../components/pages/RestaurantProducts";
 import RestaurantManagement from "../components/pages/RestaurantManagement";
 import UserSettings from "../components/pages/UserSettings";
+import FeedBack from "../components/pages/feedback";
+import Report from "../components/pages/Report";
+import Footer from "../components/foot/Footer";
+import Loading from "../utils/Loading";
 
 function DefaultLayout() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+  // useEffect(() => {
+  //   const init = async () => {
+  //     try {  
+  //       await Promise.all([
+  //         fetch("/api/init-cart"),
+  //       ]);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError("Không thể tải dữ liệu");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   init();
+  // }, []);
+
   useEffect(() => {
-    fetch("/api/init-cart").catch(() => {});
+    const initApp = async () => {
+      try {
+        await fetch("/api/init-cart").catch(() => {});
+      } catch (error) {
+        console.error("Lỗi init:", error);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000); 
+      }
+    };
+
+    initApp();
   }, []);
+
+  // loading screen
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <main className="site-shell">
       <Header />
+
       <div className="site-main">
         <Routes>
           <Route path="/" element={<MainContent />} />
@@ -42,8 +84,12 @@ function DefaultLayout() {
           <Route path="/restaurant/:restaurantId/products" element={<RestaurantProducts />} />
           <Route path="/restaurant/manage" element={<RestaurantManagement />} />
           <Route path="/user/settings" element={<UserSettings />} />
+          <Route path="/user/feedback" element={<FeedBack />} />
+          <Route path="/user/reports" element={<Report />} />
         </Routes>
       </div>
+
+      <Footer />
     </main>
   );
 }
