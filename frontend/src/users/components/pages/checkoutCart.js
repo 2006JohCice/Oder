@@ -8,6 +8,8 @@ import {
 } from "../../utils/shop";
 import FeaturedProducts from "../MainContents/products/featuredProducts";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import LoadingButton from "../../../shared/components/LoadingButton";
+import useButtonLoading from "../../../shared/hooks/useButtonLoading";
 
 const defaultForm = {
   fullName: "",
@@ -28,6 +30,7 @@ export default function CheckoutCart() {
   const [formData, setFormData] = useState(defaultForm);
   const [availableTables, setAvailableTables] = useState([]);
   const [isLoadingTables, setIsLoadingTables] = useState(false);
+  const { isLoading: isLoadingCheckout, handleLoading: handleLoadingCheckout } = useButtonLoading();
   const navigate = useNavigate();
   const location = useLocation();
   const { fetchCart } = useCart();
@@ -135,34 +138,41 @@ export default function CheckoutCart() {
   const handleDonePay = async (event) => {
     event.preventDefault();
 
-    const res = await fetch("/api/checkout/order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    await handleLoadingCheckout(async () => {
+      try {
+        const res = await fetch("/api/checkout/order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
 
-    if (res.status === 401) {
-      notifyApp("Vui long dang nhap de dat hang", "info");
-      navigate("/user/auth/login");
-      return;
-    }
+        if (res.status === 401) {
+          notifyApp("Vui lòng đăng nhập để đặt hàng", "info");
+          navigate("/user/auth/login");
+          return;
+        }
 
-    const data = await res.json();
-    if (!res.ok) {
-      notifyApp(data.message, "error");
-      if (formData.orderType === "dine_in") {
-        const tableRes = await fetch("/api/tables/available");
-        const tableData = await tableRes.json();
-        setAvailableTables(Array.isArray(tableData.tables) ? tableData.tables : []);
+        const data = await res.json();
+        if (!res.ok) {
+          notifyApp(data.message, "error");
+          if (formData.orderType === "dine_in") {
+            const tableRes = await fetch("/api/tables/available");
+            const tableData = await tableRes.json();
+            setAvailableTables(Array.isArray(tableData.tables) ? tableData.tables : []);
+          }
+          return;
+        }
+
+        await fetchCart();
+        notifyApp("Đặt hàng thành công", "success");
+        navigate(`/cart/checkout/success/${data.orderId}`);
+      } catch (error) {
+        console.error("Checkout error:", error);
+        notifyApp("Lỗi khi đặt hàng. Vui lòng thử lại.", "error");
       }
-      return;
-    }
-
-    await fetchCart();
-    notifyApp("Dat hang thanh cong", "success");
-    navigate(`/cart/checkout/success/${data.orderId}`);
+    });
   };
 
   if (products.length === 0) {
@@ -347,13 +357,16 @@ export default function CheckoutCart() {
             <span>Tong tien</span>
             <strong>{formatCurrency(cartItems?.totalCartPrice)}</strong>
           </div>
-          <button
+          <LoadingButton
             className="primary-button full-width"
             type="submit"
             disabled={formData.orderType === "dine_in" && !formData.tableInfo.tableNumber}
+            isLoading={isLoadingCheckout}
+            loadingText="Đang xác nhận..."
+            variant="primary"
           >
-            Xac nhan don hang
-          </button>
+            Xác nhận đơn hàng
+          </LoadingButton>
         </form>
       </div>
     </section>

@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { apiFetch } from '../../../utils/apiFetch';
 import LoadingCart from "../mixi/loadingCart";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import LoadingButton from "../../../shared/components/LoadingButton";
+import useButtonLoading from "../../../shared/hooks/useButtonLoading";
 
 const ProductsAdmin = ({ query }) => {
   const [CardLoading ,setCardLoading] = useState(true);
@@ -29,6 +31,10 @@ const ProductsAdmin = ({ query }) => {
   const [limitPage, setLimitPage] = useState(10);
   const [newStatusListFood, setNewStatusListFood] = useState("");
   const [notifKey, setNotifKey] = useState(0);
+
+  // Loading states for buttons
+  const [loadingStatusIds, setLoadingStatusIds] = useState(new Set());
+  const { isLoading: isLoadingMulti, handleLoading: handleLoadingMulti } = useButtonLoading();
 
   const [filters, setFilters] = useState({
     status: "",
@@ -114,12 +120,11 @@ const ProductsAdmin = ({ query }) => {
 
   // Change status
   const handleChangeStatus = async (id, status) => {
-    setLoading(true);
+    setLoadingStatusIds(prev => new Set([...prev, id]));
     setNotifMessage("Thay Đổi Trạng Thái Thành Công!")
     setNotifKey((prev) => prev + 1);
 
     const statusChange = status === "active" ? "inactive" : "active";
-
 
     setProducts(prev =>
       prev.map(p =>
@@ -129,25 +134,28 @@ const ProductsAdmin = ({ query }) => {
 
     const url = `/api/admin/products/change-status/${statusChange}/${id}`;
 
-    fetch(url, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status: statusChange }),
-    })
-      .then(res => res.json())
-      .then(result => {
-        console.log("Cập nhật xong:", result);
-        fetchProducts();
-      })
-      .catch(err => {
-        console.error("Lỗi khi cập nhật:", err);
-        alert("Cập nhật thất bại!");
-      })
-    // .finally(() => {
-    //   setLoading(false);
-    // });
+    try {
+      const res = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: statusChange }),
+      });
+      const result = await res.json();
+      console.log("Cập nhật xong:", result);
+      await fetchProducts();
+      notifyApp("Thay đổi trạng thái thành công!", "success");
+    } catch (err) {
+      console.error("Lỗi khi cập nhật:", err);
+      notifyApp("Cập nhật thất bại!", "error");
+    } finally {
+      setLoadingStatusIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+    }
   };
 
 
@@ -240,8 +248,6 @@ const ProductsAdmin = ({ query }) => {
   }
 
   const handleUpdateChangeMulti = async () => {
-
-
     /* Xóa nhiều sản phẩm */
     if (newStatus === "delete-all") {
       // eslint-disable-next-line no-restricted-globals
@@ -259,31 +265,36 @@ const ProductsAdmin = ({ query }) => {
       }
     }
 
-
     if (!newStatus) {
-      alert("Chọn trạng thái")
+      notifyApp("Chọn trạng thái", "warning");
+      return;
     }
-    if (selectedIds.length === 0) return alert("chưa có sản phẩm nào được chọn")
+    if (selectedIds.length === 0) {
+      notifyApp("Chưa có sản phẩm nào được chọn", "warning");
+      return;
+    }
 
-
-    fetch(`/api/admin/products/change-multi`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ids: selectedIds, idPosition, newStatus }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        setNotifMessage(data.message)
-        setLoading(true);
-        fetchProducts();
-      })
-      .catch(err => {
+    await handleLoadingMulti(async () => {
+      try {
+        const res = await fetch(`/api/admin/products/change-multi`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ids: selectedIds, idPosition, newStatus }),
+        });
+        const data = await res.json();
+        setNotifMessage(data.message);
+        await fetchProducts();
+        notifyApp(data.message || "Cập nhật thành công!", "success");
+        setSelectedIds([]);
+        setIdPosition([]);
+      } catch (err) {
         console.error("Lỗi khi cập nhật:", err);
-        alert("Cập nhật thất bại!");
-      })
-  }
+        notifyApp("Cập nhật thất bại!", "error");
+      }
+    });
+  };
   //Endl change-multi
 
 
@@ -315,10 +326,14 @@ const ProductsAdmin = ({ query }) => {
                 {opt.title}
               </option>
             ))}
-
-
           </select>
-          <button className="btn-accent" onClick={() => setSortAim("")}>Xóa Lọc</button>
+          <LoadingButton 
+            className="btn-accent" 
+            onClick={() => setSortAim("")}
+            variant="secondary"
+          >
+            Xóa Lọc
+          </LoadingButton>
 
           <button className="btn-accent" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBackdrop" aria-controls="offcanvasWithBackdrop">
             + Thêm Sản Phẩm
@@ -352,11 +367,17 @@ const ProductsAdmin = ({ query }) => {
                 {opt.value}
               </option>
             ))}
-
-
           </select>
 
-          <button className="btn-accent" onClick={handleUpdateChangeMulti}>Áp Dụng</button>
+          <LoadingButton 
+            className="btn-accent" 
+            onClick={handleUpdateChangeMulti}
+            isLoading={isLoadingMulti}
+            loadingText="Đang xử lý..."
+            variant="primary"
+          >
+            Áp Dụng
+          </LoadingButton>
 
         </div>
 
@@ -409,19 +430,20 @@ const ProductsAdmin = ({ query }) => {
                         /></td>
                       <td>{item.name}</td>
                       <td>{item.price.toLocaleString()}</td>
-                      {item.status === "active" ? <td style={{ color: "green" }}><a
-                        style={{ cursor: "pointer" }}
-                        data-status={item.status}
-                        data-id={item.id}
-                        onClick={() => handleChangeStatus(item._id, item.status)}
-
-                      >Hoạt Động</a></td> : <td style={{ color: "red" }}> <a
-                        style={{ cursor: "pointer" }}
-                        data-status={item.status}
-                        data-id={item.id}
-                        onClick={() => handleChangeStatus(item._id, item.status)}
-
-                      >Ngừng Bán</a></td>}
+                      <td>
+                        <LoadingButton
+                          onClick={() => handleChangeStatus(item._id, item.status)}
+                          isLoading={loadingStatusIds.has(item._id)}
+                          loadingText={item.status === "active" ? "..." : "..."}
+                          variant="ghost"
+                          style={{ 
+                            color: item.status === "active" ? "green" : "red",
+                            padding: "4px 8px"
+                          }}
+                        >
+                          {item.status === "active" ? "Hoạt Động" : "Ngừng Bán"}
+                        </LoadingButton>
+                      </td>
                       <td>
                         <input
                           type="number"

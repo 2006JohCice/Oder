@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../../css/RestaurantProducts.css";
+import CardProducts from "../mixi/cardProducts/cardProducts";
 
 const RestaurantProducts = () => {
   const { restaurantId } = useParams();
@@ -51,7 +52,7 @@ const RestaurantProducts = () => {
         </div>
       )}
 
-      <div className="products-grid">
+      {/* <div className="products-grid">
         {products.map((product) => (
           <div key={product._id} className="product-card">
             <img
@@ -67,7 +68,9 @@ const RestaurantProducts = () => {
             <button className="btn btn-primary">Thêm vào giỏ</button>
           </div>
         ))}
-      </div>
+      </div> */}
+
+      <CardProducts data={products} restaurantId={restaurantId} />
 
       {products.length === 0 && (
         <div className="no-products">

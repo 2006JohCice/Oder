@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+// import "../css/user.css";
 import Header from "../components/Header";
 import MainContent from "../components/HouseMain";
 import { Routes, Route } from "react-router-dom";
@@ -13,14 +14,30 @@ import DoneOrder from "../components/pages/doneOrder";
 import RestaurantList from "../components/MainContents/RestaurantList";
 import RestaurantRegister from "../components/pages/RestaurantRegister";
 import RestaurantProducts from "../components/pages/RestaurantProducts";
-
-
+import Footer from "../components/foot/Footer";
 import Loading from "../utils/Loading";
 
 function DefaultLayout() {
-
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+
+
+  // useEffect(() => {
+  //   const init = async () => {
+  //     try {  
+  //       await Promise.all([
+  //         fetch("/api/init-cart"),
+  //       ]);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError("Không thể tải dữ liệu");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   init();
+  // }, []);
 
   useEffect(() => {
     const initApp = async () => {
@@ -61,10 +78,10 @@ function DefaultLayout() {
           <Route path="/restaurants" element={<RestaurantList />} />
           <Route path="/restaurant/register" element={<RestaurantRegister />} />
           <Route path="/restaurant/:restaurantId/products" element={<RestaurantProducts />} />
-  
         </Routes>
       </div>
 
+      <Footer />
     </main>
   );
 }
