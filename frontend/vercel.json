@@ -2,7 +2,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://myoder.onrender.com/api/$1" 
+      "destination": "https://myoder.onrender.com/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
