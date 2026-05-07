@@ -1,39 +1,6 @@
 import React from 'react';
 import '../css/LoadingButton.css';
 
-/**
- * LoadingButton Component
- * 
- * A reusable button component with built-in loading state management.
- * Automatically disables the button during loading and shows a loading indicator.
- * 
- * @param {Object} props - Component properties
- * @param {React.ReactNode} props.children - Button text/content
- * @param {Function} props.onClick - Click handler function
- * @param {boolean} props.isLoading - Loading state (optional, manages internally if not passed)
- * @param {Function} props.onLoadingChange - Callback when loading state changes
- * @param {string} props.loadingText - Text to show during loading (default: "Đang xử lý...")
- * @param {string} props.className - Additional CSS classes
- * @param {string} props.type - Button type (button, submit, reset)
- * @param {boolean} props.disabled - Additional disabled state
- * @param {string} props.variant - Button variant (primary, secondary, ghost, danger)
- * @param {...any} props.rest 
- * 
- * @example
- * <LoadingButton onClick={handleSubmit}>
- *   Submit
- * </LoadingButton>
- * 
- * @example
- * const [loading, setLoading] = useState(false);
- * <LoadingButton 
- *   isLoading={loading}
- *   loadingText="Saving..."
- *   onClick={() => saveData()}
- * >
- *   Save
- * </LoadingButton>
- */
 const LoadingButton = ({
   children,
   onClick,

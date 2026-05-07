@@ -2,7 +2,6 @@
   "name": "oder",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:backend": "cd backend && npm start",
@@ -20,5 +19,8 @@
     "url": "https://github.com/06JohCoder/Oder/issues"
   },
   "homepage": "https://github.com/06JohCoder/Oder#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "lottie-react": "^2.4.1"
+  }
 }
