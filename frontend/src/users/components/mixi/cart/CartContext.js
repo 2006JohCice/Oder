@@ -4,17 +4,19 @@ export const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState({});
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [loading, setLoading] = useState(true);
 
   //  fetchCart cố định (KHÔNG bị tạo lại)
   const fetchCart = useCallback(async () => {
     try {
-      const res = await fetch("/api/cart");
+      const res = await fetch("/api/cart", {
+        credentials: "include",
+      });
 
       if (!res.ok) {
-        setCartItems([]);
+        setCartItems({});
         setTotalQuantity(0);
         return null;
       }
@@ -23,14 +25,14 @@ export function CartProvider({ children }) {
 
       const products = data.products || [];
 
-      setCartItems(products);
+      setCartItems(data || {});
       setTotalQuantity(
         products.reduce((sum, item) => sum + item.quantity, 0)
       );
 
       return data;
     } catch (error) {
-      setCartItems([]);
+      setCartItems({});
       setTotalQuantity(0);
       return null;
     } finally {
@@ -42,8 +44,9 @@ export function CartProvider({ children }) {
     try {
       const res = await fetch(`/api/cart/update/${productId}`, {
         method: "PATCH",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity }),
+        body: JSON.stringify({ quantity: Number(quantity) }),
       });
 
       if (res.ok) {

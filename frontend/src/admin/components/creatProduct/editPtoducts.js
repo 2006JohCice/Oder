@@ -4,7 +4,8 @@ import ListCategory from "../AddCategory/list-category";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
 function EditProducts({ idEdit, setProducts }) {
-  const [data, setData] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
   const [dataEdit, setDataEdit] = useState({
     name: "",
     description: "",
@@ -16,31 +17,39 @@ function EditProducts({ idEdit, setProducts }) {
     status: "inactive",
     category: "",
     featured: "0",
+    restaurant_id: "",
   });
 
   useEffect(() => {
-    fetch("/api/admin/products/create")
+    fetch("/api/admin/products/create", { credentials: "include" })
       .then((res) => res.json())
-      .then((res) => setData(Array.isArray(res) ? res : Array.isArray(res.data) ? res.data : []))
-      .catch(() => setData([]));
+      .then((res) => {
+        setCategories(Array.isArray(res.categories) ? res.categories : []);
+        setRestaurants(Array.isArray(res.restaurants) ? res.restaurants : []);
+      })
+      .catch(() => {
+        setCategories([]);
+        setRestaurants([]);
+      });
   }, []);
 
   useEffect(() => {
     if (!idEdit) return;
-    fetch(`/api/admin/products/edit/${idEdit}`)
+    fetch(`/api/admin/products/edit/${idEdit}`, { credentials: "include" })
       .then((res) => res.json())
       .then((dataResponse) => {
         setDataEdit({
-          name: dataResponse.product.name,
-          description: dataResponse.product.description,
-          price: dataResponse.product.price,
-          discountPercentage: dataResponse.product.discountPercentage,
-          stock: dataResponse.product.stock,
-          img: dataResponse.product.img,
-          position: dataResponse.product.position,
-          status: dataResponse.product.status,
+          name: dataResponse.product.name || "",
+          description: dataResponse.product.description || "",
+          price: dataResponse.product.price || "",
+          discountPercentage: dataResponse.product.discountPercentage || "",
+          stock: dataResponse.product.stock || "",
+          img: dataResponse.product.img || "",
+          position: dataResponse.product.position || "",
+          status: dataResponse.product.status || "inactive",
           category: dataResponse.product.category || "",
-          featured: dataResponse.product.featured,
+          featured: dataResponse.product.featured || "0",
+          restaurant_id: dataResponse.product.restaurant_id || "",
         });
       });
   }, [idEdit]);
@@ -59,20 +68,22 @@ function EditProducts({ idEdit, setProducts }) {
       const res = await fetch(`/api/admin/products/edit/${idEdit}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(dataEdit),
       });
 
+      const payload = await res.json().catch(() => ({}));
       if (!res.ok) {
-        notifyApp("Cap nhat san pham that bai", "error");
+        notifyApp(payload.message || "Cập nhật sản phẩm thất bại", "error");
         return;
       }
 
       setProducts((prevProducts) =>
         prevProducts.map((product) => (product._id === idEdit ? { ...product, ...dataEdit } : product))
       );
-      notifyApp("Cap nhat san pham thanh cong", "success");
+      notifyApp(payload.message || "Cập nhật sản phẩm thành công", "success");
     } catch (error) {
-      notifyApp("Loi khi cap nhat san pham", "error");
+      notifyApp("Lỗi khi cập nhật sản phẩm", "error");
     }
   };
 
@@ -85,7 +96,7 @@ function EditProducts({ idEdit, setProducts }) {
     >
       <div className="offcanvas-header createProducts-header">
         <h5 className="offcanvas-title" id="offcanvasEditProductLabel">
-          Sua san pham
+          Sửa sản phẩm
         </h5>
         <button
           type="button"
@@ -98,31 +109,53 @@ function EditProducts({ idEdit, setProducts }) {
       <div className="offcanvas-body createProducts-body">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label">Tieu de</label>
+            <label className="form-label">Tên sản phẩm</label>
             <input
               type="text"
               name="name"
               value={dataEdit.name}
               onChange={handleChange}
               className="form-control createProducts-input"
-              placeholder="Nhap tieu de..."
+              placeholder="Nhập tên sản phẩm..."
               required
             />
           </div>
 
-          <select
-            name="category"
-            className="admin-select"
-            style={{ width: "100%" }}
-            value={dataEdit.category}
-            onChange={handleChange}
-          >
-            <option value="">Lua chon danh muc</option>
-            {Array.isArray(data) && data.map((item) => <ListCategory key={item._id} node={item} />)}
-          </select>
+          <div className="mb-3">
+            <label className="form-label">Nhà hàng</label>
+            <select
+              name="restaurant_id"
+              className="admin-select"
+              style={{ width: "100%" }}
+              value={dataEdit.restaurant_id}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Chọn nhà hàng</option>
+              {restaurants.map((restaurant) => (
+                <option key={restaurant._id} value={restaurant._id}>
+                  {restaurant.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="mb-3">
-            <label className="form-label">Cai dat hien thi</label>
+            <label className="form-label">Danh mục</label>
+            <select
+              name="category"
+              className="admin-select"
+              style={{ width: "100%" }}
+              value={dataEdit.category}
+              onChange={handleChange}
+            >
+              <option value="">Chọn danh mục</option>
+              {categories.map((item) => <ListCategory key={item._id} node={item} />)}
+            </select>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Hiển thị</label>
             <div>
               <div className="form-check form-check-inline">
                 <input
@@ -133,7 +166,7 @@ function EditProducts({ idEdit, setProducts }) {
                   checked={dataEdit.featured === "1"}
                   onChange={handleChange}
                 />
-                <label className="form-check-label">Noi bat</label>
+                <label className="form-check-label">Nổi bật</label>
               </div>
               <div className="form-check form-check-inline">
                 <input
@@ -144,26 +177,26 @@ function EditProducts({ idEdit, setProducts }) {
                   checked={dataEdit.featured === "0"}
                   onChange={handleChange}
                 />
-                <label className="form-check-label">Thong thuong</label>
+                <label className="form-check-label">Thường</label>
               </div>
             </div>
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Mo ta</label>
+            <label className="form-label">Mô tả</label>
             <textarea
               name="description"
               value={dataEdit.description}
               onChange={handleChange}
               className="form-control createProducts-input"
               rows="3"
-              placeholder="Nhap mo ta..."
+              placeholder="Nhập mô tả..."
             ></textarea>
           </div>
 
           <div className="row">
             <div className="col-6 mb-3">
-              <label className="form-label">Gia</label>
+              <label className="form-label">Giá</label>
               <input
                 type="number"
                 name="price"
@@ -175,7 +208,7 @@ function EditProducts({ idEdit, setProducts }) {
               />
             </div>
             <div className="col-6 mb-3">
-              <label className="form-label">Giam gia (%)</label>
+              <label className="form-label">Giảm giá (%)</label>
               <input
                 type="number"
                 name="discountPercentage"
@@ -187,7 +220,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">So luong</label>
+            <label className="form-label">Số lượng</label>
             <input
               type="number"
               name="stock"
@@ -195,12 +228,12 @@ function EditProducts({ idEdit, setProducts }) {
               onChange={handleChange}
               className="form-control createProducts-input"
               required
-              min="1"
+              min="0"
             />
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Anh (URL)</label>
+            <label className="form-label">Ảnh (URL)</label>
             <input
               type="url"
               name="img"
@@ -212,7 +245,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Vi tri</label>
+            <label className="form-label">Vị trí</label>
             <input
               type="number"
               name="position"
@@ -223,7 +256,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Trang thai</label>
+            <label className="form-label">Trạng thái</label>
             <div>
               <div className="form-check form-check-inline">
                 <input
@@ -234,7 +267,7 @@ function EditProducts({ idEdit, setProducts }) {
                   checked={dataEdit.status === "active"}
                   onChange={handleChange}
                 />
-                <label className="form-check-label">Hoat dong</label>
+                <label className="form-check-label">Hoạt động</label>
               </div>
               <div className="form-check form-check-inline">
                 <input
@@ -245,13 +278,13 @@ function EditProducts({ idEdit, setProducts }) {
                   checked={dataEdit.status === "inactive"}
                   onChange={handleChange}
                 />
-                <label className="form-check-label">Tam dung</label>
+                <label className="form-check-label">Tạm dừng</label>
               </div>
             </div>
           </div>
 
           <button type="submit" className="btn createProducts-btn">
-            Luu thay doi
+            Lưu thay đổi
           </button>
         </form>
       </div>

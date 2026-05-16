@@ -1,63 +1,91 @@
-const Product = require("../../models/product.model")
+const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/controllerCategory.model");
-const { ObjectId } = require("mongodb");
+const Restaurant = require("../../models/restaurant.model");
 
+const decorateProducts = async (products = []) => {
+  const restaurantIds = [...new Set(products.map((item) => String(item.restaurant_id || "")).filter(Boolean))];
+  const restaurants = await Restaurant.find({ _id: { $in: restaurantIds } })
+    .select("name ratingAverage ratingCount orderCount")
+    .lean();
 
-
-//[GET] /api/products
+  const restaurantMap = new Map(restaurants.map((item) => [String(item._id), item]));
+  return products.map((product) => ({
+    ...product.toObject ? product.toObject() : product,
+    restaurantInfo: restaurantMap.get(String(product.restaurant_id || "")) || null,
+  }));
+};
 
 module.exports.index = async (req, res) => {
   try {
-    const data = await Product
-      .find({
-        status: "active",
-        deleted: false
-      })
-      .sort({ position: "desc" });
-    res.json(data);
+    const data = await Product.find({
+      status: "active",
+      deleted: false,
+    }).sort({ soldCount: -1, position: "desc" });
+
+    const decorated = await decorateProducts(data);
+    res.json(decorated);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Lỗi khi lấy dữ liệu' });
+    res.status(500).json({ message: "Loi khi lay du lieu" });
   }
-}
+};
 
-//[GET] /api/products/ (Featured - productsNew)
 module.exports.featuredProducts = async (req, res) => {
-  let find = {
-    deleted: false,
-    featured: "1",
-    status: "active"
-  }
-  let findProductsNew = {
-    deleted: false,
-    status: "active"
-
-  }
   try {
-    const data = await Product.find(find).limit(14)
-    const dataProductsNew = await Product.find(findProductsNew).sort({ position: "desc" }).limit(7)
+    const activeRestaurants = await Restaurant.find({ deleted: false, status: "active" })
+      .sort({ ratingAverage: -1, orderCount: -1, createdAt: -1 })
+      .select("_id");
+
+    const topRestaurantIds = activeRestaurants.slice(0, 8).map((item) => item._id);
+
+    const featuredRaw = await Product.find({
+      deleted: false,
+      status: "active",
+      $or: [{ featured: "1" }, { restaurant_id: { $in: topRestaurantIds } }],
+    })
+      .sort({ soldCount: -1, position: "desc" })
+      .limit(14);
+
+    const latestRaw = await Product.find({
+      deleted: false,
+      status: "active",
+    })
+      .sort({ createdAt: -1, position: "desc" })
+      .limit(7);
+
+    const highlightedRestaurants = await Restaurant.find({
+      deleted: false,
+      status: "active",
+    })
+      .sort({ ratingAverage: -1, orderCount: -1, createdAt: -1 })
+      .limit(6);
+
+    const [data, dataProductsNew] = await Promise.all([
+      decorateProducts(featuredRaw),
+      decorateProducts(latestRaw),
+    ]);
+
     res.json({
       data,
-      dataProductsNew
+      dataProductsNew,
+      highlightedRestaurants,
     });
-    // console.log(data)
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Lỗi khi lấy dữ liệu' });
+    res.status(500).json({ message: "Loi khi lay du lieu" });
   }
-}
+};
 
-// [GET] /api/products/:slugCategory
 module.exports.categoryProducts = async (req, res) => {
   try {
     const category = await ProductCategory.findOne({
       slug: req.params.slugCategory,
-      deleted: false
+      deleted: false,
     });
 
     if (!category) {
       return res.status(404).json({
-        message: "Category not found"
+        message: "Category not found",
       });
     }
 
@@ -70,8 +98,6 @@ module.exports.categoryProducts = async (req, res) => {
 
       let allSub = [...subs];
 
-      // console.log(allSub);
-
       for (const sub of subs) {
         const childs = await getSubCategory(sub._id);
         allSub = allSub.concat(childs);
@@ -80,42 +106,41 @@ module.exports.categoryProducts = async (req, res) => {
       return allSub;
     };
 
-    const listSubCategory = await getSubCategory(category.id)
-    const listSubCategoryID = listSubCategory.map(item => item.id)
+    const listSubCategory = await getSubCategory(category.id);
+    const listSubCategoryID = listSubCategory.map((item) => item.id);
 
-
-    // 693420b723be2adcf44ae277
     const products = await Product.find({
       category: { $in: [category.id, ...listSubCategoryID] },
-      deleted: false
+      deleted: false,
     });
 
-    res.json(products);
-
+    res.json(await decorateProducts(products));
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
 
-
-// [GET] /api/products/detail/:slugProduct
 module.exports.detailProducts = async (req, res) => {
-  console.log(req.params.slugProduct)
   try {
-    let find = {
+    const product = await Product.findOne({
       slug: req.params.slugProduct,
       deleted: false,
-      status: "active"
+      status: "active",
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Khong tim thay san pham" });
     }
-    const product = await Product.findOne(find);
-     res.json(product);
+
+    const [decorated] = await decorateProducts([product]);
+    res.json(decorated);
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 };

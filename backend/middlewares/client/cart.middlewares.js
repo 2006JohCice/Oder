@@ -1,24 +1,32 @@
+const mongoose = require("mongoose");
 const Cart = require("../../models/cart.model");
 
 module.exports.CartId = async (req, res) => {
-    if (req.cookies.cartId) {
-        const cart = await Cart.findOne({
-            _id: req.cookies.cartId
-        });
+  const cartId = req.cookies.cartId;
 
-        if (cart) {
-            cart.totalQuantity = cart.products.reduce((sum, item) => sum + item.quantity, 0);
-            return res.status(200).json(cart.totalQuantity);
-        }
+  if (cartId && mongoose.Types.ObjectId.isValid(cartId)) {
+    const cart = await Cart.findById(cartId);
+    if (cart) {
+      const products = Array.isArray(cart.products) ? cart.products : [];
+      cart.totalQuantity = products.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+      return res.status(200).json(cart.totalQuantity);
     }
+  }
 
-    const cart = new Cart();
-    await cart.save();
+  if (cartId) {
+    res.clearCookie("cartId");
+  }
 
-    const expiresTime = 1000 * 60 * 60 * 24 * 14;
-    res.cookie("cartId", cart._id.toString(), {
-        expires: new Date(Date.now() + expiresTime)
-    });
+  const cart = new Cart({
+    products: [],
+    restaurant_ids: [],
+  });
+  await cart.save();
 
-    return res.status(200).json(0);
+  const expiresTime = 1000 * 60 * 60 * 24 * 14;
+  res.cookie("cartId", cart._id.toString(), {
+    expires: new Date(Date.now() + expiresTime),
+  });
+
+  return res.status(200).json(0);
 };

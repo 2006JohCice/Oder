@@ -1,6 +1,9 @@
-﻿const Restaurant = require("../../models/restaurant.model");
+const Restaurant = require("../../models/restaurant.model");
 const Product = require("../../models/product.model");
 const Table = require("../../models/table.model");
+const Order = require("../../models/orders.model");
+const RestaurantFeedback = require("../../models/restaurant-feedback.model");
+const RestaurantReport = require("../../models/restaurant-report.model");
 
 const findOwnerRestaurant = async (userId, onlyActive = true) => {
   const filter = { owner_id: userId, deleted: false };
@@ -10,7 +13,9 @@ const findOwnerRestaurant = async (userId, onlyActive = true) => {
 
 module.exports.getRestaurants = async (req, res) => {
   try {
-    const restaurants = await Restaurant.find({ status: "active", deleted: false }).populate("owner_id", "fullname email");
+    const restaurants = await Restaurant.find({ status: "active", deleted: false })
+      .populate("owner_id", "fullname email")
+      .sort({ ratingAverage: -1, orderCount: -1, createdAt: -1 });
     return res.status(200).json({ restaurants });
   } catch (error) {
     return res.status(500).json({ message: "Loi server" });
@@ -31,7 +36,7 @@ module.exports.registerRestaurant = async (req, res) => {
     const normalizedTables = Array.isArray(tables)
       ? tables
           .filter((t) => t && t.name)
-          .map((t, idx) => ({
+          .map((t) => ({
             tableNumber: String(t.name).trim(),
             area: String(t.area || locationLabel || "").trim(),
             capacity: Number(t.capacity || 4),
@@ -72,7 +77,10 @@ module.exports.registerRestaurant = async (req, res) => {
 module.exports.getRestaurantProducts = async (req, res) => {
   try {
     const { restaurantId } = req.params;
-    const products = await Product.find({ restaurant_id: restaurantId, status: "active", deleted: false }).sort({ position: 1 });
+    const products = await Product.find({ restaurant_id: restaurantId, status: "active", deleted: false }).sort({
+      soldCount: -1,
+      position: 1,
+    });
     return res.status(200).json({ products });
   } catch (error) {
     return res.status(500).json({ message: "Loi server" });
@@ -118,7 +126,10 @@ module.exports.getMyProducts = async (req, res) => {
     const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
     if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
 
-    const products = await Product.find({ restaurant_id: restaurant._id, deleted: false }).sort({ position: 1 });
+    const products = await Product.find({ restaurant_id: restaurant._id, deleted: false }).sort({
+      soldCount: -1,
+      position: 1,
+    });
     return res.status(200).json({ products, restaurant });
   } catch (error) {
     return res.status(500).json({ message: "Loi server" });
@@ -131,7 +142,15 @@ module.exports.createProduct = async (req, res) => {
     if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
 
     const { name, price, description, img, category_id } = req.body || {};
-    const product = await Product.create({ name, price, description, img, category_id, restaurant_id: restaurant._id, status: "active" });
+    const product = await Product.create({
+      name,
+      price,
+      description,
+      img,
+      category_id,
+      restaurant_id: restaurant._id,
+      status: "active",
+    });
     return res.status(201).json({ message: "Them san pham thanh cong", product });
   } catch (error) {
     return res.status(500).json({ message: "Loi server" });
@@ -247,6 +266,105 @@ module.exports.deleteTable = async (req, res) => {
     await Restaurant.updateOne({ _id: restaurant._id }, { tableCount: count });
 
     return res.status(200).json({ message: "Xoa ban thanh cong" });
+  } catch (error) {
+    return res.status(500).json({ message: "Loi server" });
+  }
+};
+
+module.exports.getMyOrders = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const orders = await Order.find({ restaurant_id: restaurant._id }).sort({ createdAt: -1 });
+    return res.status(200).json({ orders, restaurant });
+  } catch (error) {
+    return res.status(500).json({ message: "Loi server" });
+  }
+};
+
+module.exports.updateMyOrderStatus = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const { orderId } = req.params;
+    const { status } = req.body || {};
+    if (!["pending", "activating", "completed", "cancelled"].includes(status)) {
+      return res.status(400).json({ message: "Trang thai khong hop le" });
+    }
+
+    const order = await Order.findOne({ _id: orderId, restaurant_id: restaurant._id });
+    if (!order) return res.status(404).json({ message: "Khong tim thay don hang" });
+
+    await Order.updateOne({ _id: orderId }, { orderStatus: status });
+
+    if (order.orderType === "dine_in" && order.tableInfo?.tableNumber) {
+      await Table.updateOne(
+        { restaurant_id: restaurant._id, tableNumber: order.tableInfo.tableNumber },
+        status === "completed" || status === "cancelled"
+          ? { status: "available", currentOrderId: "" }
+          : { status: "occupied", currentOrderId: String(order._id) }
+      );
+    }
+
+    return res.status(200).json({ message: "Cap nhat trang thai thanh cong" });
+  } catch (error) {
+    return res.status(500).json({ message: "Loi server" });
+  }
+};
+
+module.exports.getMyDashboard = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const [allOrders, recentFeedbacks] = await Promise.all([
+      Order.find({ restaurant_id: restaurant._id }).sort({ createdAt: -1 }),
+      RestaurantFeedback.find({ restaurant_id: restaurant._id }).sort({ createdAt: -1 }).limit(6),
+    ]);
+
+    const totalProducts = await Product.countDocuments({ restaurant_id: restaurant._id, deleted: false });
+    const totalRevenue = allOrders.reduce((sum, item) => sum + Number(item.totalAmount || 0), 0);
+    const pendingOrders = allOrders.filter((item) => item.orderStatus === "pending").length;
+
+    return res.status(200).json({
+      stats: {
+        totalProducts,
+        totalOrders: allOrders.length,
+        totalRevenue,
+        pendingOrders,
+        ratingAverage: Number(restaurant.ratingAverage || 0),
+        ratingCount: Number(restaurant.ratingCount || 0),
+        orderCount: Number(restaurant.orderCount || 0),
+      },
+      recentOrders: allOrders.slice(0, 6),
+      recentFeedbacks,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Loi server" });
+  }
+};
+
+module.exports.getMyFeedbacks = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const feedbacks = await RestaurantFeedback.find({ restaurant_id: restaurant._id }).sort({ createdAt: -1 });
+    return res.status(200).json({ feedbacks });
+  } catch (error) {
+    return res.status(500).json({ message: "Loi server" });
+  }
+};
+
+module.exports.getMyReports = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const reports = await RestaurantReport.find({ restaurant_id: restaurant._id }).sort({ createdAt: -1 });
+    return res.status(200).json({ reports });
   } catch (error) {
     return res.status(500).json({ message: "Loi server" });
   }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import "../css/user.css";
+
+// import "../css/user.css";
 import Header from "../components/Header";
 import MainContent from "../components/HouseMain";
 import { Routes, Route } from "react-router-dom";
@@ -20,10 +21,10 @@ import FeedBack from "../components/pages/feedback";
 import Report from "../components/pages/Report";
 import Footer from "../components/foot/Footer";
 import Loading from "../utils/Loading";
-
 function DefaultLayout() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
 
 
   // useEffect(() => {

@@ -1,105 +1,92 @@
-/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
-// import { useState, useEffect } from "react";
 import "../../css/products/ProductsAdmin.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { apiFetch } from '../../../utils/apiFetch';
-import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../../../utils/apiFetch";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
 const RoleHome = () => {
-    const navigate = useNavigate();
-    const [data,setDataa] = useState([]);
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
 
-    const fetchData = () => {
-        let url = "/api/admin/role/create";
-        apiFetch(url)
-            .then((data) => {
-                setDataa(data);
-            })
-            .catch(err =>{
-              if(err.status === 401){
-                navigate('/admin/auth/login')
-              }
-            })
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-  
-    const handlDelete = (id) => {
-     
-        let url = `/api/admin/role/delete/${id}`;
-        try {
-            fetch(url, {
-                method: "DELETE",
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.message) {
-                        alert(data.message)
-                        fetchData();
-                    }
-                })
-        } catch (error) {
-            console.error("Error:", error);
+  const fetchData = () => {
+    apiFetch("/api/admin/role")
+      .then((roles) => {
+        setData(Array.isArray(roles) ? roles : []);
+      })
+      .catch((err) => {
+        if (err.status === 401) {
+          navigate("/admin/auth/login");
         }
-    
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`/api/admin/role/delete/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const payload = await res.json();
+      if (!res.ok) {
+        notifyApp(payload.message || "Xóa vai trò thất bại", "error");
+        return;
       }
-
-    
-
+      notifyApp(payload.message || "Xóa vai trò thành công", "success");
+      fetchData();
+    } catch (error) {
+      notifyApp("Lỗi khi xóa vai trò", "error");
+    }
+  };
 
   return (
     <div className="products-page">
-
-      <header className="products-header">
-        <h1>Quản lý phân quyền</h1>
-          <div div style={{ display: "flex", gap: "10px" }}>
-
-        <Link to = {`/admin/role/create`}>
-        <button className="btn-accent" type="button" >
-            + Thêm Quyền
-          </button>
-        </Link>
-          
-
+      <div className="admin-card">
+        <div className="admin-toolbar">
+          <div>
+            <h3>Vai trò và phân quyền</h3>
+            <div className="admin-muted">Quản lý nhóm quyền dùng cho toàn bộ khu vực quản trị.</div>
+          </div>
+          <Link to="/admin/role/create">
+            <button className="btn-accent" type="button">
+              + Thêm vai trò
+            </button>
+          </Link>
         </div>
-     
-
-
-      </header>
+      </div>
 
       <div className="products-table">
         <table>
           <thead>
             <tr>
-              <th>STT </th>
-              <th>Nhóm Quyền</th>
-              <th>Miêu tả</th>
-              <th>Hình ảnh</th>
+              <th>STT</th>
+              <th>Tên vai trò</th>
+              <th>Mô tả</th>
+              <th>Số quyền</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {data?.map((item, index) => (
+            {data.map((item, index) => (
               <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>{item.name}</td>
                 <td>{item.description}</td>
-                <td style={{ display: "flex", gap: "5px" }}>
+                <td>{Array.isArray(item.permissions) ? item.permissions.length : 0}</td>
+                <td style={{ display: "flex", gap: "8px" }}>
                   <Link to={`/admin/role/edit/${item._id}`}>
-                  <button className="admin-btn">Sửa</button>
+                    <button className="admin-btn">Sửa</button>
                   </Link>
-                 
-                  <button className="admin-btn" onClick={() => handlDelete(item._id)}>Xóa</button>
+                  <button className="admin-btn" onClick={() => handleDelete(item._id)}>Xóa</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-
     </div>
   );
 };

@@ -9,6 +9,12 @@ const cartSchema = new mongoose.Schema(
           ref: "Restaurant",
           default: null,
         },
+        restaurant_ids: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Restaurant",
+            }
+        ],
         products:[
             {
                 product_id: String,

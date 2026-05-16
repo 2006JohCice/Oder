@@ -1,155 +1,84 @@
-
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
 function RoleEdit() {
-    const id = window.location.pathname.split("/").pop();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+  });
 
-    const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        status: "active",
-    });
+  useEffect(() => {
+    fetch(`/api/admin/role/edit/${id}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        setFormData({
+          name: data.name || "",
+          description: data.description || "",
+        });
+      });
+  }, [id]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }))
+  const submitFormData = async () => {
+    try {
+      const res = await fetch(`/api/admin/role/edit/${id}`, {
+        method: "PATCH",
+        headers: { "Content-type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        notifyApp(data.message || "Cập nhật vai trò thất bại", "error");
+        return;
+      }
+      notifyApp(data.message || "Cập nhật vai trò thành công", "success");
+      navigate("/admin/role");
+    } catch (error) {
+      notifyApp("Lỗi khi cập nhật vai trò", "error");
     }
+  };
 
+  return (
+    <div className="products-container">
+      <div className="products-right">
+        <div className="mb-3">
+          <label className="form-label">Tên vai trò</label>
+          <input
+            type="text"
+            name="name"
+            className="form-control createProducts-input"
+            placeholder="Nhập tên vai trò..."
+            value={formData.name}
+            onChange={handleChange}
+          />
+        </div>
 
+        <div className="mb-3">
+          <label className="form-label">Mô tả</label>
+          <textarea
+            name="description"
+            className="form-control createProducts-input"
+            placeholder="Nhập mô tả..."
+            rows="3"
+            value={formData.description}
+            onChange={handleChange}
+          ></textarea>
+        </div>
 
-    const submitFromdata = () => {
-        let url = `/api/admin/role/edit/${id}`;
-        try {
-            fetch(url, {
-                method: "PATCH",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify(formData)
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.message) {
-                        alert(data.message)
-                        // setFormData({
-                        //     name: "",
-                        //     description: "",
-                        //     status: "active",
-                        // })
-                    }
-                })
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    }
-
-
-    useState(() => {
-        let url = `/api/admin/role/edit/${id}`;
-        try {
-            fetch(url)
-                .then((res) => res.json())
-                .then((data) => {
-                    setFormData({
-                        name: data.name,
-                        description: data.description,
-                        status: data.status,
-                    })
-                })
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    }, []);
-
-    console.log("fromdataa",formData)
-
-    return (
-        <>
-
-
-
-            <div className="products-container">
-
-                <div className="products-right">
-
-                    <div className="mb-3">
-                        <label className="form-label">Tiêu đề</label>
-                        <input
-                            type="text"
-                            name="name"
-                            className="form-control createProducts-input"
-                            placeholder="Nhập tiêu đề..."
-                            value={formData.name}
-                            onChange={handleChange}
-
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label className="form-label">Mô tả</label>
-                        <textarea
-                            name="description"
-                            className="form-control createProducts-input"
-                            placeholder="Nhập mô tả..."
-                            rows="3"
-                            value={formData.description}
-                            onChange={handleChange}
-                        ></textarea>
-                    </div>
-
-
-                    {/* Trạng thái */}
-                    {/* <div className="mb-3">
-                        <label className="form-label">Trạng thái</label>
-                        <div>
-                            <div className="form-check form-check-inline">
-                                <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="status"
-                                    value="active"
-                                    checked={formData.status === "active"}
-                                    onChange={handleChange}
-                                />
-                                <label className="form-check-label">Hoạt động</label>
-                            </div>
-
-                            <div className="form-check form-check-inline">
-                                <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="status"
-                                    value="inactive"
-                                    checked={formData.status === "inactive"}
-                                    onChange={handleChange}
-                                />
-                                <label className="form-check-label">
-                                    Dừng hoạt động
-                                </label>
-                            </div>
-                        </div>
-                    </div> */}
-
-
-                    <Link to={`/admin/role`}>
-
-                        <button
-                            type="button"
-                            className="btn createProducts-btn"
-                            onClick={submitFromdata}
-                        >
-                            Lưu Thay Đổi
-                        </button>
-                    </Link>
-
-                </div>
-            </div>
-
-        </>
-    );
-
-
-
+        <button type="button" className="btn createProducts-btn" onClick={submitFormData}>
+          Lưu thay đổi
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default RoleEdit;

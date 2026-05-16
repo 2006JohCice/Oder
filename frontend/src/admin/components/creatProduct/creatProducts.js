@@ -4,7 +4,8 @@ import ListCategory from "../AddCategory/list-category";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
 function CreateProducts({ setProducts, setLoading }) {
-  const [data, setData] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -16,6 +17,7 @@ function CreateProducts({ setProducts, setLoading }) {
     status: "active",
     category: "",
     featured: "0",
+    restaurant_id: "",
   });
 
   const handleChange = (e) => {
@@ -35,6 +37,7 @@ function CreateProducts({ setProducts, setLoading }) {
       status: "active",
       category: "",
       featured: "0",
+      restaurant_id: "",
     });
 
   const handleSubmit = async (e) => {
@@ -43,30 +46,37 @@ function CreateProducts({ setProducts, setLoading }) {
       const res = await fetch("/api/admin/products/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
       const dataResponse = await res.json();
 
       if (!res.ok) {
-        notifyApp(dataResponse?.message || "Khong the tao san pham", "error");
+        notifyApp(dataResponse?.message || "Không thể tạo sản phẩm", "error");
         return;
       }
 
       setLoading?.(true);
-      setProducts((prev) => [...prev, dataResponse.product]);
+      setProducts((prev) => [dataResponse.product, ...prev]);
       resetForm();
-      notifyApp(dataResponse.message || "Tao san pham thanh cong", "success");
+      notifyApp(dataResponse.message || "Tạo sản phẩm thành công", "success");
     } catch (error) {
-      notifyApp("Co loi khi tao san pham", "error");
+      notifyApp("Có lỗi khi tạo sản phẩm", "error");
     }
   };
 
   useEffect(() => {
-    fetch("/api/admin/products/create")
+    fetch("/api/admin/products/create", { credentials: "include" })
       .then((res) => res.json())
-      .then((res) => setData(Array.isArray(res) ? res : res.data || []))
-      .catch(() => setData([]));
+      .then((res) => {
+        setCategories(Array.isArray(res.categories) ? res.categories : []);
+        setRestaurants(Array.isArray(res.restaurants) ? res.restaurants : []);
+      })
+      .catch(() => {
+        setCategories([]);
+        setRestaurants([]);
+      });
   }, []);
 
   return (
@@ -78,7 +88,7 @@ function CreateProducts({ setProducts, setLoading }) {
     >
       <div className="offcanvas-header createProducts-header">
         <h5 className="offcanvas-title" id="offcanvasWithBackdropLabel">
-          Create Product
+          Tạo sản phẩm
         </h5>
         <button
           type="button"
@@ -91,31 +101,53 @@ function CreateProducts({ setProducts, setLoading }) {
       <div className="offcanvas-body createProducts-body">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label">Tieu de</label>
+            <label className="form-label">Tên sản phẩm</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               className="form-control createProducts-input"
-              placeholder="Nhap tieu de..."
+              placeholder="Nhập tên sản phẩm..."
               required
             />
           </div>
 
-          <select
-            name="category"
-            className="admin-select"
-            style={{ width: "100%" }}
-            value={formData.category}
-            onChange={handleChange}
-          >
-            <option value="">Lua chon danh muc</option>
-            {Array.isArray(data) && data.map((item) => <ListCategory key={item._id} node={item} />)}
-          </select>
+          <div className="mb-3">
+            <label className="form-label">Nhà hàng</label>
+            <select
+              name="restaurant_id"
+              className="admin-select"
+              style={{ width: "100%" }}
+              value={formData.restaurant_id}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Chọn nhà hàng</option>
+              {restaurants.map((restaurant) => (
+                <option key={restaurant._id} value={restaurant._id}>
+                  {restaurant.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="mb-3">
-            <label className="form-label">Cai dat hien thi</label>
+            <label className="form-label">Danh mục</label>
+            <select
+              name="category"
+              className="admin-select"
+              style={{ width: "100%" }}
+              value={formData.category}
+              onChange={handleChange}
+            >
+              <option value="">Chọn danh mục</option>
+              {categories.map((item) => <ListCategory key={item._id} node={item} />)}
+            </select>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Hiển thị</label>
             <div>
               <div className="form-check form-check-inline">
                 <input
@@ -126,7 +158,7 @@ function CreateProducts({ setProducts, setLoading }) {
                   checked={formData.featured === "1"}
                   onChange={handleChange}
                 />
-                <label className="form-check-label">Noi bat</label>
+                <label className="form-check-label">Nổi bật</label>
               </div>
               <div className="form-check form-check-inline">
                 <input
@@ -137,91 +169,91 @@ function CreateProducts({ setProducts, setLoading }) {
                   checked={formData.featured === "0"}
                   onChange={handleChange}
                 />
-                <label className="form-check-label">Thong thuong</label>
+                <label className="form-check-label">Thường</label>
               </div>
             </div>
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Mo ta</label>
+            <label className="form-label">Mô tả</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               className="form-control createProducts-input"
               rows="3"
-              placeholder="Nhap mo ta..."
+              placeholder="Nhập mô tả..."
             ></textarea>
           </div>
 
           <div className="row">
             <div className="col-6 mb-3">
-              <label className="form-label">Gia</label>
+              <label className="form-label">Giá</label>
               <input
                 type="number"
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
                 className="form-control createProducts-input"
-                placeholder="Gia goc"
+                placeholder="Giá gốc"
                 required
                 min="1"
               />
             </div>
             <div className="col-6 mb-3">
-              <label className="form-label">Giam gia (%)</label>
+              <label className="form-label">Giảm giá (%)</label>
               <input
                 type="number"
                 name="discountPercentage"
                 value={formData.discountPercentage}
                 onChange={handleChange}
                 className="form-control createProducts-input"
-                placeholder="Giam gia"
+                placeholder="Giảm giá"
               />
             </div>
           </div>
 
           <div className="mb-3">
-            <label className="form-label">So luong</label>
+            <label className="form-label">Số lượng</label>
             <input
               type="number"
               name="stock"
               value={formData.stock}
               onChange={handleChange}
               className="form-control createProducts-input"
-              placeholder="Nhap so luong"
+              placeholder="Nhập số lượng"
               required
-              min="1"
+              min="0"
             />
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Anh (URL)</label>
+            <label className="form-label">Ảnh (URL)</label>
             <input
               type="url"
               name="img"
               value={formData.img}
               onChange={handleChange}
               className="form-control createProducts-input"
-              placeholder="Dan link anh"
+              placeholder="Dán link ảnh"
               required
             />
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Vi tri</label>
+            <label className="form-label">Vị trí</label>
             <input
               type="number"
               name="position"
               value={formData.position}
               onChange={handleChange}
               className="form-control createProducts-input"
-              placeholder="Nhap vi tri hien thi"
+              placeholder="Nhập vị trí hiển thị"
             />
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Trang thai</label>
+            <label className="form-label">Trạng thái</label>
             <div>
               <div className="form-check form-check-inline">
                 <input
@@ -232,7 +264,7 @@ function CreateProducts({ setProducts, setLoading }) {
                   checked={formData.status === "active"}
                   onChange={handleChange}
                 />
-                <label className="form-check-label">Hoat dong</label>
+                <label className="form-check-label">Hoạt động</label>
               </div>
               <div className="form-check form-check-inline">
                 <input
@@ -243,13 +275,13 @@ function CreateProducts({ setProducts, setLoading }) {
                   checked={formData.status === "inactive"}
                   onChange={handleChange}
                 />
-                <label className="form-check-label">Tam dung</label>
+                <label className="form-check-label">Tạm dừng</label>
               </div>
             </div>
           </div>
 
           <button type="submit" className="btn createProducts-btn">
-            Tao moi
+            Tạo mới
           </button>
         </form>
       </div>

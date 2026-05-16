@@ -11,8 +11,9 @@ function CardProducts({ data }) {
   const [addingProductId, setAddingProductId] = useState(null);
 
   const handleAddToCart = async (productId, redirectToCheckout = false) => {
+    console.log("nó ở đây",productId, redirectToCheckout );
+    
     if (addingProductId === productId) return;
-
     setAddingProductId(productId);
 
     try {
@@ -21,6 +22,7 @@ function CardProducts({ data }) {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           productId,
           quantity: 1,
@@ -28,33 +30,29 @@ function CardProducts({ data }) {
       });
 
       if (res.status === 401) {
-        notifyApp("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng", "info");
+        notifyApp("Vui long dang nhap de them san pham vao gio hang", "info");
         navigate("/user/auth/login");
         return;
       }
 
-      const result = await res.json().catch(() => ({}));
+      const result = await res.json().catch(() => ({}))
       if (res.ok) {
         await fetchCart();
-        notifyApp(result.message || "Đã thêm sản phẩm vào giỏ hàng", "success");
+        notifyApp(result.message || "Da them san pham vao gio hang", "success");
         if (redirectToCheckout) {
           navigate("/cart/checkout");
         }
         return;
       }
 
-      notifyApp(result.message || "Không thể thêm sản phẩm vào giỏ hàng", "error");
+      notifyApp(result.message || "Khong the them san pham vao gio hang", "error");
     } finally {
       setAddingProductId(null);
     }
   };
 
   if (!Array.isArray(data) || data.length === 0) {
-    return (
-      
-        <CardLoading/>
-    
-    );
+    return <CardLoading />;
   }
 
   return (
@@ -66,13 +64,13 @@ function CardProducts({ data }) {
           <article className="product-card" key={product._id}>
             <div className="product-image">
               <img src={product.img} alt={product.name} />
-              {product.featured === "1" && <span className="product-tag">Nổi bật</span>}
+              {product.featured === "1" && <span className="product-tag">Noi bat</span>}
             </div>
 
             <div className="product-info">
               <div className="product-meta">
-                <span>{product.stock > 0 ? "Sẵn sàng phục vụ" : "Tạm hết"}</span>
-                <span>{product.slug}</span>
+                <span>{product.stock > 0 ? "San sang phuc vu" : "Tam het"}</span>
+                <span>{product.restaurantInfo?.name || product.slug}</span>
               </div>
 
               <Link to={`/products/detail/${product.slug}`} className="product-name">
@@ -80,8 +78,15 @@ function CardProducts({ data }) {
               </Link>
 
               <p className="product-description">
-                {product.description || "Món ăn được trình bày gọn gàng, phù hợp cho order tại bàn."}
+                {product.description || "Mon an duoc trinh bay gon gang, phu hop cho dat ship hoac dat ban."}
               </p>
+
+              {product.restaurantInfo && (
+                <div className="product-meta">
+                  <span>{Number(product.restaurantInfo.ratingAverage || 0).toFixed(1)} sao</span>
+                  <span>{product.restaurantInfo.orderCount || 0} luot mua</span>
+                </div>
+              )}
 
               <div className="product-footer">
                 <strong className="product-price">{formatCurrency(product.price)}</strong>
@@ -92,7 +97,7 @@ function CardProducts({ data }) {
                     onClick={() => handleAddToCart(product._id)}
                     disabled={isAdding}
                   >
-                    {isAdding ? "Đang thêm..." : "Thêm giỏ"}
+                    {isAdding ? "Dang them..." : "Them gio"}
                   </button>
                   <button
                     type="button"
@@ -100,7 +105,7 @@ function CardProducts({ data }) {
                     onClick={() => handleAddToCart(product._id, true)}
                     disabled={isAdding}
                   >
-                    {isAdding ? "Đang xử lý..." : "Mua ngay"}
+                    {isAdding ? "Dang xu ly..." : "Mua ngay"}
                   </button>
                 </div>
               </div>

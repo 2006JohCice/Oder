@@ -12,5 +12,7 @@ router.post("/user/password/forgot", controller.forgotPassword);
 router.post("/user/password/otp", controller.otpPasswordPost);
 router.get("/user/me", usermiddlewars.infoUser, controller.infoUser);
 router.patch("/user/profile", usermiddlewars.infoUser, controller.updateProfile);
+router.post("/user/feedback", usermiddlewars.infoUser, controller.submitFeedback);
+router.post("/user/report", usermiddlewars.infoUser, controller.submitReport);
 
 module.exports = router;

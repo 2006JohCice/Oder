@@ -17,7 +17,7 @@ module.exports.ensureTables = ensureTables;
 
 module.exports.available = async (req, res) => {
   try {
-    const { restaurantId } = req.query;
+    const { restaurantId, visitDate, arrivalTime } = req.query;
 
     if (!restaurantId) {
       return res.status(200).json({ tables: [] });
@@ -25,10 +25,26 @@ module.exports.available = async (req, res) => {
 
     const tables = await Table.find({
       restaurant_id: restaurantId,
-      status: "available",
     }).sort({ area: 1, displayName: 1, tableNumber: 1 });
 
-    return res.status(200).json({ tables });
+    if (!visitDate || !arrivalTime) {
+      const availableTables = tables.filter((table) => table.status === "available");
+      return res.status(200).json({ tables: availableTables });
+    }
+
+    const Order = require("../../models/orders.model");
+    const slotKey = `${visitDate}_${arrivalTime}`;
+    const bookedOrders = await Order.find({
+      restaurant_id: restaurantId,
+      orderType: "dine_in",
+      bookingSlotKey: slotKey,
+      orderStatus: { $nin: ["completed", "cancelled"] },
+    }).select("tableInfo");
+
+    const bookedTableNumbers = new Set(bookedOrders.map((order) => String(order.tableInfo?.tableNumber || "")));
+    const availableTables = tables.filter((table) => !bookedTableNumbers.has(String(table.tableNumber)));
+
+    return res.status(200).json({ tables: availableTables });
   } catch (error) {
     return res.status(500).json({ message: "Khong the lay danh sach ban trong" });
   }

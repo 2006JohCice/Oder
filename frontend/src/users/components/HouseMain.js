@@ -9,15 +9,15 @@ function MainContent() {
       <section className="hero-metrics">
         <article>
           <strong>120+</strong>
-          <span>Món Ăn Đang Chờ Phục Vụ</span>
+          <span>Mon an dang san sang tu nhieu nha hang</span>
         </article>
         <article>
-          <strong>15 phút</strong>
-          <span>Thời gian lên đơn trung bình</span>
+          <strong>15 phut</strong>
+          <span>Thoi gian len don trung binh</span>
         </article>
         <article>
-          <strong>Hơn 20 bàn </strong>
-          <span>Khu vực rộng rải</span>
+          <strong>Da nha hang</strong>
+          <span>Dat ship va dat ban theo tung nha hang trong cung mot lan checkout</span>
         </article>
       </section>
 

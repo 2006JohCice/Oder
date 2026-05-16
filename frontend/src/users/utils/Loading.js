@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../css/Loading/Loading.css";
 import NoInternet from "./NoInternet";
 
-const text = "Order Shop is loading...";
+const text = "Order loading...";
 
 const Loading = () => {
     const [isOnline, setIsOnline] = useState(navigator.onLine);

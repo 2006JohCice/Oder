@@ -14,6 +14,10 @@ const productSchema = new mongoose.Schema({
   category: String,
   status: { type: String, default: "active" },
   featured:String,
+  soldCount: {
+    type: Number,
+    default: 0
+  },
   deleted: {
     type: Boolean,
     default: false

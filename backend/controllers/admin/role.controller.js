@@ -1,182 +1,112 @@
-const role = require('../../models/decentralization.model');
+const Role = require("../../models/decentralization.model");
 
-// [Get] : admin/role
 module.exports.index = async (req, res) => {
-    let find = {
-        deleted: false
-    }
+  try {
+    const records = await Role.find({ deleted: false }).sort({ createdAt: -1 });
+    res.json(records);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi lấy danh sách vai trò" });
+  }
+};
 
-    const records = await role.find(find);
-
-
-}
-
-// [Get] : admin/role/create
 module.exports.create = async (req, res) => {
-    let find = {
-        deleted: false
-    }
+  try {
+    const data = await Role.find({ deleted: false }).sort({ createdAt: -1 });
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi lấy vai trò" });
+  }
+};
 
-    const data = await role.find(find);
-    try {
-        if (data) {
-            res.json(data);
-        }
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'Lỗi khi lấy vai trò' });
-
-    }
-}
-
-// [POST] : admin/role/create 
 module.exports.createPost = async (req, res) => {
-    const data = req.body;
-
-
-    const newRole = new role({
-        name: data.name,
-        description: data.description,
-        status: data.status
+  try {
+    const newRole = new Role({
+      name: req.body.name,
+      description: req.body.description,
     });
-    try {
-        if (newRole) {
-            await newRole.save();
-            res.json({
-                message: "Tạo vai trò thành công",
-                role: newRole
-            });
-        } else {
-            res.json({
-                message: "Tạo vai trò thất bại",
-            });
-        }
+    await newRole.save();
+    res.json({
+      message: "Tạo vai trò thành công",
+      role: newRole,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi tạo vai trò" });
+  }
+};
 
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'Lỗi khi tạo vai trò' });
-
-    }
-
-
-}
-
-// [Get] : admin/role/edit/:id
 module.exports.edit = async (req, res) => {
-    const id = req.params.id;
-    const roleData = await role.findOne(
-        { _id: id }
-
-    );
-    try {
-        if (roleData) {
-            res.json(roleData);
-        } else {
-            res.status(404).json({ message: 'Vai trò không tồn tại' });
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'Lỗi khi lấy vai trò' });   
-
+  try {
+    const roleData = await Role.findOne({ _id: req.params.id, deleted: false });
+    if (!roleData) {
+      return res.status(404).json({ message: "Vai trò không tồn tại" });
     }
-}
+    res.json(roleData);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi lấy vai trò" });
+  }
+};
 
-// [PATCH] : admin/role/edit/:id
 module.exports.editPatch = async (req, res) => {
-    const id = req.params.id;
-    const data = req.body;
-    
-    try {
-        const updatedRole = await role.findByIdAndUpdate(
-            { _id: id },
-            {
-                name: data.name,
-                description: data.description,
-            },
-            { new: true }
-        );
-        if (updatedRole) {
-            res.json({
-                message: "Cập nhật vai trò thành công",
-                role: updatedRole
-            });
-        } else {
-            res.status(404).json({ message: 'Vai trò không tồn tại' });
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'Lỗi khi cập nhật vai trò' });
+  try {
+    const updatedRole = await Role.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        description: req.body.description,
+      },
+      { new: true }
+    );
+    if (!updatedRole) {
+      return res.status(404).json({ message: "Vai trò không tồn tại" });
     }
-}
-// [DELETE] : admin/role/delete/:id
+    res.json({
+      message: "Cập nhật vai trò thành công",
+      role: updatedRole,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi cập nhật vai trò" });
+  }
+};
+
 module.exports.delete = async (req, res) => {
-    const id = req.params.id;
-    try {
-        const deletedRole = await role.findByIdAndUpdate(
-            { _id: id },
-            { deleted: true },
-            { new: true }   
-        );
-        if (deletedRole) {
-            res.json({
-                message: "Xóa vai trò thành công",
-                role: deletedRole
-            });
-        } else {
-            res.status(404).json({ message: 'Vai trò không tồn tại' });
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'Lỗi khi xóa vai trò' });
+  try {
+    const deletedRole = await Role.findByIdAndUpdate(
+      req.params.id,
+      { deleted: true, deletedAt: new Date() },
+      { new: true }
+    );
+    if (!deletedRole) {
+      return res.status(404).json({ message: "Vai trò không tồn tại" });
     }
-}
+    res.json({
+      message: "Xóa vai trò thành công",
+      role: deletedRole,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi xóa vai trò" });
+  }
+};
 
-// [GET] : admin/role/permissions
 module.exports.permissions = async (req, res) => {
-    let find = {
-        deleted: false
-    }
-    const data = await role.find(find);
-    try {
-        if (data) {
-            res.json(data);
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'Lỗi khi lấy quyền' });
-    }
-}
+  try {
+    const data = await Role.find({ deleted: false }).sort({ createdAt: -1 });
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi lấy quyền" });
+  }
+};
 
-// [PATCH] : admin/role/permissions
 module.exports.missionsPatch = async (req, res) => {
-    const permissionsData = req.body;
-    try {
-        // for (let i = 0; i < permissionsData.length; i++) {
-        //     const roleId = permissionsData[i].roleId;
-        //     const permissions = permissionsData[i].permissions;
-        //     await role.findByIdAndUpdate(
-        //         { _id: roleId },
-        //         { permissions: permissions },
-        //         { new: true }
-        //     );
-        // }
-        for (const item of permissionsData) {
-            const id = item.roleId;
-            const permissions = item.permissions;
-
-            await role.updateOne(
-                { _id:id },
-                {permissions:permissions},
-                { new: true }
-            
-            )
-            
-        }
-        res.json({ message: 'Cập nhật quyền thành công' });
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'Lỗi khi cập nhật quyền' });
+  const permissionsData = req.body;
+  try {
+    for (const item of permissionsData) {
+      await Role.updateOne(
+        { _id: item.roleId },
+        { permissions: item.permissions }
+      );
     }
-}
+    res.json({ message: "Cập nhật quyền thành công" });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi cập nhật quyền" });
+  }
+};

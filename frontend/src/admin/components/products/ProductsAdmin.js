@@ -1,465 +1,383 @@
-/* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "../../css/products/ProductsAdmin.css";
-import ButtonTabs from "../../helpers/filterStatus";
-import FilterListFood from "../../helpers/filterListFood";
 import PaginationHelper from "../../helpers/pagination";
-import Delete from "../../helpers/delete";
 import CreatProducts from "../creatProduct/creatProducts";
 import EditProducts from "../creatProduct/editPtoducts";
 import { useNavigate } from "react-router-dom";
-import { apiFetch } from '../../../utils/apiFetch';
+import { apiFetch } from "../../../utils/apiFetch";
 import LoadingCart from "../mixi/loadingCart";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import LoadingButton from "../../../shared/components/LoadingButton";
+import useButtonLoading from "../../../shared/hooks/useButtonLoading";
+import { formatCurrency } from "../../../users/utils/shop";
 
 const ProductsAdmin = ({ query }) => {
-  const [CardLoading ,setCardLoading] = useState(true);
   const navigate = useNavigate();
-  // console.log("Query in ProductsAdmin:", query);
+  const [cardLoading, setCardLoading] = useState(true);
   const [products, setProducts] = useState([]);
-  const [activeTab, setActiveTab] = useState(1); // mÃ¡ÂºÂ·c Ã„â€˜Ã¡Â»â€¹nh lÃƒÂ  "All"
-  const [activeName, setActiveName] = useState(1); // mÃ¡ÂºÂ·c Ã„â€˜Ã¡Â»â€¹nh lÃƒÂ  "All"
-  const [loading, setLoading] = useState(false);
-  const [notifMessage, setNotifMessage] = useState("");
-  const [idDelete, setIdDelete] = useState("");
+  const [restaurants, setRestaurants] = useState([]);
+  const [activeTab, setActiveTab] = useState("all");
   const [idEdit, setIdEdit] = useState("");
-
   const [page, setPage] = useState(1);
   const [sortAim, setSortAim] = useState("");
   const [totalPages, setTotalPages] = useState(1);
   const [limitPage, setLimitPage] = useState(10);
-  const [newStatusListFood, setNewStatusListFood] = useState("");
-  const [notifKey, setNotifKey] = useState(0);
-
-  const [filters, setFilters] = useState({
-    status: "",
-    category: "",
-    search: query || "",
-  });
-
-
-  const fetchProducts = (status, category) => {
-
-    let url = "/api/admin/products";
-    const params = [];
-    if (status) {
-      params.push(`status=${status}`);
-    }
-    if (query) {
-      params.push(`keyword=${query}`);
-    }
-
-    if (page > 1) {
-      params.push(`page=${page}`);
-    }
-    if (category) {
-      params.push(`category=${category}`)
-    }
-    if (sortAim !== "") {
-      let sortValue = sortAim.split("_")[1];
-      let sortKey = sortAim.split("_")[0];
-
-      params.push(`sortKey=${sortKey}`);
-      params.push(`sortValue=${sortValue}`);
-
-    }
-
-
-    if (params.length > 0) {
-      url += `?${params.join('&')}`;
-    }
-
-
-
-
-    apiFetch(url)
-      // .then((res) => res.json())
-      .then((res) => {
-        setProducts(Array.isArray(res.data) ? res.data : []);
-        setCardLoading(false)
-        setTotalPages(res.objPagination.totalPages)
-        setLimitPage(res.objPagination.limitItems)
-      })
-      .catch(err => {
-        if (err.status === 401) {
-          navigate('/admin/auth/login');
-        }
-        // if (err.status === 200) {
-        //   navigate('/admin');
-        // }
-      });
-  };
-
-
-  useEffect(() => {
-    let status = "";
-    let category = "";
-
-    // tab Ã¢â€ â€™ xÃƒÂ¡c Ã„â€˜Ã¡Â»â€¹nh trÃ¡ÂºÂ¡ng thÃƒÂ¡i
-    if (activeTab === 2) status = "active";
-    else if (activeTab === 3) status = "inactive";
-
-    if (newStatusListFood === "") {
-      category = "";
-
-    } else {
-      category = newStatusListFood;
-    }
-
-
-
-
-    fetchProducts(status, category);
-  }, [activeTab, activeName, query, page, idDelete, sortAim]);
-
-
-  // Change status
-  const handleChangeStatus = async (id, status) => {
-    setLoading(true);
-    setNotifMessage("Thay Ã„ÂÃ¡Â»â€¢i TrÃ¡ÂºÂ¡ng ThÃƒÂ¡i ThÃƒÂ nh CÃƒÂ´ng!")
-    setNotifKey((prev) => prev + 1);
-
-    const statusChange = status === "active" ? "inactive" : "active";
-
-
-    setProducts(prev =>
-      prev.map(p =>
-        p._id === id ? { ...p, status: statusChange } : p
-      )
-    );
-
-    const url = `/api/admin/products/change-status/${statusChange}/${id}`;
-
-    fetch(url, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status: statusChange }),
-    })
-      .then(res => res.json())
-      .then(result => {
-        console.log("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t xong:", result);
-        fetchProducts();
-      })
-      .catch(err => {
-        console.error("LÃ¡Â»â€”i khi cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t:", err);
-        alert("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
-      })
-    // .finally(() => {
-    //   setLoading(false);
-    // });
-  };
-
-
-
-
-  // option 
-  const statusOptions = [
-
-    { id: 1, value: "active" },
-    { id: 2, value: "inactive" },
-    { id: 3, value: "delete-all" },
-    { id: 4, value: "change-position" }
-
-  ];
-
+  const [restaurantFilter, setRestaurantFilter] = useState("");
+  const [ratingFilter, setRatingFilter] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [newStatus, setNewStatus] = useState("active");
+  const [loadingStatusIds, setLoadingStatusIds] = useState(new Set());
+  const { isLoading: isLoadingMulti, handleLoading: handleLoadingMulti } = useButtonLoading();
 
   const sortAims = [
     { id: 1, value: "price_asc", title: "Giá tăng dần" },
     { id: 2, value: "price_desc", title: "Giá giảm dần" },
     { id: 3, value: "position_asc", title: "Vị trí tăng dần" },
     { id: 4, value: "position_desc", title: "Vị trí giảm dần" },
-  ]
+  ];
 
-  // Change-multi
+  const statusOptions = [
+    { id: 1, value: "active", title: "Hoạt động" },
+    { id: 2, value: "inactive", title: "Tạm dừng" },
+    { id: 3, value: "delete-all", title: "Xoá đã chọn" },
+  ];
 
+  const fetchProducts = async () => {
+    let url = "/api/admin/products";
+    const params = [];
 
+    if (activeTab === "active" || activeTab === "inactive") {
+      params.push(`status=${activeTab}`);
+    }
+    if (query) {
+      params.push(`keyword=${encodeURIComponent(query)}`);
+    }
+    if (page > 1) {
+      params.push(`page=${page}`);
+    }
+    if (restaurantFilter) {
+      params.push(`restaurantId=${restaurantFilter}`);
+    }
+    if (sortAim !== "") {
+      const sortValue = sortAim.split("_")[1];
+      const sortKey = sortAim.split("_")[0];
+      params.push(`sortKey=${sortKey}`);
+      params.push(`sortValue=${sortValue}`);
+    }
 
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [newStatus, setNewStatus] = useState("active");
+    if (params.length > 0) {
+      url += `?${params.join("&")}`;
+    }
 
+    try {
+      const res = await apiFetch(url);
+      setProducts(Array.isArray(res.data) ? res.data : []);
+      setRestaurants(Array.isArray(res.restaurants) ? res.restaurants : []);
+      setCardLoading(false);
+      setTotalPages(res.objPagination?.totalPages || 1);
+      setLimitPage(res.objPagination?.limitItems || 10);
+    } catch (err) {
+      if (err.status === 401) {
+        navigate("/admin/auth/login");
+      }
+    }
+  };
 
+  useEffect(() => {
+    fetchProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, query, page, sortAim, restaurantFilter]);
 
-  // console.log(newStatus)
-  /*-------Check all----- */
+  const filteredProducts = useMemo(() => {
+    if (!ratingFilter) return products;
+    return products.filter((item) => Number(item.restaurantInfo?.ratingAverage || 0) >= Number(ratingFilter));
+  }, [products, ratingFilter]);
+
+  const handleChangeStatus = async (id, status) => {
+    setLoadingStatusIds((prev) => new Set([...prev, id]));
+    const statusChange = status === "active" ? "inactive" : "active";
+
+    try {
+      const res = await fetch(`/api/admin/products/change-status/${statusChange}/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ status: statusChange }),
+      });
+      const result = await res.json();
+      await fetchProducts();
+      notifyApp(result.message || "Thay đổi trạng thái thành công!", "success");
+    } catch (err) {
+      console.error("Lỗi khi cập nhật:", err);
+      notifyApp("Cập nhật thất bại!", "error");
+    } finally {
+      setLoadingStatusIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+    }
+  };
+
   const handleCheckAll = (e) => {
     if (e.target.checked) {
-      setSelectedIds(products?.map((item) => item._id))
-
+      setSelectedIds(filteredProducts.map((item) => item._id));
     } else {
-      setSelectedIds([])
+      setSelectedIds([]);
     }
-  }
-  
-
-  /* Change position */
-  const [idPosition, setIdPosition] = useState([])
-
-  const handleChangePosition = (index, e) => {
-    const value = e.target.value
-    const updatePosition = [...products]
-
-    updatePosition[index].position = value
-
-
-    setProducts(updatePosition)
-
-
-
-    const changedItem = updatePosition[index]
-    // console.log(changedItem)
-
-
-    setIdPosition((prev) => {
-      const filtered = prev.filter(p => p.id !== changedItem._id);
-
-      return [...filtered, { id: changedItem._id, position: value }];
-    })
-
-
-  }
-
-
-  /*Endl Change position */
-
-
-
-
-
-  /*-------Check one----- */
-
-
-
-
+  };
 
   const handleCheck = (id) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    )
-  }
+    );
+  };
 
   const handleUpdateChangeMulti = async () => {
-
-
- 
-    if (newStatus === "delete-all") {
-      // eslint-disable-next-line no-restricted-globals
-      const result = confirm("Bạn có chắc chắn?");
-      if (!result) {
-        return
-      }
-    }
-
-    if (newStatus === "change-position") {
-      // eslint-disable-next-line no-restricted-globals
-      const result = confirm("Bạn có chắc chắn?");
-      if (!result) {
-        return
-      }
-    }
-
-
     if (!newStatus) {
-      alert("ChÃ¡Â»Ân trÃ¡ÂºÂ¡ng thÃƒÂ¡i")
+      notifyApp("Chọn trạng thái", "warning");
+      return;
     }
-    if (selectedIds.length === 0) return alert("chÃ†Â°a cÃƒÂ³ sÃ¡ÂºÂ£n phÃ¡ÂºÂ©m nÃƒÂ o Ã„â€˜Ã†Â°Ã¡Â»Â£c chÃ¡Â»Ân")
+    if (selectedIds.length === 0) {
+      notifyApp("Chưa có sản phẩm nào được chọn", "warning");
+      return;
+    }
 
-
-    fetch(`/api/admin/products/change-multi`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ids: selectedIds, idPosition, newStatus }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        setNotifMessage(data.message)
-        setLoading(true);
-        fetchProducts();
-      })
-      .catch(err => {
-        console.error("LÃ¡Â»â€”i khi cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t:", err);
-        alert("CÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t thÃ¡ÂºÂ¥t bÃ¡ÂºÂ¡i!");
-      })
-  }
-  //Endl change-multi
-
+    await handleLoadingMulti(async () => {
+      try {
+        const res = await fetch(`/api/admin/products/change-multi`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ ids: selectedIds, newStatus }),
+        });
+        const data = await res.json();
+        await fetchProducts();
+        setSelectedIds([]);
+        notifyApp(data.message || "Cập nhật thành công!", "success");
+      } catch (err) {
+        console.error("Lỗi khi cập nhật:", err);
+        notifyApp("Cập nhật thất bại!", "error");
+      }
+    });
+  };
 
   return (
     <div className="products-page">
-      <CreatProducts setProducts={setProducts} setLoading={setLoading} />
+      <CreatProducts setProducts={setProducts} setLoading={setCardLoading} />
       <EditProducts idEdit={idEdit} setProducts={setProducts} />
 
-      <header className="products-header">
-        <h1>Quản lý sản phẩm</h1>
-        <div >
+      <section className="admin-grid admin-grid-4">
+        <div className="admin-card">
+          <h3>Tổng sản phẩm</h3>
+          <div className="admin-big">{filteredProducts.length}</div>
+        </div>
+        <div className="admin-card">
+          <h3>Đang bán</h3>
+          <div className="admin-big">{filteredProducts.filter((item) => item.status === "active").length}</div>
+        </div>
+        <div className="admin-card">
+          <h3>Cửa hàng</h3>
+          <div className="admin-big">{restaurants.length}</div>
+        </div>
+        <div className="admin-card">
+          <h3>Lượt chọn</h3>
+          <div className="admin-big">{selectedIds.length}</div>
+        </div>
+      </section>
 
-          <ButtonTabs
-            activeTab={activeTab}
-            onTabClick={(tab) => setActiveTab(tab.id)}
-          />
+      <header className="products-header">
+        <h1>Tất cả sản phẩm từ các cửa hàng</h1>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          <button className={`admin-btn ${activeTab === "all" ? "admin-primary" : ""}`} onClick={() => { setPage(1); setActiveTab("all"); }}>
+            Tất cả
+          </button>
+          <button className={`admin-btn ${activeTab === "active" ? "admin-primary" : ""}`} onClick={() => { setPage(1); setActiveTab("active"); }}>
+            Hoạt động
+          </button>
+          <button className={`admin-btn ${activeTab === "inactive" ? "admin-primary" : ""}`} onClick={() => { setPage(1); setActiveTab("inactive"); }}>
+            Tạm dừng
+          </button>
         </div>
 
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           <select
-            name="status"
+            name="sort"
             className="admin-select"
-            style={{ width: "230px" }}
+            style={{ width: "180px" }}
             value={sortAim}
             onChange={(e) => setSortAim(e.target.value)}
           >
-            {sortAims?.map((opt) => (
-              <option key={opt.id} value={opt.value} >
+            <option value="">Sắp xếp</option>
+            {sortAims.map((opt) => (
+              <option key={opt.id} value={opt.value}>
                 {opt.title}
               </option>
             ))}
-
-
           </select>
-          <button className="btn-accent" onClick={() => setSortAim("")}>Xóa Lọc</button>
 
-          <button className="btn-accent" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBackdrop" aria-controls="offcanvasWithBackdrop">
-            + Thêm Sản Phẩm
+          <select
+            className="admin-select"
+            style={{ width: "220px" }}
+            value={restaurantFilter}
+            onChange={(e) => { setPage(1); setRestaurantFilter(e.target.value); }}
+          >
+            <option value="">Lọc theo cửa hàng</option>
+            {restaurants.map((restaurant) => (
+              <option key={restaurant._id} value={restaurant._id}>
+                {restaurant.name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="admin-select"
+            style={{ width: "180px" }}
+            value={ratingFilter}
+            onChange={(e) => setRatingFilter(e.target.value)}
+          >
+            <option value="">Lọc theo rating</option>
+            <option value="4">Từ 4 sao</option>
+            <option value="4.5">Từ 4.5 sao</option>
+          </select>
+
+          <button className="btn-accent" onClick={() => { setSortAim(""); setRestaurantFilter(""); setRatingFilter(""); }}>
+            Xoá lọc
           </button>
 
+          <button className="btn-accent" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBackdrop" aria-controls="offcanvasWithBackdrop">
+            + Thêm sản phẩm
+          </button>
         </div>
-
-
       </header>
 
       <div className="products-header">
-        <FilterListFood
-          activeTab={activeName}
-          onTabClick={(category, tab) => {
-            setNewStatusListFood(category)
-            setActiveName(tab)
-          }}
-        />
-
         <div style={{ display: "flex", gap: "10px" }}>
-
           <select
             name="status"
             className="admin-select"
-            style={{ width: "130px" }}
+            style={{ width: "180px" }}
             value={newStatus}
             onChange={(e) => setNewStatus(e.target.value)}
           >
-            {statusOptions?.map((opt) => (
-              <option key={opt.id} value={opt.value} >
-                {opt.value}
+            {statusOptions.map((opt) => (
+              <option key={opt.id} value={opt.value}>
+                {opt.title}
               </option>
             ))}
-
-
           </select>
 
-          <button className="btn-accent" onClick={handleUpdateChangeMulti}>Áp Dụng</button>
-
+          <LoadingButton
+            className="btn-accent"
+            onClick={handleUpdateChangeMulti}
+            isLoading={isLoadingMulti}
+            loadingText="Đang xử lý..."
+            variant="primary"
+          >
+            Áp dụng
+          </LoadingButton>
         </div>
-
-
       </div>
+
       <div className="products-table">
         <table>
           <thead>
             <tr>
-              <th><input
-                type="checkbox"
-                name="checkall"
-                onChange={handleCheckAll}
-                checked={selectedIds.length === products.length}
-              /></th>
-
-              <th>ID</th>
+              <th>
+                <input
+                  type="checkbox"
+                  name="checkall"
+                  onChange={handleCheckAll}
+                  checked={selectedIds.length > 0 && selectedIds.length === filteredProducts.length}
+                />
+              </th>
+              <th>STT</th>
               <th>Ảnh</th>
-              <th>Tên Sản Phẩm</th>
-              <th>Giá (VNĐ)</th>
-              <th>Trạng Thái</th>
-              <th>Vị Trí</th>
-              <th>Tồn Kho</th>
-              <th>Hình Ảnh</th>
+              <th>Sản phẩm</th>
+              <th>Cửa hàng</th>
+              <th>Rating</th>
+              <th>Giá</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
-            {
-              CardLoading ? (
-               
-                    <LoadingCart />
-                
-              ) : (
-                products.length > 0 ? (
-                  Array.isArray(products) && products.map((item, index) => (
-                    <tr key={item._id}>
-                      <td><input
-                        type="checkbox"
-                        name="id"
-                        checked={selectedIds.includes(item._id)}
-                        onChange={() => handleCheck(item._id)}
-                      /></td>
-
-                      <td>{limitPage * (page - 1) + (index + 1)}</td>
-                      <td>
-                        <img
-                          src={item.img}
-                          alt={item.name}
-                          className="storyHome-img"
-                        /></td>
-                      <td>{item.name}</td>
-                      <td>{item.price.toLocaleString()}</td>
-                      {item.status === "active" ? <td style={{ color: "green" }}><a
-                        style={{ cursor: "pointer" }}
-                        data-status={item.status}
-                        data-id={item.id}
-                        onClick={() => handleChangeStatus(item._id, item.status)}
-
-                      >Hoạt Động</a></td> : <td style={{ color: "red" }}> <a
-                        style={{ cursor: "pointer" }}
-                        data-status={item.status}
-                        data-id={item.id}
-                        onClick={() => handleChangeStatus(item._id, item.status)}
-
-                      >Ngưng Hoạt Động</a></td>}
-                      <td>
-                        <input
-                          type="number"
-                          value={item.position}
-                          style={{ width: "60px" }}
-                          min="1"
-                          name="position"
-                          onChange={(e) => handleChangePosition(index, e)}
-                        />
-                      </td>
-                      <td>{item.stock}</td>
-                      <td style={{ display: "flex", gap: "5px" }}>
-                        <button className="admin-btn"
-                          type="button"
-                          data-bs-toggle="offcanvas"
-                          data-bs-target="#offcanvasEditProduct"
-                          aria-controls="offcanvasEditProduct"
-                          onClick={() => setIdEdit(item._id)}
-
-                        ><i className="bi bi-pen"></i></button>
-                        <Delete set={setProducts} Id={item._id} setId={setIdDelete} setLoading={setLoading} />
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="9" style={{ textAlign: "center" }}>
-                      Không có sản phẩm nào
-                    </td>
-                  </tr>
-                )
-              )
-            }
+            {cardLoading ? (
+              <LoadingCart />
+            ) : filteredProducts.length > 0 ? (
+              filteredProducts.map((item, index) => (
+                <tr key={item._id}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="id"
+                      checked={selectedIds.includes(item._id)}
+                      onChange={() => handleCheck(item._id)}
+                    />
+                  </td>
+                  <td>{limitPage * (page - 1) + (index + 1)}</td>
+                  <td>
+                    <img src={item.img} alt={item.name} className="storyHome-img" />
+                  </td>
+                  <td>
+                    <strong>{item.name}</strong>
+                    <div className="admin-muted">{item.category || "Chưa phân loại"}</div>
+                  </td>
+                  <td>{item.restaurantInfo?.name || "Chưa gán cửa hàng"}</td>
+                  <td>{Number(item.restaurantInfo?.ratingAverage || 0).toFixed(1)} / 5</td>
+                  <td>{formatCurrency(item.price)}</td>
+                  <td>
+                    <LoadingButton
+                      onClick={() => handleChangeStatus(item._id, item.status)}
+                      isLoading={loadingStatusIds.has(item._id)}
+                      loadingText="..."
+                      variant="ghost"
+                      style={{
+                        color: item.status === "active" ? "green" : "red",
+                        padding: "4px 8px",
+                      }}
+                    >
+                      {item.status === "active" ? "Hoạt động" : "Tạm dừng"}
+                    </LoadingButton>
+                  </td>
+                  <td style={{ display: "flex", gap: "5px" }}>
+                    <button
+                      className="admin-btn"
+                      type="button"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#offcanvasEditProduct"
+                      aria-controls="offcanvasEditProduct"
+                      onClick={() => setIdEdit(item._id)}
+                    >
+                      <i className="bi bi-pen"></i>
+                    </button>
+                    <button
+                      className="admin-btn"
+                      onClick={async () => {
+                        await fetch(`/api/admin/products/delete/${item._id}`, { method: "DELETE", credentials: "include" });
+                        fetchProducts();
+                      }}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" style={{ textAlign: "center" }}>
+                  Không có sản phẩm nào
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
       <PaginationHelper totalPages={totalPages} page={page} setPage={setPage} />
-
     </div>
   );
 };

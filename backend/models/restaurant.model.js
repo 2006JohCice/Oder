@@ -34,6 +34,22 @@ const restaurantSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    ratingAverage: {
+      type: Number,
+      default: 0,
+    },
+    ratingCount: {
+      type: Number,
+      default: 0,
+    },
+    orderCount: {
+      type: Number,
+      default: 0,
+    },
+    totalRevenue: {
+      type: Number,
+      default: 0,
+    },
     status: {
       type: String,
       enum: ['active', 'inactive', 'pending'],

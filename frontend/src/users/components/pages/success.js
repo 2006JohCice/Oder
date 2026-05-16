@@ -1,21 +1,31 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { formatCurrency, formatDateTime, getOrderTotal } from "../../utils/shop";
+import { formatCurrency, formatDateTime } from "../../utils/shop";
 
 function OrderSuccess() {
   const { orderId } = useParams();
-  const [order, setOrder] = useState(null);
+  const [payload, setPayload] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/checkout/success/${orderId}`)
+    fetch(`/api/checkout/success/${orderId}`, { credentials: "include" })
       .then((res) => res.json())
-      .then((data) => setOrder(data))
-      .catch(() => setOrder(null));
+      .then((data) => setPayload(data))
+      .catch(() => setPayload(null));
   }, [orderId]);
 
-  const total = useMemo(() => getOrderTotal(order?.products || []), [order]);
+  const orders = useMemo(() => {
+    if (!payload) return [];
+    if (payload.type === "group") return payload.orders || [];
+    if (payload.order) return [payload.order];
+    return [];
+  }, [payload]);
 
-  if (!order) {
+  const total = useMemo(
+    () => orders.reduce((sum, item) => sum + Number(item.totalAmount || 0), 0),
+    [orders]
+  );
+
+  if (!payload || orders.length === 0) {
     return null;
   }
 
@@ -25,47 +35,37 @@ function OrderSuccess() {
         <div className="success-icon">
           <i className="bi bi-check2-circle" />
         </div>
-        <p className="eyebrow">Đặt hàng thành công</p>
-        <h1>Đơn hàng đã được ghi nhận.</h1>
+        <p className="eyebrow">Dat hang thanh cong</p>
+        <h1>Yeu cau cua ban da duoc ghi nhan.</h1>
         <p>
-          Mã đơn {order.orderId} được tạo lúc {formatDateTime(order.createdAt)}. Trạng thái hiện tại:
-          {" "}
-          <strong>{order.orderStatus}</strong>.
+          {payload.orderGroupCode ? `Nhom don ${payload.orderGroupCode}` : `Don ${orders[0].orderId}`} duoc tao luc {formatDateTime(orders[0].createdAt)}.
         </p>
 
         <div className="success-summary">
           <div className="summary-row">
-            <span>Khách hàng</span>
-            <strong>{order.userInfo?.fullName}</strong>
+            <span>So nha hang</span>
+            <strong>{orders.length}</strong>
           </div>
           <div className="summary-row">
-            <span>Số điện thoại</span>
-            <strong>{order.userInfo?.phone}</strong>
-          </div>
-          <div className="summary-row">
-            <span>Loại đơn</span>
-            <strong>{order.orderType === "delivery" ? "Giao hàng" : "Ăn tại bàn"}</strong>
-          </div>
-          {order.tableInfo?.tableNumber && (
-            <div className="summary-row">
-              <span>Bàn ăn</span>
-              <strong>
-                {order.tableInfo.tableNumber} - {order.tableInfo.area}
-              </strong>
-            </div>
-          )}
-          <div className="summary-row">
-            <span>Tổng tiền</span>
+            <span>Tong tien</span>
             <strong>{formatCurrency(total)}</strong>
           </div>
+          {orders.map((order) => (
+            <div className="summary-row" key={order._id}>
+              <span>{order.restaurantInfo?.name || order.orderId}</span>
+              <strong>
+                {order.orderType === "delivery" ? "Ship" : "Dat ban"} • {formatCurrency(order.totalAmount || 0)}
+              </strong>
+            </div>
+          ))}
         </div>
 
         <div className="button-row">
           <Link to="/" className="secondary-button no-underline ">
-            Về trang chủ
+            Ve trang chu
           </Link>
           <Link to="/cart/doneOrder" className="primary-button no-underline ">
-            Xem lịch sử đơn
+            Xem lich su don
           </Link>
         </div>
       </article>

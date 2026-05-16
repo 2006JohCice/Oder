@@ -77,7 +77,7 @@ function cartControl() {
   }, [cart]);
 
 
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shippingFee = 30000;
     const total = subtotal + shippingFee;
 

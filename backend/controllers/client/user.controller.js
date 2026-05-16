@@ -1,5 +1,8 @@
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
+const Restaurant = require("../../models/restaurant.model");
+const RestaurantFeedback = require("../../models/restaurant-feedback.model");
+const RestaurantReport = require("../../models/restaurant-report.model");
 const generateHelper = require("../../helpers/generate");
 const sendMailHelper = require("../../helpers/sendMail");
 const md5 = require("md5");
@@ -433,5 +436,110 @@ module.exports.updateProfile = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+};
+
+const escapeRegExp = (value = "") => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const findRestaurantByInput = async (restaurantInput) => {
+  if (!restaurantInput) return null;
+
+  const normalized = String(restaurantInput).trim();
+  if (!normalized) return null;
+
+  const orConditions = [{ name: new RegExp(`^${escapeRegExp(normalized)}$`, "i") }];
+  if (/^[0-9a-fA-F]{24}$/.test(normalized)) {
+    orConditions.push({ _id: normalized });
+  }
+
+  return Restaurant.findOne({
+    deleted: false,
+    $or: orConditions,
+  });
+};
+
+const recalculateRestaurantRating = async (restaurantId) => {
+  const feedbacks = await RestaurantFeedback.find({ restaurant_id: restaurantId });
+  const ratingCount = feedbacks.length;
+  const ratingAverage = ratingCount
+    ? feedbacks.reduce((sum, item) => sum + Number(item.rating || 0), 0) / ratingCount
+    : 0;
+
+  await Restaurant.updateOne(
+    { _id: restaurantId },
+    {
+      ratingAverage: Number(ratingAverage.toFixed(1)),
+      ratingCount,
+    }
+  );
+};
+
+module.exports.submitFeedback = async (req, res) => {
+  try {
+    const currentUser = res.locals.user;
+    if (!currentUser) {
+      return res.status(401).json({ message: "Chua dang nhap" });
+    }
+
+    const { fullname, email, restaurant, sentiment, feedback, rating } = req.body || {};
+    if (!feedback || !restaurant) {
+      return res.status(400).json({ message: "Vui long nhap nha hang va noi dung gop y" });
+    }
+
+    const restaurantDoc = await findRestaurantByInput(restaurant);
+    if (!restaurantDoc) {
+      return res.status(404).json({ message: "Khong tim thay nha hang" });
+    }
+
+    const ratingValue = Number(rating || (sentiment === "bad" ? 2 : 5));
+
+    await RestaurantFeedback.create({
+      user_id: currentUser._id,
+      restaurant_id: restaurantDoc._id,
+      fullname: fullname || currentUser.fullname || "",
+      email: email || currentUser.email || "",
+      restaurant: restaurantDoc.name,
+      sentiment: sentiment || "good",
+      rating: Math.max(1, Math.min(5, ratingValue)),
+      feedback: String(feedback || "").trim(),
+    });
+
+    await recalculateRestaurantRating(restaurantDoc._id);
+    return res.status(201).json({ message: "Gui gop y thanh cong" });
+  } catch (error) {
+    return res.status(500).json({ message: "Loi may chu" });
+  }
+};
+
+module.exports.submitReport = async (req, res) => {
+  try {
+    const currentUser = res.locals.user;
+    if (!currentUser) {
+      return res.status(401).json({ message: "Chua dang nhap" });
+    }
+
+    const { fullname, email, restaurant, report, sentiment } = req.body || {};
+    if (!report || !restaurant) {
+      return res.status(400).json({ message: "Vui long nhap nha hang va noi dung bao cao" });
+    }
+
+    const restaurantDoc = await findRestaurantByInput(restaurant);
+    if (!restaurantDoc) {
+      return res.status(404).json({ message: "Khong tim thay nha hang" });
+    }
+
+    await RestaurantReport.create({
+      user_id: currentUser._id,
+      restaurant_id: restaurantDoc._id,
+      fullname: fullname || currentUser.fullname || "",
+      email: email || currentUser.email || "",
+      restaurant: restaurantDoc.name,
+      sentiment: sentiment || "bad",
+      report: String(report || "").trim(),
+    });
+
+    return res.status(201).json({ message: "Gui bao cao thanh cong" });
+  } catch (error) {
+    return res.status(500).json({ message: "Loi may chu" });
   }
 };

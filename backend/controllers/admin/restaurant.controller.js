@@ -9,7 +9,7 @@ module.exports.getRestaurants = async (req, res) => {
 
     const restaurants = await Restaurant.find(filter)
       .populate("owner_id", "fullname email phone role")
-      .sort({ createdAt: -1 });
+      .sort({ ratingAverage: -1, orderCount: -1, createdAt: -1 });
 
     return res.status(200).json({ restaurants });
   } catch (error) {

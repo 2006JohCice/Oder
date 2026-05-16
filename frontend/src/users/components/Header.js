@@ -26,7 +26,18 @@ function Header() {
         }
 
         const userData = await userRes.json();
-        setUser(userData?.user || null);
+        const currentUser = userData?.user || null;
+        setUser(currentUser);
+
+        if (!currentUser) {
+          setHasRestaurant(false);
+          return;
+        }
+
+        if (currentUser.role !== "owner" && !currentUser.restaurant_id) {
+          setHasRestaurant(false);
+          return;
+        }
 
         const restaurantRes = await fetch("/api/restaurant/my", { credentials: "include" });
         setHasRestaurant(restaurantRes.ok);

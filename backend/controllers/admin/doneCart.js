@@ -1,11 +1,63 @@
 const Order = require("../../models/orders.model");
 const Table = require("../../models/table.model");
 
+const paginate = (items, page = 1, limit = 10) => {
+  const currentPage = Number(page || 1);
+  const pageSize = Number(limit || 10);
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+  const totalItems = items.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  return {
+    items: items.slice(start, end),
+    pagination: {
+      page: currentPage,
+      limit: pageSize,
+      totalItems,
+      totalPages,
+    },
+  };
+};
+
 module.exports.doneOrder = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const { q = "", status = "", type = "", page = 1, limit = 10 } = req.query;
+    const allOrders = await Order.find().sort({ createdAt: -1 }).lean();
+
+    const keyword = String(q || "").trim().toLowerCase();
+    const filtered = allOrders.filter((order) => {
+      const matchesStatus = status ? order.orderStatus === status : true;
+      const matchesType = type ? order.orderType === type : true;
+      const haystack = [
+        order.orderId,
+        order.orderGroupCode,
+        order.userInfo?.fullName,
+        order.userInfo?.phone,
+        order.restaurantInfo?.name,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      const matchesKeyword = keyword ? haystack.includes(keyword) : true;
+      return matchesStatus && matchesType && matchesKeyword;
+    });
+
+    const totalRevenue = filtered.reduce((sum, item) => sum + Number(item.totalAmount || 0), 0);
+    const stats = {
+      totalOrders: filtered.length,
+      pendingOrders: filtered.filter((item) => item.orderStatus === "pending").length,
+      dineInOrders: filtered.filter((item) => item.orderType === "dine_in").length,
+      deliveryOrders: filtered.filter((item) => item.orderType === "delivery").length,
+      totalRevenue,
+      totalDeposits: filtered.reduce((sum, item) => sum + Number(item.depositAmount || 0), 0),
+    };
+
+    const paged = paginate(filtered, page, limit);
     res.json({
-      orders,
+      orders: paged.items,
+      pagination: paged.pagination,
+      stats,
     });
   } catch (err) {
     console.error(err);
@@ -32,12 +84,16 @@ module.exports.authenOrder = async (req, res) => {
       }
 
       if (currentOrder.orderType === "dine_in" && currentOrder.tableInfo?.tableNumber) {
-        const tablePayload = status === "completed"
-          ? { status: "available", currentOrderId: "" }
-          : { status: "occupied", currentOrderId: String(currentOrder._id) };
+        const tablePayload =
+          status === "completed" || status === "cancelled"
+            ? { status: "available", currentOrderId: "" }
+            : { status: "occupied", currentOrderId: String(currentOrder._id) };
 
         await Table.updateOne(
-          { tableNumber: currentOrder.tableInfo.tableNumber },
+          {
+            restaurant_id: currentOrder.restaurant_id,
+            tableNumber: currentOrder.tableInfo.tableNumber,
+          },
           tablePayload
         );
       }

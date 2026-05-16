@@ -69,21 +69,9 @@ const RestaurantProducts = () => {
 
   return (
     <div className="restaurant-products">
-      {/* {restaurant && (
-        <div className="restaurant-header">
-          <h2>{restaurant.name}</h2>
-          <p className="address">{restaurant.address}</p>
-          <p className="phone">{restaurant.phone}</p>
-        </div>
-      )} */}
-
-      <div className="topbar">
-        <span>{restaurant.name}</span>
-        <span className="address">ADDRESS: {restaurant.address}</span>
-        <span className="phone">CSKH-TEL: {restaurant.phone}</span>
-        {/* <Link to="/cart/checkout?mode=table" className="no-underline">Dat ban ngay</Link> */}
-      </div>
-
+    
+{/* 
+      <CardProducts data={products} restaurantId={restaurantId} /> */}
       <header className="app-header">
         <div className="brand-group">
           <Link to="/" className="logo no-underline">{restaurant.name}</Link>
@@ -153,15 +141,6 @@ const RestaurantProducts = () => {
             </div>
 
           </div>
-
-          {/* <button
-            type="button"
-            className="mobile-menu-toggle"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label="Mo menu"
-          >
-            <i className="bi bi-list" />
-          </button> */}
         </div>
 
 
@@ -169,21 +148,6 @@ const RestaurantProducts = () => {
       </header>
 
 
-      {/* <div className="products-grid">
-        {products.map((product) => (
-          <div key={product._id} className="product-card">
-            <img src={product.img || "/default-food.jpg"} alt={product.name} className="product-image" loading="lazy" />
-            <div className="product-info">
-              <h3>{product.name}</h3>
-              <p className="price">{Number(product.price || 0).toLocaleString("vi-VN")} đ</p>
-              <p className="description">{product.description || "Không có mô tả"}</p>
-            </div>
-            <button className="btn btn-primary" disabled={addingId === product._id} onClick={() => handleAddToCart(product._id)}>
-              {addingId === product._id ? "Đang thêm..." : "Thêm vào giỏ"}
-            </button>
-          </div>
-        ))}
-      </div> */}
         <CardProducts data={products} />
 
      

@@ -8,41 +8,44 @@ export default function CartPage() {
   const { cartItems, totalQuantity, fetchCart, loading, updateQuantity } = useCart();
   const navigate = useNavigate();
 
+  const groups = Array.isArray(cartItems?.restaurantGroups) ? cartItems.restaurantGroups : [];
+
   const handleRemove = async (id) => {
     const res = await fetch(`/api/cart/delete/${id}`, {
       method: "DELETE",
+      credentials: "include",
     });
 
     if (res.status === 401) {
-      notifyApp("Vui lòng đăng nhập để thao tác với giỏ hàng", "info");
+      notifyApp("Vui long dang nhap de thao tac voi gio hang", "info");
       navigate("/user/auth/login");
       return;
     }
 
     if (res.ok) {
-      await fetchCart(); 
-      notifyApp("Đã xóa sản phẩm khỏi giỏ hàng", "success");
+      await fetchCart();
+      notifyApp("Da xoa san pham khoi gio hang", "success");
       return;
     }
 
-    notifyApp("Không thể xóa sản phẩm khỏi giỏ hàng", "error");
+    notifyApp("Khong the xoa san pham khoi gio hang", "error");
   };
 
   const handleUpdateQuantity = async (productId, newQuantity) => {
     if (newQuantity < 1) return;
     const success = await updateQuantity(productId, newQuantity);
     if (success) {
-      notifyApp("Cập nhật số lượng thành công", "success");
+      notifyApp("Cap nhat so luong thanh cong", "success");
     } else {
-      notifyApp("Không thể cập nhật số lượng", "error");
+      notifyApp("Khong the cap nhat so luong", "error");
     }
   };
 
   if (loading) {
-    return <p>Đang tải giỏ hàng...</p>;
+    return <p>Dang tai gio hang...</p>;
   }
 
-  if (cartItems.length === 0) {
+  if (!groups.length) {
     return (
       <div className="page-stack">
         <section className="success-shell">
@@ -50,15 +53,15 @@ export default function CartPage() {
             <div className="success-icon">
               <i className="bi bi-cart-x" />
             </div>
-            <p className="eyebrow">Giỏ hàng trống</p>
-            <h1>Bạn chưa thêm món ăn nào.</h1>
+            <p className="eyebrow">Gio hang trong</p>
+            <h1>Ban chua them mon an nao.</h1>
 
             <div className="empty-state-actions">
               <Link to="/products" className="primary-button no-underline ">
-                Xem sản phẩm
+                Xem san pham
               </Link>
               <Link to="/" className="secondary-button no-underline ">
-                Về trang chủ
+                Ve trang chu
               </Link>
             </div>
           </article>
@@ -73,61 +76,77 @@ export default function CartPage() {
     <section className="section-shell">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Giỏ hàng của bạn</p>
-          <h2>Rà soát lại món trước khi đặt hàng</h2>
+          <p className="eyebrow">Gio hang cua ban</p>
+          <h2>Ban co the dat mon tu nhieu nha hang trong cung mot lan thanh toan</h2>
         </div>
       </div>
 
-      <div className="order-layout">
-        <div className="table-card">
-          <div className="order-list">
-            {cartItems.map((item, index) => (
-              <article className="order-item" key={`${item.product_id}-${index}`}>
-                <img src={item.productInfo?.img} alt={item.productInfo?.name} />
-                <div className="order-item-copy">
-                  <Link to={`/products/detail/${item.productInfo?.slug}`}>
-                    {item.productInfo?.name}
-                  </Link>
-                  <div className="quantity-controls">
-                    <button
-                      type="button"
-                      onClick={() => handleUpdateQuantity(item.product_id, item.quantity - 1)}
-                      disabled={item.quantity <= 1}
-                    >
-                      -
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleUpdateQuantity(item.product_id, item.quantity + 1)}
-                    >
-                      +
-                    </button>
+      <div className="page-stack">
+        {groups.map((group) => (
+          <div className="table-card" key={group.restaurantId || group.restaurantName}>
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">{group.restaurantName}</p>
+                <h3>{group.totalQuantity} mon - {formatCurrency(group.totalAmount)}</h3>
+              </div>
+              <div className="admin-muted">
+                {Number(group.ratingAverage || 0).toFixed(1)} sao • {group.orderCount || 0} luot mua
+              </div>
+            </div>
+
+            <div className="order-list">
+              {group.products.map((item, index) => (
+                <article className="order-item" key={`${item.product_id}-${index}`}>
+                  <img src={item.productInfo?.img} alt={item.productInfo?.name} />
+                  <div className="order-item-copy">
+                    <Link to={`/products/detail/${item.productInfo?.slug}`}>
+                      {item.productInfo?.name}
+                    </Link>
+                    <div className="quantity-controls">
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateQuantity(item.product_id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleUpdateQuantity(item.product_id, item.quantity + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <strong>{formatCurrency(calculateLineTotal(item))}</strong>
-                <button
-                  type="button"
-                  className="danger-link"
-                  onClick={() => handleRemove(item.product_id)}
-                >
-                  Xóa
-                </button>
-              </article>
-            ))}
+                  <strong>{formatCurrency(calculateLineTotal(item))}</strong>
+                  <button type="button" className="danger-link" onClick={() => handleRemove(item.product_id)}>
+                    Xoa
+                  </button>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
+        ))}
 
         <aside className="summary-card">
-          <h3>Tổng kết đơn hàng</h3>
+          <h3>Tong ket don hang</h3>
 
           <div className="summary-row">
-            <span>Số món</span>
+            <span>So mon</span>
             <strong>{totalQuantity}</strong>
+          </div>
+          <div className="summary-row">
+            <span>So nha hang</span>
+            <strong>{groups.length}</strong>
+          </div>
+          <div className="summary-row">
+            <span>Tam tinh</span>
+            <strong>{formatCurrency(cartItems?.totalCartPrice)}</strong>
           </div>
 
           <Link to="/cart/checkout" className="primary-button full-width no-underline ">
-            Đi đến thanh toán
+            Di den thanh toan
           </Link>
         </aside>
       </div>
