@@ -3,13 +3,14 @@ import { useCart } from "../mixi/cart/CartContext";
 import { calculateLineTotal, formatCurrency } from "../../utils/shop";
 import FeaturedProducts from "../MainContents/products/featuredProducts";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import LoadingButtonMini from "../mixi/LoadingButtonMini";
 
 export default function CartPage() {
   const { cartItems, totalQuantity, fetchCart, loading, updateQuantity } = useCart();
   const navigate = useNavigate();
 
   const groups = Array.isArray(cartItems?.restaurantGroups) ? cartItems.restaurantGroups : [];
-
+  console.log("groups", groups)
   const handleRemove = async (id) => {
     const res = await fetch(`/api/cart/delete/${id}`, {
       method: "DELETE",
@@ -77,7 +78,7 @@ export default function CartPage() {
       <div className="section-heading">
         <div>
           <p className="eyebrow">Gio hang cua ban</p>
-          <h2>Ban co the dat mon tu nhieu nha hang trong cung mot lan thanh toan</h2>
+          <h2 className="eyebrow">Bạn có thể đặt nhiều nhà hàng trong 1 lân thanh toán</h2>
         </div>
       </div>
 
@@ -92,6 +93,13 @@ export default function CartPage() {
               <div className="admin-muted">
                 {Number(group.ratingAverage || 0).toFixed(1)} sao • {group.orderCount || 0} luot mua
               </div>
+              <div>
+                <Link to={`/cart/checkoutshop?shop=${group.restaurantId}`} className=" no-underline" style={{color:"blue"}}>
+                  Mua Ngay
+                </Link>
+              </div>
+
+
             </div>
 
             <div className="order-list">
@@ -102,27 +110,52 @@ export default function CartPage() {
                     <Link to={`/products/detail/${item.productInfo?.slug}`}>
                       {item.productInfo?.name}
                     </Link>
+                    <div className="admin-muted">
+                      <span>
+                        {new Date(item.productInfo.createdAt).toLocaleString("vi-VN", {
+                          timeZone: "Asia/Ho_Chi_Minh",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
                     <div className="quantity-controls">
-                      <button
+                      <LoadingButtonMini
                         type="button"
                         onClick={() => handleUpdateQuantity(item.product_id, item.quantity - 1)}
                         disabled={item.quantity <= 1}
                       >
                         -
-                      </button>
+                      </LoadingButtonMini>
                       <span>{item.quantity}</span>
-                      <button
+                      <LoadingButtonMini
                         type="button"
                         onClick={() => handleUpdateQuantity(item.product_id, item.quantity + 1)}
                       >
                         +
-                      </button>
+                      </LoadingButtonMini>
                     </div>
                   </div>
                   <strong>{formatCurrency(calculateLineTotal(item))}</strong>
-                  <button type="button" className="danger-link" onClick={() => handleRemove(item.product_id)}>
-                    Xoa
-                  </button>
+                  <LoadingButtonMini
+                    onClick={() => handleRemove(item.product_id)}
+                    // isLoading={loadingStatusIds.has(item._id)}
+                    loadingText="..."
+                    variant="ghost"
+                    style={{
+                      color: item.status === "active" ? "green" : "red",
+                      padding: "4px 8px",
+                      border: "none",
+                      background: "none",
+                    }}
+                  >Xoa</LoadingButtonMini>
+                  {/* <button type="button" className="danger-link" >
+                    
+                  </button> */}
                 </article>
               ))}
             </div>

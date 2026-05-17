@@ -27,10 +27,10 @@ function FeaturedProducts() {
       <section className="section-shell">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Nha hang duoc danh gia cao</p>
-            <h2>Goi y uu tien tu cac quan ban tot</h2>
+            <p className="eyebrow">Nhà hàng được đánh giá cao</p>
+           
           </div>
-          <p>San pham cua nha hang co rating va luot mua cao duoc day len trang chu.</p>
+        
         </div>
         <div className="restaurant-grid">
           {highlightedRestaurants.map((restaurant) => (

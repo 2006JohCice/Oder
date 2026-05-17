@@ -1,453 +1,155 @@
+const bcrypt = require("bcryptjs");
+
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
 const Restaurant = require("../../models/restaurant.model");
 const RestaurantFeedback = require("../../models/restaurant-feedback.model");
 const RestaurantReport = require("../../models/restaurant-report.model");
+
 const generateHelper = require("../../helpers/generate");
 const sendMailHelper = require("../../helpers/sendMail");
-const md5 = require("md5");
-// [GET]  api/user
-module.exports.getUser = async (req, res) => {
-  const users = await User.find({ deleted: false }).select(
-    "-password -tokenUser"
-  );
-  return res.status(200).json({ users });
-};
-//Create OTP For Register
-//[POST] api/user/register/passwordOtp
-module.exports.passwordRegisterOtp = async (req, res) => {
-  console.log("Password Register OTP:", req.body);
-  const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/;
-  if (
-    !req.body ||
-    !req.body.fullName ||
-    !req.body.email ||
-    !req.body.password ||
-    !req.body.confirmPassword
-  ) {
-    return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
-  }
-  if (req.body.password !== req.body.confirmPassword) {
-    return res.status(400).json({ messagePassword: "Mật Khẩu Không Khớp" });
-  }
-  if(!req.body.email.includes("@")){
-    return res.status(400).json({ message: "Email Không Hợp Lệ" });
-  }
-  if(!regex.test(req.body.password)){
-    return res.status(400).json({ messagePassword: "Mật Khẩu Phải Có Ít Nhất 6 Ký Tự, Gồm Ít Nhất 1 Ký Tự Hoa Và 1 Ký Tự Đặc Biệt" });
-  }
- 
 
 
-  const existEmail = await User.find({
-    email: req.body.email,
-    deleted: false,
+
+const passwordRegex =
+  /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/;
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+
+const escapeRegExp = (value = "") =>
+  String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const sendResponse = (
+  res,
+  status = 200,
+  success = true,
+  message = "",
+  data = {}
+) => {
+  return res.status(status).json({
+    success,
+    message,
+    ...data,
   });
-
-  if (existEmail.length > 0) {
-    return res.status(400).json({ message: "Email Ä‘Ã£ tá»“n táº¡i" });
-  }
-  const otpRamdon = generateHelper.generateRandomNumber(6);
-
-  const objectForgotPassword = {
-    email: req.body.email,
-    otp: otpRamdon,
-    type: "register",
-    expireAt: Date.now() + 60 * 1000,
-  };
-  console.log("obj otp password", objectForgotPassword)
-  // console.log("Forgot Password Object:", otpRamdon);
-  const forgotPassword = new ForgotPassword(objectForgotPassword);
-  await forgotPassword.save();
-  const subject = "YÃªu Táº¡o TÃ i Khoáº£n Má»›i Vá»›i Order Local ";
-  const html = `
-<!DOCTYPE html>
-<html lang="vi">
-
-<head>
-  <meta charset="UTF-8">
-</head>
-
-<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, sans-serif;">
-
-  <table width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6f8; padding:20px;">
-    <tr>
-      <td align="center">
-
-        <table width="500" cellspacing="0" cellpadding="0"
-          style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-
-          <!-- Header Image -->
-          <tr>
-            <td>
-              <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="OTP" width="100%" style="    /* right: 31%; */
-    left: 45%;
-    justify-content: center;
-    text-align: center;
-    position: relative;
-    height: 50px;
-    width: 50px;
-    display: grid;
-    top: 6px;">
-            </td>
-          </tr>
-
-          <!-- Content -->
-          <tr>
-            <td style="padding:30px; text-align:center;">
-
-              <h2 style="color:#333; margin-bottom:10px;">XÃ¡c thá»±c tÃ i khoáº£n</h2>
-
-              <p style="color:#666; font-size:14px;">
-                Xin chÃ o,<br>
-                ÄÃ¢y lÃ  mÃ£ OTP cá»§a báº¡n:
-              </p>
-
-              <div style="margin:20px 0;">
-                <span
-                  style="display:inline-block; background:#4CAF50; color:#fff; font-size:28px; letter-spacing:5px; padding:15px 25px; border-radius:8px; font-weight:bold;">
-                  ${otpRamdon}
-                </span>
-              </div>
-
-              <p style="color:#666; font-size:14px;">
-                MÃ£ OTP sáº½ háº¿t háº¡n sau <b>1 phÃºt</b>.
-              </p>
-
-              <p style="color:#999; font-size:12px; margin-top:20px;">
-                Náº¿u báº¡n khÃ´ng yÃªu cáº§u táº¡o tÃ i khoáº£n, vui lÃ²ng bá» qua email nÃ y.
-              </p>
-
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="background:#f0f0f0; padding:15px; text-align:center;">
-              <p style="margin:0; font-size:12px; color:#888;">
-                Â© ORDER SHOP
-              </p>
-            </td>
-          </tr>
-
-        </table>
-
-      </td>
-    </tr>
-  </table>
-
-</body>
-
-</html>
-`;
-
-  // sendMailHelper.sendMail( req.body.email, subject, html);
-  try {
-    await sendMailHelper.sendMail(req.body.email, subject, html);
-
-    return res.status(200).json({
-      message: "ÄÃ£ gá»­i OTP vá» email"
-    });
-
-  } catch (error) {
-    return res.status(500).json({
-      message: "Gá»­i email tháº¥t báº¡i"
-    });
-  }
-
-}
-// [POST] api/user/register
-module.exports.register = async (req, res) => {
-  console.log("Register user:", req.body);
-  if (
-    !req.body ||
-    !req.body.fullName ||
-    !req.body.email ||
-    !req.body.password ||
-    !req.body.confirmPassword ||
-    !req.body.otp
-  ) {
-    return res.status(400).json({ message: "Nháº­p ThÃ´ng Tin Äáº§y Äá»§" });
-  }
-  if (req.body.password !== req.body.confirmPassword) {
-    return res.status(400).json({ messagePassword: "Máº­t Kháº©u KhÃ´ng Khá»›p" });
-  }
-
-  const existEmail = await User.find({
-    email: req.body.email,
-    deleted: false,
-  });
-
-  if (existEmail.length > 0) {
-    return res.status(400).json({ message: "Email Ä‘Ã£ tá»“n táº¡i" });
-  }
-
-  const userRegister = await ForgotPassword.findOne({
-    email: req.body.email,
-    otp: req.body.otp,
-    type: "register",
-  });
-  if (!userRegister) {
-    return res.status(400).json({
-      message: "XÃ¡c Thá»±c KhÃ´ng ThÃ nh CÃ´ng Kiá»ƒm Tra Láº¡i Email Hoáº·c OTP",
-    });
-  } else {
-    req.body.password = md5(req.body.password);
-
-    const user = new User(req.body);
-    await user.save();
-    res.cookie("tokenUser", user.tokenUser, {
-      httpOnly: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
-    console.log("Newly registered user:", user);
-    return res.status(201).json({ message: "ÄÄƒng kÃ½ thÃ nh cÃ´ng" });
-  }
 };
 
-// [POST] api/user/login
-module.exports.login = async (req, res) => {
-  console.log("Login user:", req.body);
-  if (!req.body || !req.body.email || !req.body.password) {
-    return res.status(400).json({ message: "Nháº­p ThÃ´ng Tin Äáº§y Äá»§" });
-  }
+const generateOtpEmailTemplate = (otp) => {
+  return `
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
 
-  const user = await User.findOne({
-    email: req.body.email,
-    password: md5(req.body.password),
-    deleted: false,
-  });
+  <body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
 
-  if (!user) {
-    return res.status(400).json({ message: "Email hoáº·c Máº­t Kháº©u KhÃ´ng ÄÃºng" });
-  }
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" style="padding:20px;">
 
-  if (user.status !== "active") {
-    return res
-      .status(400)
-      .json({ alerts: "TÃ i khoáº£n cá»§a báº¡n khÃ´ng cÃ²n hoáº¡t Ä‘á»™ng" });
-  }
-  res.cookie("tokenUser", user.tokenUser, {
-    httpOnly: true,
-    secure: false,        // dev localhost
-    sameSite: "lax",
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
-  console.log("Logged in user:", user);
-  return res.status(200).json({ message: "ÄÄƒng nháº­p thÃ nh cÃ´ng" });
-};
-// [GET] api/user/logout
-module.exports.logout = async (req, res) => {
-  res.clearCookie("tokenUser");
-  return res.status(200).json({ message: "ÄÄƒng xuáº¥t thÃ nh cÃ´ng" });
-};
-// Create OTP For Forgot Password
-//[POST] /api/user/password/forgot
-module.exports.forgotPassword = async (req, res) => {
-  const { email, password, confirmPassword, otp } = req.body;
-  if (!email || !confirmPassword || !password) {
-    return res.status(400).json({ message: "Nháº­p ThÃ´ng Tin Äáº§y Äá»§" });
-  }
-  if (password != confirmPassword) {
-    return res.status(400).json({ messagePassword: "Máº­t Kháº©u KhÃ´ng Khá»›p" });
-  }
-  const user = await User.findOne({
-    email: email,
-    deleted: false,
-  });
-  // console.log(user)
-  if (!user) {
-    return res.status(400).json({
-      alerts: "TÃ i Khoáº£n Email KhÃ´ng Tá»“n Táº¡i",
-    });
-  }
-  const otpRamdon = generateHelper.generateRandomNumber(6);
-  const objectForgotPassword = {
-    email: email,
-    otp: otpRamdon,
-    expireAt: Date.now() + 60 * 1000,
-  };
+          <table width="500" cellpadding="0" cellspacing="0"
+            style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.1);">
 
-  // console.log(objectForgotPassword)
-  const forgotPassword = new ForgotPassword(objectForgotPassword);
-  await forgotPassword.save();
-  const subject = "YÃªu Cáº§u Äáº·t Láº¡i Máº­t Kháº©u";
-  // const html = `MÃ£ OTP cá»§a báº¡n lÃ : <b>${otpRamdon}</b>. MÃ£ OTP nÃ y sáº½ háº¿t háº¡n sau 1 phÃºt. Náº¿u báº¡n khÃ´ng yÃªu cáº§u Ä‘áº·t láº¡i máº­t kháº©u, vui lÃ²ng bá» qua email nÃ y.`;
-  const html = `
-<!DOCTYPE html>
-<html lang="vi">
+            <tr>
+              <td style="padding:30px;text-align:center;">
 
-<head>
-  <meta charset="UTF-8">
-</head>
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png"
+                  width="60"
+                  alt="OTP"
+                />
 
-<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, sans-serif;">
+                <h2 style="color:#333;">
+                  Xác thực tài khoản
+                </h2>
 
-  <table width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6f8; padding:20px;">
-    <tr>
-      <td align="center">
+                <p style="color:#666;">
+                  Đây là mã OTP của bạn:
+                </p>
 
-        <table width="500" cellspacing="0" cellpadding="0"
-          style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                <div style="margin:20px 0;">
+                  <span style="
+                    display:inline-block;
+                    background:#4CAF50;
+                    color:#fff;
+                    font-size:28px;
+                    letter-spacing:5px;
+                    padding:15px 25px;
+                    border-radius:8px;
+                    font-weight:bold;
+                  ">
+                    ${otp}
+                  </span>
+                </div>
 
-          <!-- Header Image -->
-          <tr>
-            <td>
-              <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="OTP" width="100%" style="    /* right: 31%; */
-    left: 45%;
-    justify-content: center;
-    text-align: center;
-    position: relative;
-    height: 50px;
-    width: 50px;
-    display: grid;
-    top: 6px;">
-            </td>
-          </tr>
+                <p style="color:#666;">
+                  Mã OTP sẽ hết hạn sau <b>1 phút</b>.
+                </p>
 
-          <!-- Content -->
-          <tr>
-            <td style="padding:30px; text-align:center;">
+                <p style="font-size:12px;color:#999;">
+                  Nếu bạn không yêu cầu thao tác này, vui lòng bỏ qua email.
+                </p>
 
-              <h2 style="color:#333; margin-bottom:10px;">XÃ¡c thá»±c tÃ i khoáº£n</h2>
+              </td>
+            </tr>
 
-              <p style="color:#666; font-size:14px;">
-                Xin chÃ o ,<br>
-                ÄÃ¢y lÃ  mÃ£ OTP cá»§a báº¡n:
-              </p>
+            <tr>
+              <td style="background:#f0f0f0;padding:15px;text-align:center;">
+                <p style="margin:0;font-size:12px;color:#888;">
+                  © ORDER SHOP
+                </p>
+              </td>
+            </tr>
 
-              <div style="margin:20px 0;">
-                <span
-                  style="display:inline-block; background:#4CAF50; color:#fff; font-size:28px; letter-spacing:5px; padding:15px 25px; border-radius:8px; font-weight:bold;">
-                  ${otpRamdon}
-                </span>
-              </div>
+          </table>
 
-              <p style="color:#666; font-size:14px;">
-                MÃ£ OTP sáº½ háº¿t háº¡n sau <b>1 phÃºt</b>.
-              </p>
+        </td>
+      </tr>
+    </table>
 
-              <p style="color:#999; font-size:12px; margin-top:20px;">
-                Náº¿u báº¡n khÃ´ng yÃªu cáº§u táº¡o tÃ i khoáº£n, vui lÃ²ng bá» qua email nÃ y.
-              </p>
-
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="background:#f0f0f0; padding:15px; text-align:center;">
-              <p style="margin:0; font-size:12px; color:#888;">
-                Â© ORDER SHOP
-              </p>
-            </td>
-          </tr>
-
-        </table>
-
-      </td>
-    </tr>
-  </table>
-
-</body>
-
-</html>
-`;
-
-  sendMailHelper.sendMail(email, subject, html);
-  // return res.status(200).json({
-  //   message: "ÄÃ£ gá»­i OTP vá» email"
-  // });
+  </body>
+  </html>
+  `;
 };
 
-//[POST] /user/password/otp
-module.exports.otpPasswordPost = async (req, res) => {
-  const { email, password, confirmPassword, otp } = req.body;
-  if (!email || !confirmPassword || !password || !otp) {
-    return res.status(400).json({ message: "Nhập Thông Tin Đầy Đủ" });
-  }
-  if (password != confirmPassword) {
-    return res.status(400).json({ messagePassword: "Mật Khẩu Không Khớp" });
-  }
-  const user = await ForgotPassword.findOne({
-    email: email,
-    otp: otp,
-  });
-  // console.log(user)
-  if (!user) {
-    return res.status(400).json({
-      alerts: "Xác Thực Không Thành Công Kiểm Tra Lại Email, Mật Khẩu Hoặc OTP",
-    });
-  } else {
-    const users = await User.updateOne(
-      {
-        email: email,
-      },
-      {
-        password: md5(password),
-      }
-    );
-    // res.cookie("tokenUser", user.tokenUser);
-
-    return res.status(200).json({});
+const validateRegister = ({
+  fullName,
+  email,
+  password,
+  confirmPassword,
+}) => {
+  if (!fullName || !email || !password || !confirmPassword) {
+    return "Nhập đầy đủ thông tin";
   }
 
+  if (!emailRegex.test(email)) {
+    return "Email không hợp lệ";
+  }
+
+  if (password !== confirmPassword) {
+    return "Mật khẩu không khớp";
+  }
+
+  if (!passwordRegex.test(password)) {
+    return "Mật khẩu phải có ít nhất 6 ký tự, gồm 1 chữ hoa và 1 ký tự đặc biệt";
+  }
+
+  return null;
 };
-
-//[GET] /api/user/me
-module.exports.infoUser = async (req, res) => {
-  if (res.locals.user) {
-    res.json({ user: res.locals.user });
-  } else {
-    res.status(401).json({ message: "Chưa đăng nhập" });
-  }
-  console.log("check user", res.locals.user);
-};
-
-// [PATCH] /api/user/profile
-module.exports.updateProfile = async (req, res) => {
-  try {
-    const currentUser = res.locals.user;
-    if (!currentUser) {
-      return res.status(401).json({ message: "Chưa đăng nhập" });
-    }
-
-    const { fullname, phone, avatar } = req.body || {};
-    const updateData = {};
-
-    if (typeof fullname === "string") {
-      updateData.fullname = fullname.trim();
-    }
-
-    if (typeof phone === "string") {
-      updateData.phone = phone.trim();
-    }
-
-    if (typeof avatar === "string") {
-      updateData.avatar = avatar.trim();
-    }
-
-    await User.updateOne({ _id: currentUser._id }, updateData);
-    const user = await User.findById(currentUser._id).select("-password");
-
-    return res.status(200).json({
-      message: "Cập nhật thông tin thành công",
-      user,
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "Lỗi máy chủ" });
-  }
-};
-
-const escapeRegExp = (value = "") => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const findRestaurantByInput = async (restaurantInput) => {
   if (!restaurantInput) return null;
 
   const normalized = String(restaurantInput).trim();
-  if (!normalized) return null;
 
-  const orConditions = [{ name: new RegExp(`^${escapeRegExp(normalized)}$`, "i") }];
+  const orConditions = [
+    {
+      name: new RegExp(`^${escapeRegExp(normalized)}$`, "i"),
+    },
+  ];
+
   if (/^[0-9a-fA-F]{24}$/.test(normalized)) {
     orConditions.push({ _id: normalized });
   }
@@ -459,10 +161,17 @@ const findRestaurantByInput = async (restaurantInput) => {
 };
 
 const recalculateRestaurantRating = async (restaurantId) => {
-  const feedbacks = await RestaurantFeedback.find({ restaurant_id: restaurantId });
+  const feedbacks = await RestaurantFeedback.find({
+    restaurant_id: restaurantId,
+  });
+
   const ratingCount = feedbacks.length;
+
   const ratingAverage = ratingCount
-    ? feedbacks.reduce((sum, item) => sum + Number(item.rating || 0), 0) / ratingCount
+    ? feedbacks.reduce(
+        (sum, item) => sum + Number(item.rating || 0),
+        0
+      ) / ratingCount
     : 0;
 
   await Restaurant.updateOne(
@@ -474,72 +183,618 @@ const recalculateRestaurantRating = async (restaurantId) => {
   );
 };
 
+// ======================
+// [GET] api/user
+// ======================
+
+module.exports.getUser = async (req, res) => {
+  try {
+    const users = await User.find({
+      deleted: false,
+    }).select("-password -tokenUser");
+
+    return sendResponse(res, 200, true, "Lấy danh sách user thành công", {
+      users,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+// ======================
+// [POST] api/user/register/passwordOtp
+// ======================
+
+module.exports.passwordRegisterOtp = async (req, res) => {
+  try {
+    const {
+      fullName,
+      email,
+      password,
+      confirmPassword,
+    } = req.body;
+
+    const validateMessage = validateRegister({
+      fullName,
+      email,
+      password,
+      confirmPassword,
+    });
+
+    if (validateMessage) {
+      return sendResponse(res, 400, false, validateMessage);
+    }
+
+    const existEmail = await User.findOne({
+      email,
+      deleted: false,
+    });
+
+    if (existEmail) {
+      return sendResponse(res, 400, false, "Email đã tồn tại");
+    }
+
+    const otpRandom = generateHelper.generateRandomNumber(6);
+
+    await ForgotPassword.create({
+      email,
+      otp: otpRandom,
+      type: "register",
+      expireAt: Date.now() + 60 * 1000,
+    });
+
+    const subject = "Yêu cầu tạo tài khoản mới";
+
+    const html = generateOtpEmailTemplate(otpRandom);
+
+    await sendMailHelper.sendMail(email, subject, html);
+
+    return sendResponse(
+      res,
+      200,
+      true,
+      "Đã gửi OTP về email"
+    );
+  } catch (error) {
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+// ======================
+// [POST] api/user/register
+// ======================
+
+module.exports.register = async (req, res) => {
+  try {
+    const {
+      fullName,
+      email,
+      password,
+      confirmPassword,
+      otp,
+    } = req.body;
+
+    const validateMessage = validateRegister({
+      fullName,
+      email,
+      password,
+      confirmPassword,
+    });
+
+    if (validateMessage) {
+      return sendResponse(res, 400, false, validateMessage);
+    }
+
+    if (!otp) {
+      return sendResponse(res, 400, false, "Vui lòng nhập OTP");
+    }
+
+    const existEmail = await User.findOne({
+      email,
+      deleted: false,
+    });
+
+    if (existEmail) {
+      return sendResponse(res, 400, false, "Email đã tồn tại");
+    }
+
+    const userRegister = await ForgotPassword.findOne({
+      email,
+      otp,
+      type: "register",
+    });
+
+    if (!userRegister) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "OTP không hợp lệ hoặc đã hết hạn"
+      );
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      fullName,
+      email,
+      password: hashPassword,
+    });
+
+    await user.save();
+
+    res.cookie("tokenUser", user.tokenUser, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+
+    return sendResponse(
+      res,
+      201,
+      true,
+      "Đăng ký thành công"
+    );
+  } catch (error) {
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+// ======================
+// [POST] api/user/login
+// ======================
+
+module.exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Nhập đầy đủ thông tin"
+      );
+    }
+
+    const user = await User.findOne({
+      email,
+      deleted: false,
+    });
+
+    if (!user) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Email hoặc mật khẩu không đúng"
+      );
+    }
+
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!isMatch) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Email hoặc mật khẩu không đúng"
+      );
+    }
+
+    if (user.status !== "active") {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Tài khoản của bạn đã bị khóa"
+      );
+    }
+
+    res.cookie("tokenUser", user.tokenUser, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+
+    return sendResponse(
+      res,
+      200,
+      true,
+      "Đăng nhập thành công"
+    );
+  } catch (error) {
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+// ======================
+// [GET] api/user/logout
+// ======================
+
+module.exports.logout = async (req, res) => {
+  res.clearCookie("tokenUser");
+
+  return sendResponse(
+    res,
+    200,
+    true,
+    "Đăng xuất thành công"
+  );
+};
+
+// ======================
+// [POST] api/user/password/forgot
+// ======================
+
+module.exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Vui lòng nhập email"
+      );
+    }
+
+    const user = await User.findOne({
+      email,
+      deleted: false,
+    });
+
+    if (!user) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Email không tồn tại"
+      );
+    }
+
+    const otpRandom = generateHelper.generateRandomNumber(6);
+
+    await ForgotPassword.create({
+      email,
+      otp: otpRandom,
+      type: "forgot",
+      expireAt: Date.now() + 60 * 1000,
+    });
+
+    const subject = "Yêu cầu đặt lại mật khẩu";
+
+    const html = generateOtpEmailTemplate(otpRandom);
+
+    await sendMailHelper.sendMail(email, subject, html);
+
+    return sendResponse(
+      res,
+      200,
+      true,
+      "Đã gửi OTP về email"
+    );
+  } catch (error) {
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+// ======================
+// [POST] /api/user/password/otp
+// ======================
+
+module.exports.otpPasswordPost = async (req, res) => {
+  try {
+    const {
+      email,
+      password,
+      confirmPassword,
+      otp,
+    } = req.body;
+
+    if (!email || !password || !confirmPassword || !otp) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Nhập đầy đủ thông tin"
+      );
+    }
+
+    if (password !== confirmPassword) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Mật khẩu không khớp"
+      );
+    }
+
+    const forgotPassword = await ForgotPassword.findOne({
+      email,
+      otp,
+      type: "forgot",
+    });
+
+    if (!forgotPassword) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "OTP không hợp lệ hoặc đã hết hạn"
+      );
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    await User.updateOne(
+      { email },
+      {
+        password: hashPassword,
+      }
+    );
+
+    return sendResponse(
+      res,
+      200,
+      true,
+      "Đổi mật khẩu thành công"
+    );
+  } catch (error) {
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+// ======================
+// [GET] /api/user/me
+// ======================
+
+module.exports.infoUser = async (req, res) => {
+  try {
+    if (!res.locals.user) {
+      return sendResponse(
+        res,
+        401,
+        false,
+        "Chưa đăng nhập"
+      );
+    }
+
+    return sendResponse(
+      res,
+      200,
+      true,
+      "Lấy thông tin user thành công",
+      {
+        user: res.locals.user,
+      }
+    );
+  } catch (error) {
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+// ======================
+// [PATCH] /api/user/profile
+// ======================
+
+module.exports.updateProfile = async (req, res) => {
+  try {
+    const currentUser = res.locals.user;
+
+    if (!currentUser) {
+      return sendResponse(
+        res,
+        401,
+        false,
+        "Chưa đăng nhập"
+      );
+    }
+
+    const { fullName, phone, avatar } = req.body;
+
+    const updateData = {};
+
+    if (typeof fullName === "string") {
+      updateData.fullName = fullName.trim();
+    }
+
+    if (typeof phone === "string") {
+      updateData.phone = phone.trim();
+    }
+
+    if (typeof avatar === "string") {
+      updateData.avatar = avatar.trim();
+    }
+
+    await User.updateOne(
+      { _id: currentUser._id },
+      updateData
+    );
+
+    const user = await User.findById(currentUser._id)
+      .select("-password");
+
+    return sendResponse(
+      res,
+      200,
+      true,
+      "Cập nhật thông tin thành công",
+      {
+        user,
+      }
+    );
+  } catch (error) {
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+// ======================
+// FEEDBACK
+// ======================
+
 module.exports.submitFeedback = async (req, res) => {
   try {
     const currentUser = res.locals.user;
+
     if (!currentUser) {
-      return res.status(401).json({ message: "Chua dang nhap" });
+      return sendResponse(
+        res,
+        401,
+        false,
+        "Chưa đăng nhập"
+      );
     }
 
-    const { fullname, email, restaurant, sentiment, feedback, rating } = req.body || {};
+    const {
+      fullname,
+      email,
+      restaurant,
+      sentiment,
+      feedback,
+      rating,
+    } = req.body;
+
     if (!feedback || !restaurant) {
-      return res.status(400).json({ message: "Vui long nhap nha hang va noi dung gop y" });
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Vui lòng nhập nhà hàng và nội dung góp ý"
+      );
     }
 
-    const restaurantDoc = await findRestaurantByInput(restaurant);
+    const restaurantDoc =
+      await findRestaurantByInput(restaurant);
+
     if (!restaurantDoc) {
-      return res.status(404).json({ message: "Khong tim thay nha hang" });
+      return sendResponse(
+        res,
+        404,
+        false,
+        "Không tìm thấy nhà hàng"
+      );
     }
 
-    const ratingValue = Number(rating || (sentiment === "bad" ? 2 : 5));
+    const ratingValue = Number(
+      rating || (sentiment === "bad" ? 2 : 5)
+    );
 
     await RestaurantFeedback.create({
       user_id: currentUser._id,
       restaurant_id: restaurantDoc._id,
-      fullname: fullname || currentUser.fullname || "",
+      fullname: fullname || currentUser.fullName || "",
       email: email || currentUser.email || "",
       restaurant: restaurantDoc.name,
       sentiment: sentiment || "good",
       rating: Math.max(1, Math.min(5, ratingValue)),
-      feedback: String(feedback || "").trim(),
+      feedback: String(feedback).trim(),
     });
 
-    await recalculateRestaurantRating(restaurantDoc._id);
-    return res.status(201).json({ message: "Gui gop y thanh cong" });
+    await recalculateRestaurantRating(
+      restaurantDoc._id
+    );
+
+    return sendResponse(
+      res,
+      201,
+      true,
+      "Gửi góp ý thành công"
+    );
   } catch (error) {
-    return res.status(500).json({ message: "Loi may chu" });
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
   }
 };
+
+// ======================
+// REPORT
+// ======================
 
 module.exports.submitReport = async (req, res) => {
   try {
     const currentUser = res.locals.user;
+
     if (!currentUser) {
-      return res.status(401).json({ message: "Chua dang nhap" });
+      return sendResponse(
+        res,
+        401,
+        false,
+        "Chưa đăng nhập"
+      );
     }
 
-    const { fullname, email, restaurant, report, sentiment } = req.body || {};
+    const {
+      fullname,
+      email,
+      restaurant,
+      report,
+      sentiment,
+    } = req.body;
+
     if (!report || !restaurant) {
-      return res.status(400).json({ message: "Vui long nhap nha hang va noi dung bao cao" });
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Vui lòng nhập nhà hàng và nội dung báo cáo"
+      );
     }
 
-    const restaurantDoc = await findRestaurantByInput(restaurant);
+    const restaurantDoc =
+      await findRestaurantByInput(restaurant);
+
     if (!restaurantDoc) {
-      return res.status(404).json({ message: "Khong tim thay nha hang" });
+      return sendResponse(
+        res,
+        404,
+        false,
+        "Không tìm thấy nhà hàng"
+      );
     }
 
     await RestaurantReport.create({
       user_id: currentUser._id,
       restaurant_id: restaurantDoc._id,
-      fullname: fullname || currentUser.fullname || "",
+      fullname: fullname || currentUser.fullName || "",
       email: email || currentUser.email || "",
       restaurant: restaurantDoc.name,
       sentiment: sentiment || "bad",
-      report: String(report || "").trim(),
+      report: String(report).trim(),
     });
 
-    return res.status(201).json({ message: "Gui bao cao thanh cong" });
+    return sendResponse(
+      res,
+      201,
+      true,
+      "Gửi báo cáo thành công"
+    );
   } catch (error) {
-    return res.status(500).json({ message: "Loi may chu" });
+    console.error(error);
+
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
   }
 };

@@ -21,6 +21,7 @@ import FeedBack from "../components/pages/feedback";
 import Report from "../components/pages/Report";
 import Footer from "../components/foot/Footer";
 import Loading from "../utils/Loading";
+import CheckoutCartOneShop from "../components/pages/checkoutCartOneShop";
 function DefaultLayout() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -78,6 +79,7 @@ function DefaultLayout() {
           <Route path="/search" element={<SearchProduct />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/cart/checkout" element={<CheckoutCart />} />
+          <Route path="/cart/checkoutshop" element={<CheckoutCartOneShop />} />
           <Route path="/cart/checkout/success/:orderId" element={<OrderSuccess />} />
           <Route path="/cart/doneOrder" element={<DoneOrder />} />
           <Route path="/restaurants" element={<RestaurantList />} />

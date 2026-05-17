@@ -177,7 +177,7 @@ button:disabled {
 .detail-content h1,
 .success-card h1 {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  /* font-family: Georgia, "Times New Roman", serif; */
   line-height: 1.08;
 }
 

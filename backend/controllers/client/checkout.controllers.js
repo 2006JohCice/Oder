@@ -196,16 +196,24 @@ const updateProductSoldCount = async (products = []) => {
 module.exports.index = async (req, res) => {
   return res.status(200).json({ message: "Checkout ready", depositAmount: DEPOSIT_AMOUNT });
 };
-
 module.exports.order = async (req, res) => {
   const lockedTables = [];
 
   try {
     const cartId = req.cookies.cartId;
-    const cart = await Cart.findOne({ _id: cartId });
 
-    if (!cart || !Array.isArray(cart.products) || cart.products.length === 0) {
-      return res.status(400).json({ message: "Gio hang khong hop le hoac rong" });
+    const cart = await Cart.findOne({
+      _id: cartId,
+    });
+
+    if (
+      !cart ||
+      !Array.isArray(cart.products) ||
+      cart.products.length === 0
+    ) {
+      return res.status(400).json({
+        message: "Giỏ hàng không hợp lệ hoặc đang trống",
+      });
     }
 
     const fallbackUserInfo = {
@@ -214,73 +222,227 @@ module.exports.order = async (req, res) => {
       address: req.body?.address || "",
     };
 
-    const groupRequests = Array.isArray(req.body?.restaurantOrders) ? req.body.restaurantOrders : [];
-    const groupedProducts = await mapProductsByRestaurant(cart.products);
+    const groupRequests = Array.isArray(
+      req.body?.restaurantOrders
+    )
+      ? req.body.restaurantOrders
+      : [];
+
+    const groupedProducts =
+      await mapProductsByRestaurant(
+        cart.products
+      );
 
     if (groupedProducts.length === 0) {
-      return res.status(400).json({ message: "Khong co san pham hop le trong gio hang" });
+      return res.status(400).json({
+        message:
+          "Không có sản phẩm hợp lệ trong giỏ hàng",
+      });
     }
 
-    const orderGroupCode = generateHelper.generateRandomOrderId(8);
+    const orderGroupCode =
+      generateHelper.generateRandomOrderId(
+        8
+      );
+
     const createdOrders = [];
 
     for (const group of groupedProducts) {
-      const requestGroup = ensureGroupRequest(groupRequests, group.restaurantId) || {
-        restaurantId: group.restaurantId,
-        fullName: fallbackUserInfo.fullName,
-        phone: fallbackUserInfo.phone,
-        address: fallbackUserInfo.address,
-        orderType: req.body?.orderType || "dine_in",
-        tableInfo: req.body?.tableInfo || {},
-      };
+      const requestGroup =
+        ensureGroupRequest(
+          groupRequests,
+          group.restaurantId
+        ) || {
+          restaurantId: group.restaurantId,
 
-      const normalizedGroup = validateOrderGroup(group, requestGroup, fallbackUserInfo);
-      if (normalizedGroup.error) {
-        await releaseLockedTables(lockedTables);
-        return res.status(400).json({ message: normalizedGroup.error });
-      }
+          fullName:
+            fallbackUserInfo.fullName,
 
-      const totalAmount = calculateTotal(group.products);
-      const order = new Order({
-        cart_id: cartId,
-        orderGroupCode,
-        restaurant_id: group.restaurantId,
-        restaurantInfo: group.restaurantInfo,
-        orderType: normalizedGroup.orderType,
-        userInfo: normalizedGroup.userInfo,
-        tableInfo: normalizedGroup.tableInfo,
-        relativeContact: normalizedGroup.relativeContact,
-        products: group.products,
-        totalAmount,
-        depositAmount: normalizedGroup.orderType === "dine_in" ? DEPOSIT_AMOUNT : 0,
-        depositStatus: normalizedGroup.orderType === "dine_in" ? "demo_paid" : "not_required",
-        orderId: generateHelper.generateRandomOrderId(5),
-      });
+          phone:
+            fallbackUserInfo.phone,
 
-      if (normalizedGroup.orderType === "dine_in") {
-        const lockResult = await lockTableForSlot(
-          group.restaurantId,
-          normalizedGroup.tableInfo,
-          order._id,
-          normalizedGroup.relativeContact
+          address:
+            fallbackUserInfo.address,
+
+          orderType:
+            req.body?.orderType ||
+            "dine_in",
+
+          tableInfo:
+            req.body?.tableInfo || {},
+        };
+
+      const normalizedGroup =
+        validateOrderGroup(
+          group,
+          requestGroup,
+          fallbackUserInfo
         );
 
+      if (normalizedGroup.error) {
+        await releaseLockedTables(
+          lockedTables
+        );
+
+        return res.status(400).json({
+          message:
+            normalizedGroup.error,
+        });
+      }
+
+      const totalAmount =
+        calculateTotal(group.products);
+
+      /* =========================
+         FIX 9 - CHỐNG TRÙNG BÀN
+      ========================= */
+
+      let bookingSlotKey = null;
+
+      if (
+        normalizedGroup.orderType ===
+        "dine_in"
+      ) {
+        bookingSlotKey =
+          `${normalizedGroup.tableInfo.visitDate}_${normalizedGroup.tableInfo.arrivalTime}`;
+
+        const existedOrder =
+          await Order.findOne({
+            restaurant_id:
+              group.restaurantId,
+
+            orderType: "dine_in",
+
+            bookingSlotKey,
+
+            "tableInfo.tableNumber":
+              normalizedGroup
+                .tableInfo
+                .tableNumber,
+
+            orderStatus: {
+              $nin: [
+                "cancelled",
+                "completed",
+              ],
+            },
+          });
+
+        if (existedOrder) {
+          await releaseLockedTables(
+            lockedTables
+          );
+
+          return res.status(400).json({
+            message:
+              "Bàn vừa được người khác đặt. Vui lòng chọn bàn khác.",
+          });
+        }
+      }
+
+      const order = new Order({
+        cart_id: cartId,
+
+        orderGroupCode,
+
+        restaurant_id:
+          group.restaurantId,
+
+        restaurantInfo:
+          group.restaurantInfo,
+
+        orderType:
+          normalizedGroup.orderType,
+
+        userInfo:
+          normalizedGroup.userInfo,
+
+        tableInfo:
+          normalizedGroup.tableInfo,
+
+        relativeContact:
+          normalizedGroup.relativeContact,
+
+        products: group.products,
+
+        totalAmount,
+
+        depositAmount:
+          normalizedGroup.orderType ===
+          "dine_in"
+            ? DEPOSIT_AMOUNT
+            : 0,
+
+        depositStatus:
+          normalizedGroup.orderType ===
+          "dine_in"
+            ? "demo_paid"
+            : "not_required",
+
+        orderId:
+          generateHelper.generateRandomOrderId(
+            5
+          ),
+
+        /* =========================
+           FIX 8 - BOOKING SLOT KEY
+        ========================= */
+
+        bookingSlotKey,
+      });
+
+      if (
+        normalizedGroup.orderType ===
+        "dine_in"
+      ) {
+        const lockResult =
+          await lockTableForSlot(
+            group.restaurantId,
+
+            normalizedGroup.tableInfo,
+
+            order._id,
+
+            normalizedGroup.relativeContact
+          );
+
         if (lockResult.error) {
-          await releaseLockedTables(lockedTables);
-          return res.status(400).json({ message: lockResult.error });
+          await releaseLockedTables(
+            lockedTables
+          );
+
+          return res.status(400).json({
+            message:
+              lockResult.error,
+          });
         }
 
-        order.tableInfo.area = lockResult.table.area || order.tableInfo.area;
-        order.bookingSlotKey = lockResult.slotKey;
+        order.tableInfo.area =
+          lockResult.table.area ||
+          order.tableInfo.area;
+
+        order.bookingSlotKey =
+          lockResult.slotKey;
+
         lockedTables.push({
-          tableId: lockResult.table._id,
+          tableId:
+            lockResult.table._id,
+
           orderId: order._id,
         });
       }
 
       await order.save();
-      await updateRestaurantStats(group.restaurantId, totalAmount);
-      await updateProductSoldCount(group.products);
+
+      await updateRestaurantStats(
+        group.restaurantId,
+        totalAmount
+      );
+
+      await updateProductSoldCount(
+        group.products
+      );
+
       createdOrders.push(order);
     }
 
@@ -288,24 +450,37 @@ module.exports.order = async (req, res) => {
       { _id: cartId },
       {
         products: [],
+
         restaurant_id: null,
+
         restaurant_ids: [],
       }
     );
 
     return res.status(200).json({
-      message: "Dat hang thanh cong",
-      orderId: createdOrders[0]?._id || "",
+      message:
+        "Đặt hàng thành công",
+
+      orderId:
+        createdOrders[0]?._id || "",
+
       orderGroupCode,
+
       orders: createdOrders,
     });
   } catch (error) {
-    await releaseLockedTables(lockedTables);
+    await releaseLockedTables(
+      lockedTables
+    );
+
     console.error(error);
-    return res.status(500).json({ message: "Khong the tao don hang" });
+
+    return res.status(500).json({
+      message:
+        "Không thể tạo đơn hàng",
+    });
   }
 };
-
 module.exports.success = async (req, res) => {
   const { orderId } = req.params;
   const order = await Order.findOne({ _id: orderId });

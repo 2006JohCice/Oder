@@ -1,36 +1,48 @@
-﻿import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+﻿import "../../css/RestaurantChildrenProducts.css";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { useCart } from "../mixi/cart/CartContext";
-import { Link, useNavigate } from "react-router-dom";
-import "../../css/RestaurantProducts.css";
 import CardProducts from "../mixi/cardProducts/cardProducts";
+
+import "../../css/RestaurantChildrenProducts.css";
 
 const RestaurantProducts = () => {
   const { restaurantId } = useParams();
   const { fetchCart } = useCart();
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
   const [restaurant, setRestaurant] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [addingId, setAddingId] = useState("");
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const fetchRestaurantData = useCallback(async () => {
     setLoading(true);
+
     try {
+      // Restaurant
       const restaurantRes = await fetch("/api/restaurants");
       const restaurantData = await restaurantRes.json();
+
       if (restaurantRes.ok) {
-        const found = (restaurantData.restaurants || []).find((r) => r._id === restaurantId);
-        setRestaurant(found || null);
+        const foundRestaurant = (
+          restaurantData.restaurants || []
+        ).find((item) => item._id === restaurantId);
+
+        setRestaurant(foundRestaurant || null);
       }
 
-      const productsRes = await fetch(`/api/restaurants/${restaurantId}/products`);
+      // Products
+      const productsRes = await fetch(
+        `/api/restaurants/${restaurantId}/products`
+      );
+
       const productsData = await productsRes.json();
+
       if (productsRes.ok) {
         setProducts(productsData.products || []);
       }
     } catch (error) {
-      console.error("Load restaurant products failed", error);
+      console.error("Load restaurant failed", error);
     } finally {
       setLoading(false);
     }
@@ -40,122 +52,148 @@ const RestaurantProducts = () => {
     fetchRestaurantData();
   }, [fetchRestaurantData]);
 
-  const handleAddToCart = async (productId) => {
-    if (addingId) return;
-    setAddingId(productId);
-    try {
-      const res = await fetch(`/api/cart/add/${productId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ quantity: 1 }),
-      });
+  if (loading) {
+    return (
+      <div className="restaurant-children-loading">
+        Đang tải sản phẩm...
+      </div>
+    );
+  }
 
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.message || "Không thể thêm vào giỏ hàng");
-      } else {
-        await fetchCart();
-      }
-    } catch (error) {
-      alert("Lỗi kết nối máy chủ");
-    } finally {
-      setAddingId("");
-    }
-  };
-
-  if (loading) return <div className="loading">Đang tải sản phẩm...</div>;
-  if (!restaurant) return <div className="loading">Không tìm thấy nhà hàng.</div>;
+  if (!restaurant) {
+    return (
+      <div className="restaurant-children-loading">
+        Không tìm thấy nhà hàng
+      </div>
+    );
+  }
 
   return (
-    <div className="restaurant-products">
-    
-{/* 
-      <CardProducts data={products} restaurantId={restaurantId} /> */}
-      <header className="app-header">
-        <div className="brand-group">
-          <Link to="/" className="logo no-underline">{restaurant.name}</Link>
-        </div>
-        <div className="header-actions">
-          <nav className="site-nav">
-            <div className="nav-dropdown">
-              <button type="button" className="nav-link nav-link-button">
-                Danh mục
-                <i className="bi bi-chevron-down" />
-              </button>
+    <div className="restaurant-children-wrapper">
+      <div className="restaurant-children-container">
 
-              <ul className="nav-dropdown-menu">
-                <li>
-                  <Link to="/products" className="nav-dropdown-link no-underline" >
-                    Xem thêm
-                  </Link>
-                </li>
-                {/* {Array.isArray(data) && data.map((item) => <MenuItem key={item._id} item={item} />)} */}
-              </ul>
-            </div>
-
-            <Link to="/" className="nav-link no-underline" >
-              Trang chủ
-            </Link>
-            <Link to="/restaurants" className="nav-link no-underline" >
-              Nhà hàng
-            </Link>
-            <Link to="/products" className="nav-link no-underline" >
-              Món nổi bật
-            </Link>
-            <Link to="/cart/checkout?mode=table" className="nav-link no-underline" >
-              Đặt bàn
-            </Link>
-            <Link to="/cart/doneOrder" className="nav-link no-underline" >
-              Đơn đặt
+        {/* HEADER */}
+        <header className="restaurant-children-header">
+          {/* MENU */}
+          <nav className="restaurant-children-nav">
+            <Link
+              to="/"
+              className="restaurant-children-nav-link"
+            >
+              Trang Chủ
             </Link>
 
+            <Link
+              to="/products"
+              className="restaurant-children-nav-link"
+            >
+              Món Nổi Bật
+            </Link>
+
+            <Link
+              to="/cart/checkout?mode=table"
+              className="restaurant-children-nav-link"
+            >
+              Đồ Uống
+            </Link>
+
+            <Link
+              to="/cart/doneOrder"
+              className="restaurant-children-nav-link"
+            >
+              Đơn Đã Đặt
+            </Link>
           </nav>
-        </div>
 
-        <div className="header-actions">
-          <div className="user-chip" >
-            <i className="bi bi-person-circle" />
+          {/* USER */}
+          <div className="restaurant-children-user">
+            <button
+              className="restaurant-children-user-btn"
+              onClick={() =>
+                setUserMenuOpen(!userMenuOpen)
+              }
+            >
+              <i className="bi bi-person-circle"></i>
 
-            <div className="user-menu-wrap">
-              <button type="button" className="user-menu-toggle" onClick={() => setUserMenuOpen((prev) => !prev)}>
-                Reviewer
-                <i className="bi bi-chevron-down" />
-              </button>
-              {userMenuOpen && (
-                <ul className="user-dropdown-menu">
+              Reviewer
 
-                  <li>
-                    <Link to="/user/reports" className="user-dropdown-link no-underline" onClick={() => setUserMenuOpen(false)}>
-                      Báo Cáo Nhà Hàng
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/user/feedback" className="user-dropdown-link no-underline" title="Góp ý cho nhà hàng">
-                      Góp ý Cho Nhà Hàng
-                    </Link>
-                  </li>
-                </ul>
-              )}
+              <i className="bi bi-chevron-down"></i>
+            </button>
 
+            {userMenuOpen && (
+              <div className="restaurant-children-user-menu">
+                <Link
+                  to="/user/reports"
+                  className="restaurant-children-user-link"
+                  onClick={() =>
+                    setUserMenuOpen(false)
+                  }
+                >
+                  Báo Cáo Nhà Hàng
+                </Link>
+
+                <Link
+                  to="/user/feedback"
+                  className="restaurant-children-user-link"
+                  onClick={() =>
+                    setUserMenuOpen(false)
+                  }
+                >
+                  Góp Ý Nhà Hàng
+                </Link>
+              </div>
+            )}
+          </div>
+        </header>
+
+        {/* HERO */}
+        <section className="restaurant-children-banner">
+          <img
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4"
+            alt=""
+          />
+
+          <div className="restaurant-children-overlay"></div>
+
+          <div className="restaurant-children-banner-content">
+            <h1>{restaurant.name}</h1>
+          </div>
+        </section>
+
+        {/* PRODUCTS */}
+        <section className="restaurant-children-products-section">
+          <div className="restaurant-children-title-wrap">
+            <div>
+              <h2 className="restaurant-children-title">
+                Danh Sách Món Ăn
+              </h2>
+
+              <p className="restaurant-children-desc">
+                Các món ăn nổi bật của nhà hàng
+              </p>
             </div>
 
+            <span>
+              {products.length} món ăn hiện có
+            </span>
           </div>
-        </div>
 
+          {products.length > 0 ? (
+            <CardProducts
+              data={products}
+              fetchCart={fetchCart}
+            />
+          ) : (
+            <div className="restaurant-children-empty">
+              <i className="bi bi-basket"></i>
 
-
-      </header>
-
-
-        <CardProducts data={products} />
-
-     
-      {products.length === 0 && (
-        <div className="no-products">
-          <p>Nhà hàng chưa có sản phẩm nào.</p>
-        </div>
-      )}
+              <p>
+                Nhà hàng chưa có sản phẩm nào
+              </p>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 };

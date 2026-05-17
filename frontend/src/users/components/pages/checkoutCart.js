@@ -42,7 +42,6 @@ export default function CheckoutCart() {
 
   const forceTableMode = new URLSearchParams(location.search).get("mode") === "table";
   const groups = Array.isArray(cartData?.restaurantGroups) ? cartData.restaurantGroups : [];
-
   useEffect(() => {
     const loadCheckoutMeta = async () => {
       const checkoutRes = await fetch("/api/checkout", { credentials: "include" });
@@ -211,6 +210,7 @@ export default function CheckoutCart() {
     });
   };
 
+
   if (!groups.length) {
     return (
       <div className="page-stack">
@@ -235,11 +235,10 @@ export default function CheckoutCart() {
     <section className="section-shell">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Thanh toan moi</p>
-          <h2>Xu ly tung nha hang trong cung mot lan dat, co phan tach ship va dat ban ro rang</h2>
+          <p className="eyebrow">Thanh Toán Ngay</p>
+          <h1>Kiểm tra lại đơn hàng của bạn</h1>
         </div>
       </div>
-
       <form className="page-stack" onSubmit={handleDonePay}>
         {groups.map((group) => {
           const form = forms.find((item) => item.restaurantId === group.restaurantId) || createRestaurantForm(group, forceTableMode);
@@ -253,7 +252,7 @@ export default function CheckoutCart() {
                     <h3>{group.totalQuantity} mon - {formatCurrency(group.totalAmount)}</h3>
                   </div>
                   <div className="admin-muted">
-                    {Number(group.ratingAverage || 0).toFixed(1)} sao • {group.orderCount || 0} luot mua
+                    {Number(group.ratingAverage || 0).toFixed(1)} sao • {group.orderCount || 0} luot mua . {group.timestamps}
                   </div>
                 </div>
 
