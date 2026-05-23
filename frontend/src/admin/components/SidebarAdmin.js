@@ -43,17 +43,24 @@ function SidebarAdmin({ menuOpen, setMenuOpen }) {
       />
 
       <aside className={`admin-sidebar ${menuOpen ? "show" : ""}`}>
-        <div className="admin-brand admin-menu">
-          <img className="admin-logo" src="/logo.jpg" alt="Admin Logo" />
-          <div>
-            <div className="admin-brand-title">Oder Admin</div>
-            <div className="admin-brand-sub">Restaurant control center</div>
+        <div className="admin-brand">
+          <i className="bi bi-hexagon-fill admin-logo-icon"></i>
+          <span className="admin-brand-title">Order Admin!</span>
+        </div>
+
+        <div className="admin-profile-quick">
+          <div className="admin-avatar">
+            <img src="/logo.jpg" alt="Profile" className="img-circle" />
           </div>
-          <div className="admin-menu-toggle-wrapper" onClick={() => setMenuOpen((prev) => !prev)}>
-            <span className="admin-ico">
-              <i className={`bi ${menuOpen ? "bi-x-lg" : "bi-list"}`}></i>
-            </span>
+          <div className="admin-profile-info">
+            <span>Welcome,</span>
+            <h2>{user?.fullname || "John Doe"}</h2>
           </div>
+        </div>
+        <br />
+
+        <div className="admin-menu-section">
+          <h3>GENERAL</h3>
         </div>
 
         <nav className="admin-menu">
@@ -190,14 +197,6 @@ function SidebarAdmin({ menuOpen, setMenuOpen }) {
             <span>Settings</span>
           </Link>
         </nav>
-
-        <div className="admin-profile">
-          <div className="admin-avatar">{user?.fullname?.charAt(0) || "A"}</div>
-          <div>
-            <div className="admin-name">{user?.fullname || "Administrator"}</div>
-            <div className="admin-role">{role?.name || "Administrator"}</div>
-          </div>
-        </div>
       </aside>
     </>
   );

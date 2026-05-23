@@ -1,0 +1,340 @@
+/* ============================================================
+   MainAdmin.css – Gentelella Alela style dashboard
+   ============================================================ */
+
+/* Loading */
+.ma-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  gap: 16px;
+  color: #73879C;
+  font-size: 14px;
+}
+.ma-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #E6E9ED;
+  border-top-color: #1ABB9C;
+  border-radius: 50%;
+  animation: ma-spin 0.7s linear infinite;
+}
+@keyframes ma-spin { to { transform: rotate(360deg); } }
+
+/* Wrapper */
+.ma-wrapper {
+  padding: 15px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── TILE STATS ── */
+.ma-tiles {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  background: #fff;
+  border: 1px solid #E6E9ED;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ma-tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 16px;
+  border-right: 1px solid #E6E9ED;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.ma-tile:last-child { border-right: none; }
+.ma-tile::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--tile-color, #1ABB9C);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+.ma-tile:hover { background: #f9f9f9; }
+.ma-tile:hover::before { transform: scaleX(1); }
+
+.ma-tile-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--tile-color, #1ABB9C);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ma-tile-icon i {
+  font-size: 20px;
+  color: #fff;
+}
+
+.ma-tile-body { min-width: 0; }
+.ma-tile-label {
+  font-size: 11px;
+  color: #73879C;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ma-tile-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2A3F54;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+.ma-tile-value--sm { font-size: 15px; }
+.ma-tile-trend {
+  font-size: 11px;
+  color: #1ABB9C;
+  margin-top: 2px;
+}
+
+/* ── PANEL ROWS ── */
+.ma-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.ma-panel {
+  background: #fff;
+  border: 1px solid #E6E9ED;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ma-panel--large { /* inherited by grid */ }
+
+.ma-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 17px;
+  border-bottom: 2px solid #E6E9ED;
+}
+.ma-panel-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2A3F54;
+}
+.ma-panel-sub {
+  font-size: 13px;
+  color: #73879C;
+}
+.ma-panel-actions {
+  display: flex;
+  gap: 6px;
+}
+.ma-action-btn {
+  background: none;
+  border: 1px solid #E6E9ED;
+  border-radius: 3px;
+  padding: 3px 8px;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 11px;
+  transition: background 0.2s, color 0.2s;
+}
+.ma-action-btn:hover {
+  background: #f5f5f5;
+  color: #2A3F54;
+}
+
+.ma-panel-body {
+  padding: 15px 17px;
+  flex: 1;
+}
+.ma-panel-body--flush {
+  padding: 0;
+}
+
+/* Chart legend */
+.ma-chart-legend {
+  font-size: 12px;
+  color: #73879C;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ma-legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Progress bars */
+.ma-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.ma-progress-label {
+  width: 120px;
+  font-size: 12px;
+  color: #73879C;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+.ma-progress-track {
+  flex: 1;
+  height: 8px;
+  background: #E6E9ED;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.ma-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+.ma-progress-value {
+  font-size: 12px;
+  color: #73879C;
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── TABLE ── */
+.ma-table-wrap { overflow-x: auto; }
+.ma-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.ma-table thead th {
+  background: #f5f5f5;
+  color: #73879C;
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid #E6E9ED;
+  white-space: nowrap;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.ma-table tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #F0F1F2;
+  color: #73879C;
+  vertical-align: middle;
+}
+.ma-table tbody tr:hover { background: #FAFAFA; }
+.ma-order-id { color: #2A3F54; font-size: 12px; }
+.ma-muted { font-size: 11px; color: #aaa; }
+.ma-amount { font-weight: 600; color: #2A3F54; }
+
+/* Status badges */
+.ma-status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.ma-status--pending    { background: #FFF8E1; color: #F39C12; }
+.ma-status--activating { background: #E3F2FD; color: #3498DB; }
+.ma-status--completed  { background: #E8F5E9; color: #1ABB9C; }
+.ma-status--cancelled  { background: #FEEFEF; color: #E74C3C; }
+
+/* Type badges */
+.ma-type-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.ma-type-badge.delivery { background: #E8F4FD; color: #3498DB; }
+.ma-type-badge.table    { background: #EAF9F5; color: #1ABB9C; }
+
+/* Quick links */
+.ma-quick-links {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+.ma-quick-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid #F0F1F2;
+  font-size: 13px;
+  color: #73879C;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.ma-quick-item:hover { color: #1ABB9C; }
+.ma-quick-item i { font-size: 14px; color: #1ABB9C; }
+.ma-quick-arrow { margin-left: auto; font-size: 11px; color: #ccc; }
+
+/* Gauge */
+.ma-gauge-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 8px;
+}
+.ma-gauge-title {
+  font-size: 13px;
+  color: #73879C;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.ma-gauge-sub {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 6px;
+}
+
+/* Empty state */
+.ma-empty {
+  text-align: center;
+  padding: 30px 0;
+  color: #bbb;
+  font-size: 13px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1200px) {
+  .ma-tiles { grid-template-columns: repeat(3, 1fr); }
+  .ma-tile:nth-child(3) { border-right: none; }
+}
+@media (max-width: 900px) {
+  .ma-tiles { grid-template-columns: repeat(2, 1fr); }
+  .ma-tile:nth-child(2n) { border-right: none; }
+  .ma-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .ma-tiles { grid-template-columns: 1fr; }
+  .ma-tile { border-right: none; border-bottom: 1px solid #E6E9ED; }
+}

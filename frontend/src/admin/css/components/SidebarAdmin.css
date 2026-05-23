@@ -1,155 +1,191 @@
+/* ============================================================
+   SidebarAdmin.css – Gentelella Alela styled sidebar
+   ============================================================ */
+
 .admin-sidebar {
-  width: 300px;
-  min-height: calc(100vh - 40px);
-  padding: 18px;
-  border-radius: 24px;
-  background: var(--admin-card-bg);
-  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.4);
+  width: 230px;
+  min-height: 100vh;
+  flex-shrink: 0;
+  padding: 0;
+  background: #2A3F54;
   position: sticky;
-  top: 20px;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
   z-index: 50;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
 }
+.admin-sidebar::-webkit-scrollbar { width: 4px; }
+.admin-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 
+/* ── Logo / Brand ── */
 .admin-brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 18px;
-  position: relative;
+  padding: 18px 20px 16px;
+  font-size: 19px;
+  font-weight: 600;
+  color: #ECF0F1;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  text-decoration: none;
+  letter-spacing: 0.3px;
 }
+.admin-logo-icon {
+  font-size: 26px;
+  color: #1ABB9C;
+}
+.admin-brand-title { flex: 1; }
 
-.admin-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #34d399, #22c55e);
+/* ── Profile quick info ── */
+.admin-profile-quick {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: #062028;
+  padding: 20px 20px 14px;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-
-.admin-brand-title {
-  font-weight: 700;
+.admin-avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  margin-right: 14px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 2px solid rgba(255,255,255,0.15);
 }
-
-.admin-brand-sub {
-  color: var(--admin-muted);
-  font-size: 0.88rem;
+.admin-avatar img.img-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
-
-.admin-menu-toggle-wrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+.admin-profile-info {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  cursor: pointer;
+  min-width: 0;
+}
+.admin-profile-info span {
+  font-size: 11px;
+  color: #BAB8B8;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.admin-profile-info h2 {
+  font-size: 13px;
+  margin: 2px 0 0;
+  font-weight: 400;
+  color: #ECF0F1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.admin-menu-toggle-wrapper:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: aquamarine;
+/* ── Menu section heading ── */
+.admin-menu-section {
+  padding: 14px 20px 4px;
+}
+.admin-menu-section h3 {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  margin: 0;
 }
 
+/* ── Navigation links ── */
 .admin-menu {
-  margin-top: 6px;
+  flex: 1;
+  padding-bottom: 10px;
 }
-
 .admin-menu a {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  color: var(--admin-text);
+  gap: 10px;
+  padding: 12px 20px;
+  color: #BAB8B8;
   text-decoration: none;
-  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  border-right: 4px solid transparent;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  position: relative;
 }
-
-.admin-menu a.active,
 .admin-menu a:hover {
-  background: var(--admin-btn-bg);
-  /* color: var(--admin-primary-text); */
+  background: rgba(255,255,255,0.07);
+  color: #ECF0F1;
+}
+.admin-menu a.active {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border-right-color: #1ABB9C;
+  font-weight: 500;
+}
+.admin-menu a .admin-ico {
+  font-size: 15px;
+  width: 22px;
+  text-align: center;
+  color: #87A2B4;
+  flex-shrink: 0;
+}
+.admin-menu a:hover .admin-ico,
+.admin-menu a.active .admin-ico {
+  color: #1ABB9C;
 }
 
-.admin-menu a .admin-ico {
-  font-size: 18px;
-  width: 26px;
+/* Sidebar footer */
+.admin-sidebar-footer {
+  padding: 12px 20px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  border-top: 1px solid rgba(255,255,255,0.06);
   text-align: center;
 }
 
-.admin-profile {
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px dashed var(--admin-border);
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.admin-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #334155, #0f1724);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-}
-
-.admin-name {
-  font-weight: 600;
-}
-
-.admin-role {
-  color: #94a3b8;
-  font-size: 0.88rem;
-}
-
+/* Backdrop for mobile */
 .admin-sidebar-backdrop {
   display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 45;
+  border: 0;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.admin-sidebar-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
 }
 
+/* ── Responsive ── */
 @media (max-width: 1000px) {
   .admin-sidebar {
     position: fixed;
-    top: 14px;
-    left: 14px;
-    bottom: 14px;
-    min-height: auto;
-    transform: translateX(-120%);
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100vh;
+    transform: translateX(-100%);
     opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 200;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.3);
   }
-
   .admin-sidebar.show {
     transform: translateX(0);
     opacity: 1;
   }
-
   .admin-sidebar-backdrop {
     display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(2, 6, 23, 0.45);
-    border: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-    z-index: 45;
-  }
-
-  .admin-sidebar-backdrop.show {
-    opacity: 1;
-    pointer-events: auto;
   }
 }

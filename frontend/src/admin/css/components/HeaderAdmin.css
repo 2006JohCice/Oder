@@ -1,0 +1,121 @@
+/* =====================
+   Admin Top Navigation Bar
+   ===================== */
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  flex-wrap: nowrap;
+  padding: 0 20px;
+  height: 57px;
+  background: #EDEDED;
+  border-bottom: 2px solid #D9DEE4;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.admin-topbar-left,
+.admin-topbar-right,
+.admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Hamburger toggle button */
+.admin-menu-toggle {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: #73879C;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: color 0.2s;
+  line-height: 1;
+}
+.admin-menu-toggle:hover {
+  color: #2A3F54;
+}
+
+/* Search box */
+.admin-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 280px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #D9DEE4;
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+.admin-search:focus-within {
+  box-shadow: 0 0 0 2px rgba(26,187,156,0.25);
+  border-color: #1ABB9C;
+}
+.admin-search i {
+  color: #aaa;
+  font-size: 14px;
+}
+.admin-search input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: #73879C;
+  font-size: 13px;
+}
+.admin-search select.admin-select {
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: #73879C;
+  font-size: 12px;
+  cursor: pointer;
+  width: auto;
+  border-right: 1px solid #D9DEE4;
+  padding-right: 8px;
+  margin-right: 4px;
+}
+
+/* Action buttons in header */
+.admin-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid #D9DEE4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  color: #73879C;
+  line-height: 1.5;
+}
+.admin-btn:hover {
+  background: #e8e8e8;
+  color: #2A3F54;
+}
+
+/* User chip in header */
+.admin-user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid #D9DEE4;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  color: #73879C;
+  transition: background 0.2s;
+}
+.admin-user-chip:hover {
+  background: #f5f5f5;
+}
+.admin-user-chip span {
+  font-weight: 500;
+  color: #2A3F54;
+}

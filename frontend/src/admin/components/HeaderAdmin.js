@@ -1,20 +1,15 @@
 import ButtonNotifi from "../helpers/buttonNotifi";
 import { Link } from "react-router-dom";
 import { prefixAdmin } from "../../config/system";
+import "../css/components/HeaderAdmin.css";
 
 function HeaderAdmin({ query, setQuery, setMenuOpen, user, theme, setTheme, searchType, setSearchType }) {
   return (
     <header className="admin-topbar">
       <div className="admin-topbar-left">
-        <button type="button" className="admin-mobile-toggle" onClick={() => setMenuOpen((prev) => !prev)}>
+        <button type="button" className="admin-menu-toggle" onClick={() => setMenuOpen((prev) => !prev)}>
           <i className="bi bi-list"></i>
         </button>
-        <div>
-          <div className="admin-topbar-title">Restaurant Dashboard</div>
-          <div className="admin-topbar-sub">
-            Quan ly nha hang, thuc don, ban an va tai khoan trong mot giao dien responsive.
-          </div>
-        </div>
       </div>
 
       <div className="admin-topbar-right">
@@ -43,17 +38,15 @@ function HeaderAdmin({ query, setQuery, setMenuOpen, user, theme, setTheme, sear
 
         <div className="admin-actions">
           <ButtonNotifi />
-          <button className="admin-btn" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-            <i className={`bi ${theme === 'light' ? 'bi-moon' : 'bi-sun'}`}></i>
-          </button>
           <Link to={`${prefixAdmin}admin/deailCloud`}>
             <button className="admin-btn">
               <i className="bi bi-cloud"></i>
             </button>
           </Link>
           <div className="admin-user-chip">
-            <i className="bi bi-person-circle"></i>
-            <span>{user?.fullname || "Admin"}</span>
+            <img src="/logo.jpg" alt="" style={{ width: '29px', height: '29px', borderRadius: '50%', objectFit: 'cover' }} />
+            <span>{user?.fullname || "John Doe"}</span>
+            <i className="bi bi-chevron-down" style={{ fontSize: '10px', marginLeft: '5px' }}></i>
           </div>
         </div>
       </div>

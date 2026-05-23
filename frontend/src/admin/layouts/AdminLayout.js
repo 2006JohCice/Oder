@@ -121,7 +121,7 @@ export default function AdminDashboard() {
             )}
           </Routes>
 
-          <footer className="admin-footer">© {new Date().getFullYear()} Order Admin</footer>
+          <footer className="admin-footer">© {new Date().getFullYear()} Order Admin Panel</footer>
         </main>
       </div>
     </div>

@@ -3,15 +3,15 @@
    ==================================== */
 
 :root {
-  --accent: #bf5b2c;
-  --accent-dark: #8d3916;
-  --accent-soft: #f3dcc9;
-  --text: #2e251d;
-  --muted: #7b6a5c;
-  --background: #fff8ef;
-  --panel: #fffcf7;
-  --line: #47301f1f;
-  --shadow: 0 20px 50px rgba(77, 47, 24, 0.12);
+  --accent: #1ABB9C;
+  --accent-dark: #169F85;
+  --accent-soft: rgba(26, 187, 156, 0.1);
+  --text: var(--admin-text, #73879C);
+  --muted: var(--admin-muted, #73879C);
+  --background: var(--admin-bg, #F7F7F7);
+  --panel: var(--admin-card-bg, #FFFFFF);
+  --line: var(--admin-border, #E6E9ED);
+  --shadow: none;
 }
 
 /* Loading state */
@@ -128,13 +128,18 @@
 }
 
 .modal-content {
-  background: white;
-  border-radius: 12px;
+  background: var(--panel);
+  backdrop-filter: var(--admin-glass-blur);
+  -webkit-backdrop-filter: var(--admin-glass-blur);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 16px;
   padding: 24px;
   width: 90%;
   max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: var(--shadow);
 }
 
 .modal-content h3 {
@@ -156,10 +161,12 @@
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
+  background: var(--admin-input-bg, transparent);
+  color: var(--text);
 }
 
 .form-group textarea {
@@ -176,8 +183,9 @@
 /* Admin sidebar */
 .sidebar-restaurant {
   width: 280px;
-  background: white;
-  border-right: 2px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: var(--admin-glass-blur);
+  border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -187,7 +195,7 @@
   z-index: 100;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow);
 }
 
 .sidebar-restaurant.is-open {
@@ -294,13 +302,14 @@
    Admin Header (Optimized)
    ==================================== */
 .header-restaurant {
-  background: white;
-  border-bottom: 2px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: var(--admin-glass-blur);
+  border-bottom: 1px solid var(--line);
   padding: 18px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow);
 }
 
 .header-left {
@@ -459,9 +468,9 @@
 }
 
 .btn-secondary {
-  background: white;
+  background: var(--admin-input-bg, transparent);
   color: var(--text);
-  border: 2px solid var(--line);
+  border: 1px solid var(--line);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
@@ -508,15 +517,17 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--panel);
+  backdrop-filter: var(--admin-glass-blur);
   border-radius: 16px;
   padding: 32px;
   max-width: 520px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  box-shadow: var(--shadow);
   border: 1px solid var(--line);
   animation: slideUp 0.3s ease;
+  color: var(--text);
 }
 
 @keyframes slideUp {
@@ -562,10 +573,10 @@
 .form-group select {
   width: 100%;
   padding: 12px 14px;
-  border: 2px solid var(--line);
+  border: 1px solid var(--line);
   border-radius: 8px;
   font-size: 15px;
-  background: var(--background);
+  background: var(--admin-input-bg, transparent);
   color: var(--text);
   transition: all 0.2s ease;
   font-family: inherit;
