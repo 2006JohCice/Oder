@@ -253,12 +253,12 @@
 
 /* Status badges */
 .ma-status {
-  display: inline-block;
-  padding: 3px 8px;
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
 }
 .ma-status--pending    { background: #FFF8E1; color: #F39C12; }
 .ma-status--activating { background: #E3F2FD; color: #3498DB; }

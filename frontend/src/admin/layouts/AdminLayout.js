@@ -43,6 +43,7 @@ export default function AdminDashboard() {
       .catch(() => {
         setUser(null);
         setRole(null);
+        window.location.href = "/admin/auth/login";
       });
   }, []);
 
@@ -54,71 +55,67 @@ export default function AdminDashboard() {
         <main className="admin-main">
           <HeaderAdmin query={query} setQuery={setQuery} setMenuOpen={setMenuOpen} user={user} theme={theme} setTheme={setTheme} searchType={searchType} setSearchType={setSearchType} />
           <Routes>
-            {role && role.permissions.length > 0 && (
-              <>
-                <Route path="/" element={<MainAdmin query={query} searchType={searchType} />} />
-                <Route
-                  path="/productsAdmin"
-                  element={role?.permissions?.includes("products-view") ? <ProductsAdmin query={query} /> : ""}
-                />
-                <Route
-                  path="/orders"
-                  element={role?.permissions?.includes("products-view") ? <Order query={query} /> : ""}
-                />
-                <Route
-                  path="/users"
-                  element={role?.permissions?.includes("role-permission") ? <UsersAdmin query={query} /> : ""}
-                />
-                <Route
-                  path="/addCategory"
-                  element={role?.permissions?.includes("products-category-view") ? <AddCategory /> : ""}
-                />
-                <Route
-                  path="/editCategory/:id"
-                  element={role?.permissions?.includes("products-category-update") ? <EditCategory /> : ""}
-                />
-                <Route
-                  path="/listAccount"
-                  element={role?.permissions?.includes("role-view") ? <Account /> : ""}
-                />
-                <Route
-                  path="/reports"
-                  element={role?.permissions?.includes("role-permission") ? <ReportsAdmin /> : ""}
-                />
-                <Route path="/deailCloud" element={<Could />} />
-                <Route path="/setting" element={<SettingsAdmin />} />
-                <Route path="/chatting" element={<ChatUI />} />
-                <Route path="/advertisement" element={role?.permissions?.includes("advertisement-view") ? <Advertisement /> : ""} />
-                <Route
-                  path="/myeditor"
-                  element={role?.permissions?.includes("products-category-view") ? <MyEditor /> : ""}
-                />
-                <Route
-                  path="/deletedItems"
-                  element={role?.permissions?.includes("products-delete") ? <ProductsBackUp /> : ""}
-                />
-                <Route
-                  path="/role"
-                  element={role?.permissions?.includes("role-view") ? <RoleHome /> : ""}
-                />
-                <Route
-                  path="/role/create"
-                  element={role?.permissions?.includes("role-create") ? <RoleCreate /> : ""}
-                />
-                <Route
-                  path="/role/edit/:id"
-                  element={role?.permissions?.includes("role-update") ? <RoleEdit /> : ""}
-                />
-                <Route
-                  path="/permission"
-                  element={role?.permissions?.includes("role-permission") ? <PermissionPage /> : ""}
-                />
-                <Route
-                  path="/restaurants"
-                  element={role?.permissions?.includes("role-permission") ? <RestaurantManagement /> : ""}
-                />
-              </>
-            )}
+            <Route path="/" element={<MainAdmin query={query} searchType={searchType} />} />
+            <Route
+              path="/productsAdmin"
+              element={role?.permissions?.includes("products-view") ? <ProductsAdmin query={query} /> : ""}
+            />
+            <Route
+              path="/orders"
+              element={role?.permissions?.includes("products-view") ? <Order query={query} /> : ""}
+            />
+            <Route
+              path="/users"
+              element={role?.permissions?.includes("role-permission") ? <UsersAdmin query={query} /> : ""}
+            />
+            <Route
+              path="/addCategory"
+              element={role?.permissions?.includes("products-category-view") ? <AddCategory /> : ""}
+            />
+            <Route
+              path="/editCategory/:id"
+              element={role?.permissions?.includes("products-category-update") ? <EditCategory /> : ""}
+            />
+            <Route
+              path="/listAccount"
+              element={role?.permissions?.includes("role-view") ? <Account /> : ""}
+            />
+            <Route
+              path="/reports"
+              element={role?.permissions?.includes("role-permission") ? <ReportsAdmin /> : ""}
+            />
+            <Route path="/deailCloud" element={<Could />} />
+            <Route path="/setting" element={<SettingsAdmin />} />
+            <Route path="/chatting" element={<ChatUI />} />
+            <Route path="/advertisement" element={role?.permissions?.includes("advertisement-view") ? <Advertisement /> : ""} />
+            <Route
+              path="/myeditor"
+              element={role?.permissions?.includes("products-category-view") ? <MyEditor /> : ""}
+            />
+            <Route
+              path="/deletedItems"
+              element={role?.permissions?.includes("products-delete") ? <ProductsBackUp /> : ""}
+            />
+            <Route
+              path="/role"
+              element={role?.permissions?.includes("role-view") ? <RoleHome /> : ""}
+            />
+            <Route
+              path="/role/create"
+              element={role?.permissions?.includes("role-create") ? <RoleCreate /> : ""}
+            />
+            <Route
+              path="/role/edit/:id"
+              element={role?.permissions?.includes("role-update") ? <RoleEdit /> : ""}
+            />
+            <Route
+              path="/permission"
+              element={role?.permissions?.includes("role-permission") ? <PermissionPage /> : ""}
+            />
+            <Route
+              path="/restaurants"
+              element={role?.permissions?.includes("role-permission") ? <RestaurantManagement /> : ""}
+            />
           </Routes>
 
           <footer className="admin-footer">© {new Date().getFullYear()} Order Admin Panel</footer>

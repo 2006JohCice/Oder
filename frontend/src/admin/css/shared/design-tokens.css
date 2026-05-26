@@ -1,0 +1,62 @@
+/* =====================================================
+   Admin Design Tokens — dùng chung cho toàn bộ trang admin
+   ===================================================== */
+
+:root {
+  /* Brand */
+  --adm-accent:        #1ABB9C;
+  --adm-accent-dark:   #148f76;
+  --adm-accent-dim:    rgba(26,187,156,0.10);
+
+  /* Semantic colors */
+  --adm-danger:        #E74C3C;
+  --adm-danger-dim:    rgba(231,76,60,0.10);
+  --adm-warning:       #F39C12;
+  --adm-warning-dim:   rgba(243,156,18,0.10);
+  --adm-info:          #3498DB;
+  --adm-info-dim:      rgba(52,152,219,0.10);
+  --adm-purple:        #9B59B6;
+  --adm-purple-dim:    rgba(155,89,182,0.10);
+  --adm-sky:           #0EA5E9;
+  --adm-sky-dim:       rgba(14,165,233,0.10);
+
+  /* Neutral */
+  --adm-bg:            #F5F6FA;
+  --adm-card:          #FFFFFF;
+  --adm-sidebar-bg:    #2A3F54;
+  --adm-text:          #2c3e50;
+  --adm-text-2:        #34495e;
+  --adm-muted:         #73879C;
+  --adm-muted-2:       #95a5a6;
+  --adm-border:        #E6E9ED;
+  --adm-border-2:      #dce1e7;
+  --adm-input-bg:      #ffffff;
+  --adm-row-hover:     #f8f9fb;
+
+  /* Shadow */
+  --adm-shadow-sm:     0 1px 3px rgba(0,0,0,0.08);
+  --adm-shadow:        0 2px 8px rgba(0,0,0,0.10);
+  --adm-shadow-lg:     0 4px 20px rgba(0,0,0,0.12);
+
+  /* Radius */
+  --adm-radius-sm:     4px;
+  --adm-radius:        8px;
+  --adm-radius-lg:     12px;
+
+  /* Font */
+  --adm-font:          "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --adm-mono:          "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  /* Page inner padding */
+  --adm-page-pad:      24px;
+}
+
+/* Scrollbar đẹp */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--adm-border) transparent;
+}
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--adm-border); border-radius: 4px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--adm-muted-2); }

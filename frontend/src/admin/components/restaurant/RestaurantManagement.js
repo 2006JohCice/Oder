@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import "../../css/RestaurantManagement.css";
+import "../../css/shared/admin-components.css";
 
 const RestaurantManagement = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -35,16 +35,14 @@ const RestaurantManagement = () => {
         credentials: "include",
         body: JSON.stringify({ status: newStatus }),
       });
-
       const data = await res.json();
       if (res.ok) {
         fetchRestaurants();
       } else {
-        alert(data.message || "Co loi xay ra");
+        alert(data.message || "Có lỗi xảy ra");
       }
     } catch (error) {
-      console.error("Error updating status:", error);
-      alert("Loi ket noi may chu");
+      alert("Lỗi kết nối máy chủ");
     }
   };
 
@@ -55,105 +53,139 @@ const RestaurantManagement = () => {
     highRated: restaurants.filter((item) => Number(item.ratingAverage || 0) >= 4).length,
   }), [restaurants]);
 
-  if (loading) {
-    return <div className="loading">Dang tai danh sach nha hang...</div>;
-  }
-
   return (
-    <div className="restaurant-management">
-      <section className="admin-grid admin-grid-4">
-        <div className="admin-card">
-          <h3>Tong nha hang</h3>
-          <div className="admin-big">{summary.total}</div>
+    <div className="adm-page">
+
+      {/* Header */}
+      <div className="adm-page-header">
+        <div>
+          <h1 className="adm-page-title">
+            <i className="bi bi-shop" style={{ color: "var(--adm-warning)", marginRight: 8 }} />
+            Quản lý nhà hàng
+          </h1>
+          <p className="adm-page-sub">Theo dõi, duyệt và quản lý các cửa hàng/nhà hàng trên hệ thống</p>
         </div>
-        <div className="admin-card">
-          <h3>Dang hoat dong</h3>
-          <div className="admin-big">{summary.active}</div>
+      </div>
+
+      {/* Stats */}
+      <section className="adm-stats">
+        <div className="adm-stat-card adm-stat-card--blue">
+          <div className="adm-stat-icon"><i className="bi bi-shop" /></div>
+          <span className="adm-stat-label">Tổng nhà hàng</span>
+          <span className="adm-stat-value">{summary.total}</span>
+          <span className="adm-stat-sub">trên toàn hệ thống</span>
         </div>
-        <div className="admin-card">
-          <h3>Cho duyet</h3>
-          <div className="admin-big">{summary.pending}</div>
+        <div className="adm-stat-card adm-stat-card--green">
+          <div className="adm-stat-icon"><i className="bi bi-check-circle" /></div>
+          <span className="adm-stat-label">Đang hoạt động</span>
+          <span className="adm-stat-value">{summary.active}</span>
+          <span className="adm-stat-sub">nhà hàng online</span>
         </div>
-        <div className="admin-card">
-          <h3>Rate cao</h3>
-          <div className="admin-big">{summary.highRated}</div>
+        <div className="adm-stat-card adm-stat-card--orange">
+          <div className="adm-stat-icon"><i className="bi bi-hourglass-split" /></div>
+          <span className="adm-stat-label">Chờ duyệt</span>
+          <span className="adm-stat-value">{summary.pending}</span>
+          <span className="adm-stat-sub">cần xác nhận mở</span>
+        </div>
+        <div className="adm-stat-card adm-stat-card--purple">
+          <div className="adm-stat-icon"><i className="bi bi-star" /></div>
+          <span className="adm-stat-label">Rate cao</span>
+          <span className="adm-stat-value">{summary.highRated}</span>
+          <span className="adm-stat-sub">đánh giá từ 4.0 trở lên</span>
         </div>
       </section>
 
-      <div className="admin-card">
-        <div className="admin-toolbar">
-          <div>
-            <h3>Quan ly nha hang</h3>
-            <div className="admin-muted">Sap xep uu tien theo rating va luot mua.</div>
+      {/* Main Table */}
+      <div className="adm-card">
+        <div className="adm-toolbar" style={{ border: "none", borderBottom: "1px solid var(--adm-border)", borderRadius: 0, margin: 0 }}>
+          <div className="adm-toolbar-left">
+            <span style={{ fontWeight: 700, color: "var(--adm-text)" }}>
+              <i className="bi bi-list-ul" /> Danh sách đối tác
+            </span>
           </div>
-          <div className="filter-controls">
-            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="form-select">
-              <option value="">Tat ca</option>
-              <option value="pending">Cho duyet</option>
-              <option value="active">Dang hoat dong</option>
-              <option value="inactive">Dinh chi</option>
+          <div className="adm-toolbar-right">
+            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="adm-select">
+              <option value="">Tất cả trạng thái</option>
+              <option value="pending">Chờ duyệt</option>
+              <option value="active">Đang hoạt động</option>
+              <option value="inactive">Đình chỉ</option>
             </select>
           </div>
         </div>
-      </div>
 
-      <div className="admin-table-container admin-card">
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Nha hang</th>
-              <th>Chu tai khoan</th>
-              <th>Danh gia</th>
-              <th>Don mua</th>
-              <th>Trang thai</th>
-              <th>Thao tac</th>
-            </tr>
-          </thead>
-          <tbody>
-            {restaurants.map((restaurant) => (
-              <tr key={restaurant._id}>
-                <td>
-                  <strong>{restaurant.name}</strong>
-                  <div className="admin-muted">{restaurant.address}</div>
-                  <div className="admin-muted">{restaurant.phone}</div>
-                </td>
-                <td>
-                  {restaurant.owner_id?.fullname || "N/A"}
-                  <br />
-                  <small>{restaurant.owner_id?.email}</small>
-                </td>
-                <td>
-                  {Number(restaurant.ratingAverage || 0).toFixed(1)} / 5
-                  <div className="admin-muted">{restaurant.ratingCount || 0} danh gia</div>
-                </td>
-                <td>{restaurant.orderCount || 0}</td>
-                <td>
-                  <span className={`admin-badge admin-status-${restaurant.status}`}>{restaurant.status}</span>
-                </td>
-                <td>
-                  <div className="action-buttons">
-                    {restaurant.status === "pending" && (
-                      <>
-                        <button className="btn btn-success btn-sm" onClick={() => updateStatus(restaurant._id, "active")}>Duyet</button>
-                        <button className="btn btn-danger btn-sm" onClick={() => updateStatus(restaurant._id, "inactive")}>Tu choi</button>
-                      </>
-                    )}
-                    {restaurant.status === "active" && (
-                      <button className="btn btn-warning btn-sm" onClick={() => updateStatus(restaurant._id, "inactive")}>Dinh chi</button>
-                    )}
-                    {restaurant.status === "inactive" && (
-                      <button className="btn btn-success btn-sm" onClick={() => updateStatus(restaurant._id, "active")}>Kich hoat</button>
-                    )}
-                    <Link className="btn btn-primary btn-sm" to={`/restaurant/${restaurant._id}/products`} target="_blank" rel="noreferrer">Xem menu</Link>
-                  </div>
-                </td>
+        <div className="adm-table-wrap" style={{ border: "none", borderRadius: 0 }}>
+          <table className="adm-table">
+            <thead>
+              <tr>
+                <th>Nhà hàng</th>
+                <th>Chủ tài khoản</th>
+                <th className="adm-th-center">Đánh giá</th>
+                <th className="adm-th-center">Đơn mua</th>
+                <th className="adm-th-center">Trạng thái</th>
+                <th className="adm-th-center">Thao tác</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr className="adm-loading-row"><td colSpan="6"><div className="adm-spinner" /><div style={{ color: "var(--adm-muted)", fontSize: 13 }}>Đang tải...</div></td></tr>
+              ) : restaurants.length === 0 ? (
+                <tr><td colSpan="6"><div className="adm-empty"><div className="adm-empty-icon"><i className="bi bi-inbox" /></div><div className="adm-empty-text">Không tìm thấy nhà hàng nào</div></div></td></tr>
+              ) : (
+                restaurants.map((restaurant) => (
+                  <tr key={restaurant._id}>
+                    <td>
+                      <div style={{ fontWeight: 600, fontSize: 13.5, color: "var(--adm-text)" }}>{restaurant.name}</div>
+                      <div style={{ fontSize: 12, color: "var(--adm-muted)", marginTop: 2 }}><i className="bi bi-geo-alt" /> {restaurant.address}</div>
+                      <div style={{ fontSize: 12, color: "var(--adm-muted)" }}><i className="bi bi-telephone" /> {restaurant.phone}</div>
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 600, fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}>
+                        <i className="bi bi-person-badge" style={{ color: "var(--adm-info)" }} /> {restaurant.owner_id?.fullname || "N/A"}
+                      </div>
+                      <div style={{ fontSize: 12, color: "var(--adm-muted)" }}>{restaurant.owner_id?.email}</div>
+                    </td>
+                    <td className="adm-td-center">
+                      <div style={{ color: "#f39c12", fontWeight: 700, fontSize: 13 }}>
+                        <i className="bi bi-star-fill" style={{ fontSize: 11, marginRight: 4 }} />
+                        {Number(restaurant.ratingAverage || 0).toFixed(1)} <span style={{ color: "var(--adm-muted)", fontSize: 12 }}>/ 5</span>
+                      </div>
+                      <div style={{ fontSize: 11.5, color: "var(--adm-muted-2)" }}>{restaurant.ratingCount || 0} đánh giá</div>
+                    </td>
+                    <td className="adm-td-center">
+                      <span className="adm-badge adm-badge--grey">{restaurant.orderCount || 0}</span>
+                    </td>
+                    <td className="adm-td-center">
+                      <span className={`adm-badge adm-badge--${restaurant.status === "active" ? "active" : restaurant.status === "pending" ? "pending" : "inactive"}`}>
+                        <i className={`bi bi-${restaurant.status === "active" ? "check-circle" : restaurant.status === "pending" ? "hourglass-split" : "slash-circle"}`} />
+                        {restaurant.status === "active" ? "Hoạt động" : restaurant.status === "pending" ? "Chờ duyệt" : "Đình chỉ"}
+                      </span>
+                    </td>
+                    <td className="adm-td-center">
+                      <div className="adm-actions" style={{ justifyContent: "center" }}>
+                        {restaurant.status === "pending" && (
+                          <>
+                            <button className="adm-btn adm-btn--primary adm-btn--icon" onClick={() => updateStatus(restaurant._id, "active")} title="Duyệt"><i className="bi bi-check-lg" /></button>
+                            <button className="adm-btn adm-btn--danger adm-btn--icon" onClick={() => updateStatus(restaurant._id, "inactive")} title="Từ chối"><i className="bi bi-x-lg" /></button>
+                          </>
+                        )}
+                        {restaurant.status === "active" && (
+                          <button className="adm-btn adm-btn--danger adm-btn--icon" onClick={() => updateStatus(restaurant._id, "inactive")} title="Đình chỉ"><i className="bi bi-pause-fill" /></button>
+                        )}
+                        {restaurant.status === "inactive" && (
+                          <button className="adm-btn adm-btn--primary adm-btn--icon" onClick={() => updateStatus(restaurant._id, "active")} title="Kích hoạt"><i className="bi bi-play-fill" /></button>
+                        )}
+                        <Link to={`/restaurant/${restaurant._id}/products`} target="_blank" rel="noreferrer" className="adm-btn adm-btn--ghost adm-btn--icon" title="Xem menu">
+                          <i className="bi bi-box-arrow-up-right" />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      {restaurants.length === 0 && <div className="no-data">Khong co nha hang nao.</div>}
     </div>
   );
 };
