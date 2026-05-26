@@ -3,15 +3,7 @@
    ==================================== */
 
 :root {
-  --accent: #1ABB9C;
-  --accent-dark: #169F85;
-  --accent-soft: rgba(26, 187, 156, 0.1);
-  --text: var(--admin-text, #73879C);
-  --muted: var(--admin-muted, #73879C);
-  --background: var(--admin-bg, #F7F7F7);
-  --panel: var(--admin-card-bg, #FFFFFF);
-  --line: var(--admin-border, #E6E9ED);
-  --shadow: none;
+  
 }
 
 /* Loading state */

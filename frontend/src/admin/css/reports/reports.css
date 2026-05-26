@@ -1,15 +1,4 @@
-/* .admin-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
-} */
 
-/* .admin-card {
-  background: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-} */
 
 .admin-big {
   font-size: 1.8rem;

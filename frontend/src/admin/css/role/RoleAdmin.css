@@ -5,50 +5,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap');
 
-:root {
-  --rol-bg:            #f1f5fb;
-  --rol-surface:       #ffffff;
-  --rol-surface-2:     #f8fafd;
-  --rol-border:        #e2e8f4;
-  --rol-border-hover:  #c7d4ea;
-
-  --rol-accent:        #6366f1;
-  --rol-accent-dim:    rgba(99, 102, 241, 0.09);
-  --rol-accent-hover:  #4f46e5;
-
-  --rol-green:         #16a34a;
-  --rol-green-dim:     rgba(22, 163, 74, 0.09);
-  --rol-green-border:  rgba(22, 163, 74, 0.25);
-
-  --rol-red:           #dc2626;
-  --rol-red-dim:       rgba(220, 38, 38, 0.08);
-  --rol-red-border:    rgba(220, 38, 38, 0.25);
-
-  --rol-yellow:        #d97706;
-  --rol-yellow-dim:    rgba(217, 119, 6, 0.09);
-
-  --rol-sky:           #0284c7;
-  --rol-sky-dim:       rgba(2, 132, 199, 0.08);
-
-  --rol-purple:        #7c3aed;
-  --rol-purple-dim:    rgba(124, 58, 237, 0.09);
-
-  --rol-text:          #0f172a;
-  --rol-muted:         #64748b;
-  --rol-muted-2:       #94a3b8;
-
-  --rol-shadow-sm:     0 1px 4px rgba(15, 23, 42, 0.06);
-  --rol-shadow:        0 4px 20px rgba(15, 23, 42, 0.08);
-  --rol-shadow-lg:     0 8px 32px rgba(15, 23, 42, 0.12);
-
-  --rol-radius:        14px;
-  --rol-radius-sm:     9px;
-  --rol-radius-xs:     6px;
-
-  --rol-font:          'Plus Jakarta Sans', sans-serif;
-  --rol-mono:          'Fira Code', monospace;
-  --rol-transition:    0.18s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 /* ── Page ── */
 .rol-page {

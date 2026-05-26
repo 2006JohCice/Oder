@@ -1,15 +1,6 @@
 /* Import font từ Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-:root {
-    --admin-primary: #6366f1;
-    --admin-dark: #0f172a;
-    --admin-sidebar: #1e293b;
-    --admin-border: rgba(255, 255, 255, 0.1);
-    --admin-text: #f8fafc;
-    --admin-text-muted: #94a3b8;
-}
-
 /* Reset mặc định */
 .support-admin-viewport {
     height: 100vh;

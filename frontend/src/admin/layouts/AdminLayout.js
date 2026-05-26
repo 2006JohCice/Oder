@@ -29,6 +29,7 @@ import RestaurantManagement from "../components/restaurant/RestaurantManagement"
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
+  console.log("My role",role)
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState("light");
