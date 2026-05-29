@@ -1,8 +1,10 @@
 import { notifyApp } from "../../shared/notifications/ToastProvider";
 
+import { confirmApp } from "../../shared/notifications/ConfirmProvider";
+
 function Delete({ set, Id, setId, setLoading }) {
-  const deleteItem = () => {
-    const result = window.confirm("Ban co chac chan muon xoa?");
+  const deleteItem = async () => {
+    const result = await confirmApp("Xác nhận", "Ban co chac chan muon xoa?");
     if (!result) return;
 
     if (!Id) {

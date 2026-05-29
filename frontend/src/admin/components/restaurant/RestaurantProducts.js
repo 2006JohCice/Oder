@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from "react";
 import "../../css/RestaurantProducts.css";
+import {confirmApp} from "../../../shared/notifications/ConfirmProvider";
 
 const initialForm = {
   name: "",
@@ -89,7 +90,7 @@ const RestaurantProducts = ({ restaurant }) => {
 
   const deleteProduct = async (productId) => {
     // eslint-disable-next-line no-restricted-globals
-    if (!confirm("Bạn chắc chắn muốn xóa sản phẩm này?")) return;
+    if (!(await confirmApp("Xác nhận", "Bạn chắc chắn muốn xóa sản phẩm này?"))) return;
 
     try {
       const res = await fetch(`/api/restaurant/products/${productId}`, {

@@ -119,3 +119,12 @@
   font-weight: 500;
   color: #2A3F54;
 }
+
+@media (max-width: 768px) {
+  .admin-search {
+    display: none;
+  }
+  .admin-user-chip span {
+    display: none;
+  }
+}

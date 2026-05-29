@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from "react";
+import {confirmApp} from "../../../shared/notifications/ConfirmProvider";
 
 const emptyTable = { name: "", area: "", capacity: 4, note: "" };
 
@@ -57,7 +58,7 @@ const RestaurantTables = () => {
 
   const deleteTable = async (tableId) => {
     // eslint-disable-next-line no-restricted-globals
-    if (!confirm("Bạn chắc chắn muốn xóa bàn này?")) return;
+    if (!(await confirmApp("Xác nhận", "Bạn chắc chắn muốn xóa bàn này?"))) return;
     const res = await fetch(`/api/restaurant/tables/${tableId}`, {
       method: "DELETE",
       credentials: "include",

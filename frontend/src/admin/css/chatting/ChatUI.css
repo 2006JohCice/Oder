@@ -268,3 +268,30 @@
   background: #2980b9;
   transform: scale(1.05);
 }
+
+@media (max-width: 768px) {
+  .chat-container {
+    height: calc(100vh - 140px);
+  }
+  .chat-layout {
+    flex-direction: column;
+  }
+  .chat-sidebar {
+    width: 100%;
+    height: 160px;
+    border-right: none;
+    border-bottom: 1px solid var(--adm-border);
+    flex-shrink: 0;
+  }
+  .chat-main {
+    flex: 1;
+    height: calc(100% - 160px);
+  }
+  .chat-messages {
+    padding: 12px;
+  }
+  .chat-bubble {
+    max-width: 85%;
+  }
+}
+

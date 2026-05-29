@@ -109,7 +109,7 @@ function EditProducts({ idEdit, setProducts }) {
       <div className="offcanvas-body createProducts-body">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label">Tên sản phẩm</label>
+            <label className="form-label"><i className="bi bi-box-seam"></i> Tên sản phẩm</label>
             <input
               type="text"
               name="name"
@@ -122,7 +122,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Nhà hàng</label>
+            <label className="form-label"><i className="bi bi-shop"></i> Nhà hàng</label>
             <select
               name="restaurant_id"
               className="admin-select"
@@ -141,7 +141,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Danh mục</label>
+            <label className="form-label"><i className="bi bi-tags"></i> Danh mục</label>
             <select
               name="category"
               className="admin-select"
@@ -155,7 +155,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Hiển thị</label>
+            <label className="form-label"><i className="bi bi-star"></i> Hiển thị</label>
             <div>
               <div className="form-check form-check-inline">
                 <input
@@ -183,7 +183,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Mô tả</label>
+            <label className="form-label"><i className="bi bi-text-paragraph"></i> Mô tả</label>
             <textarea
               name="description"
               value={dataEdit.description}
@@ -196,7 +196,7 @@ function EditProducts({ idEdit, setProducts }) {
 
           <div className="row">
             <div className="col-6 mb-3">
-              <label className="form-label">Giá</label>
+              <label className="form-label"><i className="bi bi-currency-dollar"></i> Giá</label>
               <input
                 type="number"
                 name="price"
@@ -208,7 +208,7 @@ function EditProducts({ idEdit, setProducts }) {
               />
             </div>
             <div className="col-6 mb-3">
-              <label className="form-label">Giảm giá (%)</label>
+              <label className="form-label"><i className="bi bi-percent"></i> Giảm giá (%)</label>
               <input
                 type="number"
                 name="discountPercentage"
@@ -220,7 +220,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Số lượng</label>
+            <label className="form-label"><i className="bi bi-boxes"></i> Số lượng</label>
             <input
               type="number"
               name="stock"
@@ -233,7 +233,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Ảnh (URL)</label>
+            <label className="form-label"><i className="bi bi-image"></i> Ảnh (URL)</label>
             <input
               type="url"
               name="img"
@@ -245,7 +245,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Vị trí</label>
+            <label className="form-label"><i className="bi bi-sort-numeric-down"></i> Vị trí</label>
             <input
               type="number"
               name="position"
@@ -256,7 +256,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Trạng thái</label>
+            <label className="form-label"><i className="bi bi-toggle-on"></i> Trạng thái</label>
             <div>
               <div className="form-check form-check-inline">
                 <input
@@ -284,7 +284,7 @@ function EditProducts({ idEdit, setProducts }) {
           </div>
 
           <button type="submit" className="btn createProducts-btn">
-            Lưu thay đổi
+            <i className="bi bi-check-circle"></i> Sửa sản phẩm
           </button>
         </form>
       </div>

@@ -1,26 +1,49 @@
 .createProducts-offcanvas {
-  width: 35% !important;
-  background: linear-gradient(180deg, #071029 0%, #081428 100%);
-  color: white;
+  width: 400px !important;
+  background: var(--admin-bg, #F7F7F7);
+  color: var(--admin-text, #73879C);
+  box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+  border-left: 1px solid var(--admin-border, #E6E9ED);
 }
 
 .createProducts-header {
-  border-bottom: 1px solid #2c3b64;
+  border-bottom: 2px solid var(--admin-border, #E6E9ED);
+  background: #fff;
+  padding: 16px 20px;
 }
-.offcanvas .offcanvas-header h5{
-    color: aliceblue;
+
+.offcanvas .offcanvas-header h5 {
+  color: #2A3F54;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0;
 }
 
 .createProducts-body {
-  color: white;
+  background: #fff;
+  padding: 20px;
 }
 
-
+.form-label {
+  font-weight: 500;
+  color: #2A3F54;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
 
 .createProducts-input {
-  background-color: #0e1a3a !important;
-  border: 1px solid #2c3b64 !important;
-  color: #fff !important;
+  background-color: var(--admin-input-bg, #fff) !important;
+  border: 1px solid var(--admin-border, #D9DEE4) !important;
+  color: #73879C !important;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.createProducts-input:focus {
+  border-color: #1ABB9C !important;
+  box-shadow: 0 0 0 3px rgba(26,187,156,0.1) !important;
 }
 
 .createProducts-input::placeholder {
@@ -28,16 +51,31 @@
 }
 
 .createProducts-btn {
-  background-color: #1e3a8a !important;
-  border: none !important;
+  background-color: #1ABB9C !important;
+  border: 1px solid #1ABB9C !important;
   width: 100%;
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: 6px;
-  padding: 10px;
+  padding: 12px;
   transition: 0.3s;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .createProducts-btn:hover {
-  background-color: #2a4ebf !important;
+  background-color: #169F85 !important;
+  border-color: #169F85 !important;
+  box-shadow: 0 4px 10px rgba(26,187,156,0.2);
+}
+
+.btn-close-white {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+@media (max-width: 500px) {
+  .createProducts-offcanvas {
+    width: 100% !important;
+  }
 }
