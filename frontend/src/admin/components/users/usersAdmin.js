@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../../../utils/apiFetch";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import {confirmApp} from "../../../shared/notifications/ConfirmProvider";
 import "../../css/shared/admin-components.css";
 import "../../css/user/user.css";
 
@@ -133,7 +134,7 @@ function UsersAdmin() {
   };
 
   const handleDelete = async id => {
-    if (!window.confirm("Xác nhận xoá người dùng này?")) return;
+    if (!(await confirmApp("Xác nhận", "Xác nhận xoá người dùng này?"))) return;
     const res = await fetch(`/api/admin/userAdmin/delete/${id}`, { method: "DELETE", credentials: "include" });
     const data = await res.json();
     if (!res.ok) { notifyApp(data.message || "Xóa thất bại", "error"); return; }

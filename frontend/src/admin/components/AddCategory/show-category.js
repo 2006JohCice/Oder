@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { prefixAdmin } from "../../../config/system";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import {confirmApp} from "../../../shared/notifications/ConfirmProvider";
 
 function ShowCategory({ node, level = 0, fetchData }) {
   const prefix = "— ".repeat(level);
 
   const handleDelete = async () => {
-    if (!window.confirm("Xác nhận xoá danh mục này?")) return;
+    if (!(await confirmApp("Xác nhận", "Xác nhận xoá danh mục này?"))) return;
     try {
       const res = await fetch(`/api/admin/category/delete/${node._id}`, {
         method: "DELETE",

@@ -3,6 +3,7 @@ import "../../css/shared/admin-components.css";
 import { apiFetch } from "../../../utils/apiFetch";
 import { useNavigate } from "react-router-dom";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import {confirmApp} from "../../../shared/notifications/ConfirmProvider";
 
 const formatCurrency = (v) =>
   new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(v || 0);
@@ -41,7 +42,7 @@ const ProductsBackUp = () => {
   useEffect(() => { fetchProductsBackUp(); }, [page]);
 
   const handleRestore = async (id) => {
-    if (!window.confirm("Khôi phục sản phẩm này?")) return;
+    if (!(await confirmApp("Xác nhận", "Khôi phục sản phẩm này?"))) return;
     try {
       const res = await fetch(`/api/admin/backup/products/back/${id}`, { method: "PATCH", credentials: "include" });
       const data = await res.json();
@@ -52,7 +53,7 @@ const ProductsBackUp = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("CẢNH BÁO: Xóa vĩnh viễn không thể khôi phục. Tiếp tục?")) return;
+    if (!(await confirmApp("Xác nhận", "CẢNH BÁO: Xóa vĩnh viễn không thể khôi phục. Tiếp tục?"))) return;
     try {
       const res = await fetch(`/api/admin/backup/products/delete/${id}`, { method: "DELETE", credentials: "include" });
       const data = await res.json();

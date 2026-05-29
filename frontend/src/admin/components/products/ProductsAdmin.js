@@ -3,6 +3,7 @@ import "../../css/shared/admin-components.css";
 import "../../css/products/ProductsAdmin.css";
 import CreateProducts from "../creatProduct/creatProducts";
 import EditProducts from "../creatProduct/editPtoducts";
+import {confirmApp} from "../../../shared/notifications/ConfirmProvider";
 
 /* ── Helpers ────────────────────────────────────── */
 const formatCurrency = (v) =>
@@ -133,7 +134,7 @@ const ProductsAdmin = ({ query }) => {
   };
 
   const handleDelete = async id => {
-    if (!window.confirm("Xác nhận xoá sản phẩm này?")) return;
+    if (!(await confirmApp("Xác nhận", "Xác nhận xoá sản phẩm này?"))) return;
     await fetch(`/api/admin/products/delete/${id}`, { method: "DELETE", credentials: "include" });
     fetchProducts();
   };

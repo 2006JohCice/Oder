@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import {confirmApp} from "../../../shared/notifications/ConfirmProvider";
 import "../../css/shared/admin-components.css";
 
 function SettingsAdmin() {
@@ -47,7 +48,7 @@ function SettingsAdmin() {
   };
 
   const handleClickLogOut = async () => {
-    if (!window.confirm("Bạn có chắc chắn muốn đăng xuất?")) return;
+    if (!(await confirmApp("Xác nhận", "Bạn có chắc chắn muốn đăng xuất?"))) return;
     try {
       const res = await fetch("/api/admin/auth/logout", { method: "GET", credentials: "include" });
       if (res.ok) navigate("/admin/auth/login");

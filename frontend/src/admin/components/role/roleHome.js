@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { apiFetch } from "../../../utils/apiFetch";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
+import {confirmApp} from "../../../shared/notifications/ConfirmProvider";
+
 import "../../css/shared/admin-components.css";
 
 /* ── Donut Chart ─────────────────────────────────── */
@@ -63,7 +65,7 @@ const RoleHome = () => {
   useEffect(() => { fetchData(); }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Xác nhận xoá vai trò này?")) return;
+    if (!(await confirmApp("Xác nhận", "Xác nhận xoá vai trò này?"))) return;
     try {
       const res = await fetch(`/api/admin/role/delete/${id}`, { method: "DELETE", credentials: "include" });
       const payload = await res.json();
