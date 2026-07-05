@@ -1,0 +1,18 @@
+{
+  "header": {
+    "login": "Login",
+    "register": "Register",
+    "my_account": "My Account",
+    "logout": "Logout",
+    "cart": "Cart",
+    "search_placeholder": "Search food, restaurants...",
+    "orders": "Orders",
+    "settings": "Settings"
+  },
+  "home": {
+    "welcome": "Fast Food Delivery",
+    "explore": "Explore dishes",
+    "restaurants": "Restaurants",
+    "near_you": "Near you"
+  }
+}

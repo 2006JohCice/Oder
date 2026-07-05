@@ -3,6 +3,7 @@ const Product = require("../../models/product.model");
 const Order = require("../../models/orders.model");
 const Table = require("../../models/table.model");
 const Restaurant = require("../../models/restaurant.model");
+const User = require("../../models/user.model");
 const generateHelper = require("../../helpers/generate");
 
 const DEPOSIT_AMOUNT = 200000;
@@ -65,11 +66,11 @@ const validateOrderGroup = (group, requestGroup, fallbackUserInfo) => {
   };
 
   if (!userInfo.fullName || !userInfo.phone) {
-    return { error: "Vui long nhap ho ten va so dien thoai cho tung nha hang" };
+    return { error: "Vui lòng nhập họ tên và số điện thoại cho từng nhà hàng." };
   }
 
   if (orderType === "delivery" && !userInfo.address) {
-    return { error: `Vui long nhap dia chi giao hang cho ${group.restaurantInfo.name}` };
+    return { error: `Vui lòng nhập địa chỉ giao hàng cho ${group.restaurantInfo.name}.` };
   }
 
   const tableInfoInput = requestGroup?.tableInfo || {};
@@ -87,7 +88,7 @@ const validateOrderGroup = (group, requestGroup, fallbackUserInfo) => {
 
   if (orderType === "dine_in") {
     if (!tableInfo.tableNumber || !tableInfo.visitDate || !tableInfo.arrivalTime) {
-      return { error: `Vui long chon ban, ngay va gio den cho ${group.restaurantInfo.name}` };
+      return { error: `Vui lòng chọn bàn, ngày và giờ đến cho ${group.restaurantInfo.name}.` };
     }
   }
 
@@ -110,13 +111,15 @@ const validateOrderGroup = (group, requestGroup, fallbackUserInfo) => {
 const lockTableForSlot = async (restaurantId, tableInfo, orderId, relativeContact) => {
   const slotKey = buildSlotKey(tableInfo.visitDate, tableInfo.arrivalTime);
 
-  const selectedTable = await Table.findOne({
+  const tableNumbers = String(tableInfo.tableNumber || "").split(",").map(t => t.trim()).filter(Boolean);
+
+  const selectedTables = await Table.find({
     restaurant_id: restaurantId,
-    tableNumber: tableInfo.tableNumber,
+    tableNumber: { $in: tableNumbers },
   });
 
-  if (!selectedTable) {
-    return { error: "Ban khong ton tai trong nha hang da chon" };
+  if (selectedTables.length === 0 || selectedTables.length !== tableNumbers.length) {
+    return { error: "Một hoặc nhiều bàn không tồn tại trong nhà hàng đã chọn." };
   }
 
   const conflictingOrders = await Order.find({
@@ -126,30 +129,30 @@ const lockTableForSlot = async (restaurantId, tableInfo, orderId, relativeContac
     orderStatus: { $nin: ["completed", "cancelled"] },
   }).select("tableInfo relativeContact");
 
-  const exactSameTable = conflictingOrders.find(
-    (order) => String(order.tableInfo?.tableNumber || "") === String(tableInfo.tableNumber || "")
-  );
+  let allBookedTableNumbers = [];
+  conflictingOrders.forEach(order => {
+      const nums = (order.tableInfo?.tableNumber || "").split(",").map(t => t.trim());
+      allBookedTableNumbers.push(...nums);
+  });
+
+  const exactSameTable = tableNumbers.find(t => allBookedTableNumbers.includes(t));
 
   if (exactSameTable) {
-    return { error: "Ban nay da duoc dat trong cung khung gio, vui long chon ban khac" };
+    return { error: "Một trong số các bàn bạn chọn đã được đặt trong cùng khung giờ, vui lòng chọn bàn khác." };
   }
 
-  if (conflictingOrders.length > 0 && (!relativeContact?.fullName || !relativeContact?.phone)) {
-    return {
-      error: "Khung gio nay da co nguoi dat truoc. Neu dat them ban thu hai, vui long nhap thong tin nguoi than.",
-    };
+  for (const t of selectedTables) {
+      await Table.updateOne(
+        { _id: t._id },
+        {
+          status: "occupied",
+          currentOrderId: String(orderId),
+        }
+      );
   }
-
-  await Table.updateOne(
-    { _id: selectedTable._id },
-    {
-      status: "occupied",
-      currentOrderId: String(orderId),
-    }
-  );
 
   return {
-    table: selectedTable,
+    tables: selectedTables,
     slotKey,
   };
 };
@@ -206,10 +209,18 @@ module.exports.order = async (req, res) => {
       _id: cartId,
     });
 
+    const groupRequests = Array.isArray(
+      req.body?.restaurantOrders
+    )
+      ? req.body.restaurantOrders
+      : [];
+
+    const isPureTableBooking = groupRequests.length > 0 && groupRequests.every(r => r.orderType === "dine_in");
+
     if (
-      !cart ||
+      (!cart ||
       !Array.isArray(cart.products) ||
-      cart.products.length === 0
+      cart.products.length === 0) && !isPureTableBooking
     ) {
       return res.status(400).json({
         message: "Giỏ hàng không hợp lệ hoặc đang trống",
@@ -222,22 +233,36 @@ module.exports.order = async (req, res) => {
       address: req.body?.address || "",
     };
 
-    const groupRequests = Array.isArray(
-      req.body?.restaurantOrders
-    )
-      ? req.body.restaurantOrders
-      : [];
-
-    const groupedProducts =
-      await mapProductsByRestaurant(
+    let groupedProducts =
+      cart && Array.isArray(cart.products) ? await mapProductsByRestaurant(
         cart.products
-      );
+      ) : [];
+
+    if (req.body?.isPartialCheckout) {
+       const reqRestaurantIds = groupRequests.map(r => String(r.restaurantId));
+       groupedProducts = groupedProducts.filter(g => reqRestaurantIds.includes(String(g.restaurantId)));
+    }
 
     if (groupedProducts.length === 0) {
-      return res.status(400).json({
-        message:
-          "Không có sản phẩm hợp lệ trong giỏ hàng",
-      });
+      if (!isPureTableBooking) {
+        return res.status(400).json({
+          message:
+            "Không có sản phẩm hợp lệ trong giỏ hàng",
+        });
+      }
+      // Create fake groups for table booking
+      for (const reqGroup of groupRequests) {
+        const restaurant = await Restaurant.findOne({ _id: reqGroup.restaurantId });
+        groupedProducts.push({
+          restaurantId: reqGroup.restaurantId,
+          restaurantInfo: {
+             name: restaurant?.name || "",
+             phone: restaurant?.phone || "",
+             address: restaurant?.address || ""
+          },
+          products: []
+        });
+      }
     }
 
     const orderGroupCode =
@@ -246,6 +271,7 @@ module.exports.order = async (req, res) => {
       );
 
     const createdOrders = [];
+    let totalCartAmount = 0;
 
     for (const group of groupedProducts) {
       const requestGroup =
@@ -292,52 +318,15 @@ module.exports.order = async (req, res) => {
 
       const totalAmount =
         calculateTotal(group.products);
+      
+      totalCartAmount += totalAmount;
 
       /* =========================
-         FIX 9 - CHỐNG TRÙNG BÀN
+         FIX 8 - BOOKING SLOT KEY
       ========================= */
-
       let bookingSlotKey = null;
-
-      if (
-        normalizedGroup.orderType ===
-        "dine_in"
-      ) {
-        bookingSlotKey =
-          `${normalizedGroup.tableInfo.visitDate}_${normalizedGroup.tableInfo.arrivalTime}`;
-
-        const existedOrder =
-          await Order.findOne({
-            restaurant_id:
-              group.restaurantId,
-
-            orderType: "dine_in",
-
-            bookingSlotKey,
-
-            "tableInfo.tableNumber":
-              normalizedGroup
-                .tableInfo
-                .tableNumber,
-
-            orderStatus: {
-              $nin: [
-                "cancelled",
-                "completed",
-              ],
-            },
-          });
-
-        if (existedOrder) {
-          await releaseLockedTables(
-            lockedTables
-          );
-
-          return res.status(400).json({
-            message:
-              "Bàn vừa được người khác đặt. Vui lòng chọn bàn khác.",
-          });
-        }
+      if (normalizedGroup.orderType === "dine_in") {
+          bookingSlotKey = `${normalizedGroup.tableInfo.visitDate}_${normalizedGroup.tableInfo.arrivalTime}`;
       }
 
       const order = new Order({
@@ -418,17 +407,21 @@ module.exports.order = async (req, res) => {
         }
 
         order.tableInfo.area =
-          lockResult.table.area ||
+          lockResult.tables.map(t => t.area || "").filter(Boolean).join(", ") ||
           order.tableInfo.area;
+          
+        order.tableInfo.displayName =
+          lockResult.tables.map(t => t.displayName || t.tableNumber).join(", ");
 
         order.bookingSlotKey =
           lockResult.slotKey;
 
-        lockedTables.push({
-          tableId:
-            lockResult.table._id,
-
-          orderId: order._id,
+        lockResult.tables.forEach(t => {
+            lockedTables.push({
+              tableId:
+                t._id,
+              orderId: order._id,
+            });
         });
       }
 
@@ -446,16 +439,34 @@ module.exports.order = async (req, res) => {
       createdOrders.push(order);
     }
 
-    await Cart.updateOne(
-      { _id: cartId },
-      {
-        products: [],
+    if (req.body?.isPartialCheckout) {
+      const checkedOutProductIds = [];
+      groupedProducts.forEach(g => {
+        g.products.forEach(p => checkedOutProductIds.push(String(p.product_id)));
+      });
+      const remainingProducts = cart.products.filter(p => !checkedOutProductIds.includes(String(p.product_id)));
+      await Cart.updateOne({ _id: cartId }, { products: remainingProducts });
+    } else {
+      await Cart.updateOne(
+        { _id: cartId },
+        {
+          products: [],
+          restaurant_id: null,
+          restaurant_ids: [],
+        }
+      );
+    }
 
-        restaurant_id: null,
-
-        restaurant_ids: [],
-      }
-    );
+    // ===================================
+    // THƯỞNG ĐIỂM CHO THÀNH VIÊN (RANK SYSTEM)
+    // ===================================
+    if (req.cookies.tokenUser) {
+        const user = await User.findOne({ tokenUser: req.cookies.tokenUser, deleted: false });
+        if (user) {
+            const pointsToAdd = 50 + Math.floor(totalCartAmount / 100000) * 10;
+            await User.updateOne({ _id: user._id }, { $inc: { points: pointsToAdd } });
+        }
+    }
 
     return res.status(200).json({
       message:
@@ -528,4 +539,93 @@ module.exports.doneOrder = async (req, res) => {
   }));
 
   return res.status(200).json(groupedOrders);
+};
+
+module.exports.cancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const cartId = req.cookies.cartId;
+
+    // Find all orders in this order group or just the single order
+    // But success page uses orderId, which might be a single order or orderGroupCode
+    // We'll search by either _id or orderGroupCode
+    const query = {
+      cart_id: cartId,
+      $or: [
+        { _id: orderId.match(/^[0-9a-fA-F]{24}$/) ? orderId : null },
+        { orderGroupCode: orderId }
+      ]
+    };
+
+    const orders = await Order.find(query);
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+
+    let isOver2Mins = false;
+    let anyDineIn = false;
+    const now = Date.now();
+
+    for (const order of orders) {
+      if (['completed', 'cancelled', 'shipping', 'delivering'].includes(order.orderStatus)) {
+        return res.status(400).json({ message: "Đơn hàng ở trạng thái không thể hủy." });
+      }
+
+      if (order.orderType === "dine_in") {
+        anyDineIn = true;
+      }
+
+      const diffMins = (now - new Date(order.createdAt).getTime()) / 60000;
+      if (diffMins > 2) {
+        isOver2Mins = true;
+      }
+    }
+
+    // Process cancellation
+    for (const order of orders) {
+      const cancelReason = isOver2Mins ? "Hủy sau 2 phút - Mất cọc" : "Hủy trước 2 phút";
+      
+      await Order.updateOne(
+        { _id: order._id },
+        { 
+          $set: { 
+            orderStatus: 'cancelled',
+            cancelReason: cancelReason
+          } 
+        }
+      );
+
+      // Release locked tables
+      if (order.orderType === "dine_in" && order.tableInfo?.tableNumber) {
+        const tableNumbers = String(order.tableInfo.tableNumber).split(',').map(t => t.trim()).filter(Boolean);
+        await Table.updateMany(
+          { 
+            restaurant_id: order.restaurant_id, 
+            tableNumber: { $in: tableNumbers }
+          },
+          { 
+            $set: { 
+              status: "available",
+              orderType: "none",
+              bookingSlotKey: null
+            },
+            $unset: { 
+              currentOrderId: 1,
+              relativeContact: 1,
+              tableInfo: 1
+            }
+          }
+        );
+      }
+    }
+
+    return res.status(200).json({ 
+      message: isOver2Mins ? "Đơn hàng đã hủy. Bạn bị mất cọc do quá 2 phút." : "Đã hủy đơn hàng thành công.",
+      isPenalty: isOver2Mins
+    });
+
+  } catch (error) {
+    console.error("Cancel order error:", error);
+    res.status(500).json({ message: "Lỗi máy chủ khi hủy đơn" });
+  }
 };

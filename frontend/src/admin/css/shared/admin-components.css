@@ -71,7 +71,7 @@
 .adm-stat-card--orange::before { background: var(--adm-warning); }
 .adm-stat-card--purple::before { background: var(--adm-purple); }
 .adm-stat-card--sky::before    { background: var(--adm-sky); }
-.adm-stat-card--yellow::before { background: #f1c40f; }
+.adm-stat-card--#ffffff::before { background: #ffffff; }
 
 .adm-stat-icon {
   width: 42px; height: 42px;
@@ -86,7 +86,7 @@
 .adm-stat-card--orange .adm-stat-icon { background: var(--adm-warning-dim); color: var(--adm-warning); }
 .adm-stat-card--purple .adm-stat-icon { background: var(--adm-purple-dim);  color: var(--adm-purple); }
 .adm-stat-card--sky    .adm-stat-icon { background: var(--adm-sky-dim);     color: var(--adm-sky); }
-.adm-stat-card--yellow .adm-stat-icon { background: rgba(241,196,15,0.1);   color: #d4ac0d; }
+.adm-stat-card--#ffffff .adm-stat-icon { background: rgba(241,196,15,0.1);   color: #d4ac0d; }
 
 .adm-stat-label {
   font-size: 11.5px;
@@ -737,7 +737,7 @@
 .adm-bar-fill--orange { background: var(--adm-warning); }
 .adm-bar-fill--purple { background: var(--adm-purple); }
 .adm-bar-fill--sky    { background: var(--adm-sky); }
-.adm-bar-fill--yellow { background: #f1c40f; }
+.adm-bar-fill--#ffffff { background: #ffffff; }
 .adm-bar-label {
   font-size: 10.5px;
   color: var(--adm-muted);

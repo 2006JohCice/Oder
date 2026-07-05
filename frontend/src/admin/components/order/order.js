@@ -15,7 +15,7 @@ const formatDateTime = (iso) => {
 
 const STATUS_OPTIONS = [
   { value: "pending",    label: "Chờ xử lý",  icon: "bi-hourglass-split",    cls: "pending" },
-  { value: "activating", label: "Đang xử lý", icon: "bi-lightning-charge",   cls: "activating" },
+  { value: "activating", label: "Sẵn sàng lên món", icon: "bi-bell",   cls: "activating" },
   { value: "completed",  label: "Hoàn thành", icon: "bi-check-circle",       cls: "completed" },
   { value: "cancelled",  label: "Đã huỷ",     icon: "bi-x-circle",           cls: "cancelled" },
 ];
@@ -39,7 +39,7 @@ const Pagination = ({ page, totalPages, setPage }) => {
 };
 
 /* ── Main ────────────────────────────────────────── */
-function Order({ query }) {
+function Order({ query, isMerchant = false }) {
   const [orders, setOrders]             = useState([]);
   const [draftUpdates, setDraftUpdates] = useState([]);
   const [message, setMessage]           = useState("");
@@ -48,6 +48,8 @@ function Order({ query }) {
   const [typeFilter, setTypeFilter]     = useState("");
   const [page, setPage]                 = useState(1);
   const [pagination, setPagination]     = useState({ totalPages: 1, totalItems: 0 });
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const [stats, setStats] = useState({
     totalOrders: 0, pendingOrders: 0, dineInOrders: 0,
     deliveryOrders: 0, totalRevenue: 0, totalDeposits: 0,
@@ -63,7 +65,8 @@ function Order({ query }) {
       params.set("page", String(page));
       params.set("limit", "8");
 
-      const res  = await fetch(`/api/admin/checkout/doneOrder?${params}`, { credentials: "include" });
+      const endpoint = isMerchant ? `/api/restaurant/order-list?${params}` : `/api/admin/checkout/doneOrder?${params}`;
+      const res  = await fetch(endpoint, { credentials: "include" });
       const data = await res.json();
       setOrders(Array.isArray(data.orders) ? data.orders : []);
       setPagination(data.pagination || { totalPages: 1, totalItems: 0 });
@@ -91,19 +94,51 @@ function Order({ query }) {
   const handleApplyUpdates = async () => {
     if (!draftUpdates.length) return;
     try {
-      const res  = await fetch("/api/admin/authenOrder", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ orderNew: draftUpdates }),
-      });
-      const data = await res.json();
-      setMessage(data.message || "Cập nhật thành công!");
+      let res;
+      if (isMerchant) {
+          // Merchant API updates status one by one usually, but let's assume we can add a bulk update endpoint, or just loop
+          for (const [id, status] of draftUpdates) {
+             await fetch(`/api/restaurant/orders/${id}/status`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ status })
+             });
+          }
+          res = { ok: true };
+      } else {
+          res  = await fetch("/api/admin/authenOrder", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ orderNew: draftUpdates }),
+          });
+      }
+      
+      setMessage("Cập nhật thành công!");
       setDraftUpdates([]);
       fetchOrders();
       setTimeout(() => setMessage(""), 3000);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleOpenDetail = (order) => {
+    setSelectedOrder(order);
+    setIsPrintModalOpen(true);
+  };
+
+  const handlePrint = (type) => {
+    // type: 'kitchen' or 'invoice'
+    const printArea = document.getElementById(`print-area-${type}`);
+    if (printArea) {
+        const originalContent = document.body.innerHTML;
+        const printContent = printArea.innerHTML;
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+        window.location.reload(); // Quick reset
     }
   };
 
@@ -125,9 +160,9 @@ function Order({ query }) {
         <div>
           <h1 className="adm-page-title">
             <i className="bi bi-receipt-cutoff" style={{ color: "var(--adm-info)", marginRight: 8 }} />
-            Quản lý đơn hàng
+            {isMerchant ? "Danh sách Đơn hàng" : "Quản lý đơn hàng"}
           </h1>
-          <p className="adm-page-sub">Theo dõi và cập nhật trạng thái đơn hàng trong hệ thống</p>
+          <p className="adm-page-sub">{isMerchant ? "Quản lý tất cả đơn hàng của nhà hàng bạn" : "Theo dõi và cập nhật trạng thái đơn hàng trong hệ thống"}</p>
         </div>
         {pendingDrafts > 0 && (
           <button className="adm-btn adm-btn--save" onClick={handleApplyUpdates} style={{ position: "relative" }}>
@@ -259,6 +294,7 @@ function Order({ query }) {
               <th>Thông tin thêm</th>
               <th>Ngày tạo</th>
               <th className="adm-th-center">Trạng thái</th>
+              {isMerchant && <th className="adm-th-center">Thao tác</th>}
             </tr>
           </thead>
           <tbody>
@@ -373,6 +409,13 @@ function Order({ query }) {
                       ))}
                     </select>
                   </td>
+                  {isMerchant && (
+                    <td className="adm-td-center">
+                      <button className="adm-btn adm-btn--ghost" onClick={() => handleOpenDetail(order)} style={{padding: '6px 12px', fontSize: 13}}>
+                        <i className="bi bi-file-text"></i> Chi tiết
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             )}
@@ -381,6 +424,96 @@ function Order({ query }) {
       </div>
 
       <Pagination page={page} totalPages={pagination.totalPages || 1} setPage={setPage} />
+
+      {/* Print Detail Modal */}
+      {isPrintModalOpen && selectedOrder && (
+        <div className="adm-modal-overlay">
+          <div className="adm-modal-content" style={{maxWidth: '800px', width: '90%', maxHeight: '90vh', overflowY: 'auto'}}>
+            <div className="adm-modal-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: 15, marginBottom: 15}}>
+              <h2 style={{fontSize: 18, margin: 0}}>Chi tiết Đơn hàng #{selectedOrder.orderId}</h2>
+              <button onClick={() => setIsPrintModalOpen(false)} style={{background: 'none', border: 'none', fontSize: 24, cursor: 'pointer'}}>&times;</button>
+            </div>
+
+            <div className="adm-modal-body" style={{display: 'flex', gap: '20px'}}>
+              
+              {/* KITCHEN TICKET SECTION */}
+              <div style={{flex: 1, border: '1px solid #e2e8f0', borderRadius: '8px', padding: '15px', background: selectedOrder.orderStatus === 'activating' ? '#fffaf0' : '#fff'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                      <h3 style={{fontSize: 16, margin: 0, color: '#dd6b20'}}><i className="bi bi-fire"></i> Phiếu Bếp (Đầu bếp)</h3>
+                      <button className="adm-btn adm-btn--save" onClick={() => handlePrint('kitchen')} style={{background: '#dd6b20', color: '#fff'}}><i className="bi bi-printer"></i> In bếp</button>
+                  </div>
+                  <div id="print-area-kitchen" style={{fontFamily: 'monospace', fontSize: '14px', border: '1px dashed #ccc', padding: '10px', background: '#fff', color: '#000'}}>
+                      <div style={{textAlign: 'center', marginBottom: 10, borderBottom: '1px dashed #000', paddingBottom: 5}}>
+                          <h2 style={{margin: 0, fontSize: 18}}>PHIẾU LÀM MÓN</h2>
+                          <div>BÀN: {selectedOrder.tableInfo?.tableNumber || "GIAO HÀNG"}</div>
+                          <div>Mã đơn: #{String(selectedOrder.orderId).slice(-6)}</div>
+                          <div>Giờ in: {new Date().toLocaleTimeString('vi-VN')}</div>
+                      </div>
+                      <table style={{width: '100%', textAlign: 'left', borderCollapse: 'collapse'}}>
+                          <thead>
+                              <tr style={{borderBottom: '1px dashed #000'}}>
+                                  <th style={{padding: '5px 0'}}>SL</th>
+                                  <th style={{padding: '5px 0'}}>Tên món</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {(selectedOrder.products || []).map((p, i) => (
+                                  <tr key={i} style={{borderBottom: '1px dashed #ccc'}}>
+                                      <td style={{padding: '5px 0', fontWeight: 'bold'}}>{p.quantity}</td>
+                                      <td style={{padding: '5px 0'}}>{p.product_id?.name || p.name || 'Sản phẩm'}</td>
+                                  </tr>
+                              ))}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+
+              {/* INVOICE SECTION */}
+              <div style={{flex: 1, border: '1px solid #e2e8f0', borderRadius: '8px', padding: '15px'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                      <h3 style={{fontSize: 16, margin: 0, color: '#3182ce'}}><i className="bi bi-receipt"></i> Hóa Đơn (Khách hàng)</h3>
+                      <button className="adm-btn adm-btn--save" onClick={() => handlePrint('invoice')} style={{background: '#3182ce', color: '#fff'}}><i className="bi bi-printer"></i> In HĐ</button>
+                  </div>
+                  <div id="print-area-invoice" style={{fontFamily: 'monospace', fontSize: '14px', border: '1px solid #ccc', padding: '15px', background: '#fff', color: '#000'}}>
+                      <div style={{textAlign: 'center', marginBottom: 15}}>
+                          <h2 style={{margin: 0, fontSize: 18}}>{selectedOrder.restaurantInfo?.name || "NHÀ HÀNG"}</h2>
+                          <div>{selectedOrder.restaurantInfo?.phone || ""}</div>
+                          <div style={{borderTop: '1px dashed #000', margin: '10px 0'}}></div>
+                          <h3 style={{margin: 0, fontSize: 16}}>HÓA ĐƠN THANH TOÁN</h3>
+                          <div>Mã đơn: #{selectedOrder.orderId}</div>
+                          <div>Khách: {selectedOrder.userInfo?.fullName || "Khách Vãng Lai"}</div>
+                          {selectedOrder.orderType === 'dine_in' && <div>Bàn: {selectedOrder.tableInfo?.tableNumber}</div>}
+                      </div>
+                      <table style={{width: '100%', textAlign: 'left', borderCollapse: 'collapse', marginBottom: 15}}>
+                          <thead>
+                              <tr style={{borderBottom: '1px dashed #000'}}>
+                                  <th style={{padding: '5px 0'}}>Món</th>
+                                  <th style={{padding: '5px 0', textAlign: 'center'}}>SL</th>
+                                  <th style={{padding: '5px 0', textAlign: 'right'}}>Thành tiền</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {(selectedOrder.products || []).map((p, i) => (
+                                  <tr key={i} style={{borderBottom: '1px dashed #ccc'}}>
+                                      <td style={{padding: '5px 0'}}>{p.product_id?.name || p.name || 'Sản phẩm'}</td>
+                                      <td style={{padding: '5px 0', textAlign: 'center'}}>{p.quantity}</td>
+                                      <td style={{padding: '5px 0', textAlign: 'right'}}>{formatCurrency((p.price || 0) * (p.quantity || 1))}</td>
+                                  </tr>
+                              ))}
+                          </tbody>
+                      </table>
+                      <div style={{textAlign: 'right', borderTop: '1px dashed #000', paddingTop: 10}}>
+                          <div>Tổng cộng: <strong>{formatCurrency(selectedOrder.totalAmount)}</strong></div>
+                          {selectedOrder.depositAmount > 0 && <div>Đã cọc: -{formatCurrency(selectedOrder.depositAmount)}</div>}
+                          <div style={{fontSize: 16, marginTop: 5}}><strong>CẦN TT: {formatCurrency(Math.max(0, (selectedOrder.totalAmount || 0) - (selectedOrder.depositAmount || 0)))}</strong></div>
+                      </div>
+                  </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

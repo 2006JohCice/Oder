@@ -9,5 +9,6 @@ router.get('/checkout', middleware.requireAuth,controller.index);
 router.post('/checkout/order', middleware.requireAuth,controller.order);
 router.get('/checkout/success/:orderId',middleware.requireAuth, controller.success)
 router.get('/checkout/doneOrder',middleware.requireAuth, controller.doneOrder)
+router.post('/checkout/cancel/:orderId', middleware.requireAuth, controller.cancelOrder);
 module.exports = router
 

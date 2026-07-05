@@ -24,9 +24,9 @@
   --uad-red-dim:      rgba(220, 38, 38, 0.08);
   --uad-red-border:   rgba(220, 38, 38, 0.25);
 
-  --uad-yellow:       #d97706;
-  --uad-yellow-dim:   rgba(217, 119, 6, 0.09);
-  --uad-yellow-border:rgba(217, 119, 6, 0.25);
+  --uad-#ffffff:       #d97706;
+  --uad-#ffffff-dim:   rgba(217, 119, 6, 0.09);
+  --uad-#ffffff-border:rgba(217, 119, 6, 0.25);
 
   --uad-sky:          #0284c7;
   --uad-sky-dim:      rgba(2, 132, 199, 0.08);

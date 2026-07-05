@@ -1,0 +1,247 @@
+/* MERCHANT REPORTS (PERFORMANCE ANALYTICS) CSS */
+
+.ro-time-toggles {
+  display: flex;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.ro-time-btn {
+  padding: 8px 15px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ro-time-btn.active {
+  background: #c90000;
+  color: #fff;
+  border-radius: 20px;
+}
+
+.ro-analytics-top-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.ro-analytics-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.ro-ac-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ro-ac-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #2d3748;
+  margin: 0;
+}
+
+/* REVENUE GROWTH */
+.ro-rev-amount {
+  font-size: 28px;
+  font-weight: 800;
+  color: #c90000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.ro-rev-percent {
+  font-size: 12px;
+  color: #38a169;
+  background: #e6fffa;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+/* CUSTOMER SATISFACTION */
+.ro-satisfaction-overview {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.ro-sat-score {
+  font-size: 42px;
+  font-weight: 800;
+  color: #1a202c;
+  line-height: 1;
+}
+
+.ro-sat-info i {
+  color: #dd6b20;
+  font-size: 14px;
+  margin-right: 2px;
+}
+
+.ro-sat-info p {
+  margin: 5px 0 0 0;
+  font-size: 12px;
+  color: #718096;
+}
+
+.ro-sat-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ro-sat-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.ro-sat-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: #edf2f7;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ro-sat-bar-fill {
+  height: 100%;
+  background: #fbd38d;
+  border-radius: 3px;
+}
+
+.ro-sat-percent {
+  width: 30px;
+  text-align: right;
+  color: #718096;
+}
+
+/* BOTTOM ROW */
+.ro-analytics-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+/* BEST SELLERS */
+.ro-best-seller-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.ro-best-seller-item:last-child {
+  border-bottom: none;
+}
+
+.ro-best-seller-item img {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.ro-best-seller-info {
+  flex: 1;
+}
+
+.ro-best-seller-info h4 {
+  margin: 0 0 3px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.ro-best-seller-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #a0aec0;
+}
+
+.ro-best-seller-orders {
+  text-align: right;
+}
+
+.ro-best-seller-orders h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a202c;
+}
+
+.ro-best-seller-orders p {
+  margin: 0;
+  font-size: 11px;
+  color: #718096;
+}
+
+/* PEAK HOURS */
+.ro-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.ro-hm-day {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a0aec0;
+  margin-bottom: 5px;
+}
+
+.ro-hm-cell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: #fed7d7;
+}
+
+.ro-hm-cell.level-1 { background: #fed7d7; }
+.ro-hm-cell.level-2 { background: #fc8181; }
+.ro-hm-cell.level-3 { background: #e53e3e; }
+.ro-hm-cell.level-4 { background: #9b2c2c; }
+
+.ro-hm-legend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  font-size: 11px;
+  color: #718096;
+  font-weight: 600;
+}
+
+.ro-hm-legend-colors {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ro-hm-legend-colors div {
+  width: 15px;
+  height: 10px;
+  border-radius: 2px;
+}

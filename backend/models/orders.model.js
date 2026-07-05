@@ -45,6 +45,7 @@ const orderSchema = new mongoose.Schema(
         },
         tableInfo: {
             area: String,
+            displayName: String,
             tableNumber: String,
             guestCount: Number,
             visitDate: String,
@@ -76,6 +77,11 @@ const orderSchema = new mongoose.Schema(
         timestamps: true
     });
 
-const Order = mongoose.model('Order', orderSchema, 'orders'); 
+orderSchema.index({ orderGroupCode: 1 });
+orderSchema.index({ bookingSlotKey: 1 });
+orderSchema.index({ restaurant_id: 1 });
+orderSchema.index({ orderStatus: 1 });
+
+const Order = mongoose.model('Order', orderSchema, 'orders');
 
 module.exports = Order;

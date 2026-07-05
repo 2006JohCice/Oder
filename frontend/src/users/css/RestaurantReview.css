@@ -1,0 +1,189 @@
+.restaurant-review-section {
+  margin-top: 20px;
+  background: #1e1e24; /* Dark gray background */
+  border-radius: 16px;
+  padding: 24px;
+  color: #fff;
+}
+
+.rr-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.rr-header-row h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  color: #e2e8f0;
+}
+
+.rr-overall-rating {
+  background: #b7791f;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.reviews-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.review-item {
+  border-bottom: 1px solid #2d3748;
+  padding-bottom: 24px;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.review-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #4a5568;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.review-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-meta strong {
+  font-size: 15px;
+  color: #e2e8f0;
+}
+
+.review-meta small {
+  font-size: 12px;
+  color: #a0aec0;
+  margin-top: 2px;
+}
+
+.review-stars {
+  color: #ecc94b;
+  font-size: 14px;
+}
+
+.review-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #cbd5e0;
+  margin: 0;
+}
+
+/* Form */
+.review-form-container {
+  background: #2d3748;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #4a5568;
+}
+
+.review-form textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  padding: 0;
+  font-family: inherit;
+}
+
+.review-form textarea::placeholder {
+  color: #a0aec0;
+}
+
+.review-form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  border-top: 1px solid #4a5568;
+  padding-top: 16px;
+}
+
+.star-rating-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a0aec0;
+  font-size: 14px;
+}
+
+.stars-select {
+  display: flex;
+  gap: 2px;
+  cursor: pointer;
+  color: #4a5568;
+  font-size: 18px;
+}
+
+.stars-select span.active {
+  color: #ecc94b;
+}
+
+.stars-select span:hover {
+  transform: scale(1.1);
+}
+
+.btn-submit-review {
+  background: #1a202c;
+  color: #e2e8f0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.btn-submit-review:hover:not(:disabled) {
+  background: #2d3748;
+}
+
+.btn-submit-review:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.review-message {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #48bb78;
+  text-align: right;
+}

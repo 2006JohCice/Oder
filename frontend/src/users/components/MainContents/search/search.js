@@ -1,96 +1,69 @@
-/* eslint-disable unicode-bom */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../../css/search-hero.css";
 
-function Search() {
+function SearchHero() {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
-  const [location, setLocation] = useState("");
-  const [price, setPrice] = useState("");
-  const [meal, setMeal] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    // Fetch real categories to use as search suggestions
+    fetch("/api/category")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+            // Pick 3 random categories
+            const shuffled = [...data].sort(() => 0.5 - Math.random());
+            setSuggestions(shuffled.slice(0, 3).map(c => c.name));
+        } else {
+            setSuggestions(["Phở", "Lẩu", "Cơm tấm"]);
+        }
+      })
+      .catch(() => setSuggestions(["Trà sữa", "Bánh mì", "Bún bò"]));
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    const searchParams = new URLSearchParams();
-    if (keyword) searchParams.set("keyword", keyword);
-    if (location) searchParams.set("location", location);
-    if (price) searchParams.set("price", price);
-    if (meal) searchParams.set("meal", meal);
-
-    navigate(`/search${searchParams.toString() ? `?${searchParams.toString()}` : ""}`);
+    if (keyword) {
+      navigate(`/search?keyword=${encodeURIComponent(keyword)}`);
+    }
   };
 
   return (
-    <section className="search-shell">
-      <form className="search-panel" onSubmit={handleSubmit}>
-        <div className="search-heading">
-          <p className="eyebrow">Tìm Nhanh Món Phù Hợp</p>
-          <h1>Thực đơn hấp dẫn, đặt bàn nhanh, xử lý nhanh cho bạn.</h1>
-        </div>
-
-        <div className="search-grid">
-          <div className="search-field search-field-wide">
-            <label htmlFor="search-keyword">Món ăn & tên combo</label>
-            <div className="search-input-wrap">
-              <i className="bi bi-search" />
-              <input
-                id="search-keyword"
-                type="text"
-                placeholder="Ví dụ: lẩu thái, nem rán Hà Nội, combo 4 người"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="search-field">
-            <label htmlFor="search-location">Khu vực</label>
-            <select id="search-location" value={location} onChange={(e) => setLocation(e.target.value)}>
-              <option value="">Chọn khu vực</option>
-              <option value="Ha Noi">Hà Nội</option>
-              <option value="Ho Chi Minh">Hồ Chí Minh</option>
-              <option value="Thanh Hoa">Thanh Hóa</option>
-            </select>
-          </div>
-
-          <div className="search-field">
-            <label htmlFor="search-price">Mức giá</label>
-            <select id="search-price" value={price} onChange={(e) => setPrice(e.target.value)}>
-              <option value="">Chọn mức giá</option>
-              <option value="Duoi 100k">Dưới 100k</option>
-              <option value="100k - 200k">100k - 200k</option>
-              <option value="200k - 300k">200k - 300k</option>
-              <option value="300k - 500k">300k - 500k</option>
-              <option value="Tren 500k">Trên 500k</option>
-            </select>
-          </div>
-
-          <div className="search-field">
-            <label htmlFor="search-meal">Loại bữa</label>
-            <select id="search-meal" value={meal} onChange={(e) => setMeal(e.target.value)}>
-              <option value="">Chọn bữa</option>
-              <option value="Bua sang">Bữa sáng</option>
-              <option value="Bua trua">Bữa trưa</option>
-              <option value="Bua toi">Bữa tối</option>
-              <option value="Lau">Lẩu</option>
-              <option value="Nuong">Nướng</option>
-              <option value="Combo">Combo</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="search-actions">
-          <button type="submit" className="primary-button">
-            Tìm món ăn
-          </button>
-          <a href="/cart/checkout?mode=table" className="secondary-button no-underline">
-            Ưu đãi đặt bàn
-          </a>
-        </div>
+    <div className="gp-search-container">
+      <form className="gp-search-box" onSubmit={handleSubmit}>
+        <i className="bi bi-search gp-search-icon" />
+        <input
+          type="text"
+          className="gp-search-input"
+          placeholder="Tìm món ngon ngay..."
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
       </form>
-    </section>
+      <div className="gp-search-suggestions">
+        {suggestions.map((sug, i) => (
+            <span key={i} onClick={() => {
+                setKeyword(sug);
+                navigate(`/search?keyword=${encodeURIComponent(sug)}`);
+            }}>{sug}</span>
+        ))}
+      </div>
+      
+      <div className="gp-quick-filters">
+        <button className="gp-filter-chip gp-active" onClick={() => navigate('/search')}>
+          <i className="bi bi-cursor-fill" /> Gần bạn
+        </button>
+        <button className="gp-filter-chip" onClick={() => navigate('/products')}>
+          <i className="bi bi-fire" /> Món ngon
+        </button>
+        <button className="gp-filter-chip" onClick={() => navigate('/restaurants')}>
+          <i className="bi bi-shop" /> Nhà hàng
+        </button>
+      </div>
+    </div>
   );
 }
 
-export default Search;
+export default SearchHero;

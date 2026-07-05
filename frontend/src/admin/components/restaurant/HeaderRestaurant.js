@@ -1,63 +1,31 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import "../../css/HeaderRestaurant.css";
+import React from "react";
+import "../../css/RestaurantOwnerLayout.css";
 
-const HeaderRestaurant = ({ menuOpen, setMenuOpen }) => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    fetch("/api/user/me", { credentials: "include" })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => setUser(data?.user || null))
-      .catch(() => setUser(null));
-  }, []);
-
-  const handleLogout = async () => {
-    const res = await fetch("/api/user/logout", {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (res.ok) {
-      window.location.href = "/";
-    }
-  };
-
+const HeaderRestaurant = ({ user, toggleSidebar }) => {
   return (
-    <header className="header-restaurant">
-      <div className="header-left">
-        <button
-          type="button"
-          className="menu-toggle"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Mở menu"
-        >
+    <header className="ro-top-header">
+      <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
+        <button className="ro-mobile-menu-btn" onClick={toggleSidebar}>
           <i className="bi bi-list"></i>
         </button>
-
-        <h1 className="header-title">Quản lý nhà hàng</h1>
+        <div className="ro-top-header-title">Merchant Suite</div>
       </div>
-
-      <div className="header-right">
-        <div className="user-info">
-          <i className="bi bi-person-circle"></i>
-          {user ? (
-            <>
-              <span>{user.name || user.fullname}</span>
-              <button
-                type="button"
-                className="logout-btn"
-                onClick={handleLogout}
-              >
-                Đăng xuất
-              </button>
-            </>
-          ) : (
-            <Link to="/user/auth/login" className="login-link">
-              Đăng nhập
-            </Link>
-          )}
+      
+      <div className="ro-top-header-right">
+        <div className="ro-search-bar">
+          <i className="bi bi-search"></i>
+          <input type="text" placeholder="Search..." />
         </div>
+        
+        <div className="ro-icon-btn">
+          <i className="bi bi-bell"></i>
+        </div>
+        
+        <img 
+          src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80"} 
+          alt="Avatar" 
+          className="ro-avatar" 
+        />
       </div>
     </header>
   );

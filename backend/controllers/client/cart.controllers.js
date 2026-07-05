@@ -69,7 +69,7 @@ const hydrateCart = async (cart) => {
       _id: item.product_id,
       deleted: false,
     })
-      .populate("restaurant_id", "name phone address ratingAverage ratingCount orderCount")
+      .populate("restaurant_id", "name phone address location ratingAverage ratingCount orderCount slug")
       .lean();
 
     if (!productInfo) {
@@ -114,8 +114,10 @@ const hydrateCart = async (cart) => {
       restaurantGroupsMap.set(restaurantId, {
         restaurantId: restaurantId === "no-restaurant" ? "" : restaurantId,
         restaurantName: restaurantInfo?.name || "Nhà hàng không xác định",
+        restaurantSlug: restaurantInfo?.slug || "default",
         restaurantPhone: restaurantInfo?.phone || "",
         restaurantAddress: restaurantInfo?.address || "",
+        restaurantLocation: restaurantInfo?.location || { lat: 21.028511, lng: 105.804817 },
         ratingAverage: Number(restaurantInfo?.ratingAverage || 0),
         ratingCount: Number(restaurantInfo?.ratingCount || 0),
         orderCount: Number(restaurantInfo?.orderCount || 0),

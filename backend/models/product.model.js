@@ -36,6 +36,11 @@ const productSchema = new mongoose.Schema({
     timestamps: true
   });
 
+productSchema.index({ restaurant_id: 1 });
+productSchema.index({ category: 1 });
+productSchema.index({ status: 1 });
+productSchema.index({ deleted: 1 });
+
 const Product = mongoose.model('Product', productSchema, 'products');
 
 module.exports = Product;

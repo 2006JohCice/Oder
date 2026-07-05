@@ -1,0 +1,470 @@
+/* ===== MY ORDERS PREMIUM REDESIGN ===== */
+
+.gp-orders-wrapper {
+  display: flex;
+  min-height: calc(100vh - 100px);
+  background: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  /* max-width: 1300px; */
+  /* margin: 40px auto; */
+  /* border-radius: 20px; */
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+}
+
+/* SIDEBAR BỘ LỌC */
+.gp-orders-sidebar {
+  width: 280px;
+  background: #fff;
+  padding: 30px 25px;
+  border-right: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.gp-orders-sidebar h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0 0 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gp-orders-sidebar h3 i {
+  color: #c90000;
+}
+
+.gp-orders-sidebar p {
+  font-size: 13px;
+  color: #718096;
+  margin: 0 0 30px 0;
+}
+
+.gp-orders-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.gp-filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gp-filter-section label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+/* SEARCH BOX */
+.gp-filter-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.gp-filter-search-box i {
+  position: absolute;
+  left: 12px;
+  color: #a0aec0;
+  font-size: 14px;
+}
+
+.gp-filter-search-box input {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 10px 10px 35px;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.gp-filter-search-box input:focus {
+  border-color: #c90000;
+  box-shadow: 0 0 0 3px rgba(201,0,0,0.1);
+}
+
+/* RADIO GROUPS */
+.gp-filter-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gp-filter-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+}
+
+.gp-filter-radio-group input[type="radio"] {
+  accent-color: #c90000;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+
+/* MAIN CONTENT */
+.gp-orders-content {
+  flex: 1;
+  padding: 30px 40px;
+  background: #f8fafc;
+}
+
+.gp-orders-header-title {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.gp-orders-header-title h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0;
+}
+
+.gp-orders-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c90000;
+  background: #fff5f5;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* TABS */
+.gp-orders-tabs {
+  display: flex;
+  gap: 30px;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 30px;
+}
+
+.gp-orders-tab {
+  font-size: 14px;
+  font-weight: 600;
+  color: #718096;
+  padding: 10px 0;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.gp-orders-tab:hover {
+  color: #1a202c;
+}
+
+.gp-orders-tab.active {
+  color: #c90000;
+}
+
+.gp-orders-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #c90000;
+  border-radius: 3px 3px 0 0;
+}
+
+/* LIST & CARDS (1 COLUMN LAYOUT) */
+.gp-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gp-orders-card-premium {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  border: 1px solid #edf2f7;
+  display: flex;
+  padding: 25px;
+  gap: 30px;
+  transition: all 0.3s;
+}
+
+.gp-orders-card-premium:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  border-color: #e2e8f0;
+}
+
+.gp-card-left {
+  flex: 1;
+}
+
+.gp-card-right {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: 1px dashed #e2e8f0;
+  padding-left: 30px;
+}
+
+.gp-orders-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.gp-orders-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0;
+}
+
+.gp-order-code {
+  font-size: 12px;
+  font-weight: 700;
+  color: #718096;
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.gp-orders-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-left: auto;
+}
+
+.gp-orders-badge.delivering { background: #fff5f5; color: #e53e3e; border: 1px solid #feb2b2; }
+.gp-orders-badge.completed { background: #f0fff4; color: #38a169; border: 1px solid #9ae6b4; }
+.gp-orders-badge.processing { background: #ebf8ff; color: #3182ce; border: 1px solid #90cdf4; }
+.gp-orders-badge.cancelled { background: #f7fafc; color: #a0aec0; border: 1px solid #e2e8f0; }
+
+.gp-orders-card-date {
+  font-size: 13px;
+  color: #a0aec0;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* PRODUCT LIST INSIDE CARD */
+.gp-orders-product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.gp-orders-product-item {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.gp-orders-product-item img {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #edf2f7;
+}
+
+.gp-orders-product-info {
+  flex: 1;
+}
+
+.gp-orders-product-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 5px 0;
+}
+
+.gp-orders-product-qty {
+  font-size: 13px;
+  color: #718096;
+  margin: 0;
+}
+
+.gp-orders-product-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a5568;
+}
+
+/* FOOTER STATS RIGHT */
+.gp-orders-summary-box {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #edf2f7;
+}
+
+.gp-orders-stat-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.gp-orders-stat-group.pts-group {
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.gp-orders-stat-label {
+  font-size: 12px;
+  color: #718096;
+  font-weight: 600;
+}
+
+.gp-orders-stat-val.price {
+  font-size: 20px;
+  font-weight: 900;
+  color: #c90000;
+}
+
+.gp-orders-stat-val.pts {
+  font-size: 13px;
+  font-weight: 700;
+  color: #d97706;
+}
+
+/* ACTIONS */
+.gp-orders-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gp-orders-btn {
+  text-align: center;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.gp-orders-btn.primary {
+  background: linear-gradient(135deg, #c90000, #9b0000);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(201,0,0,0.2);
+}
+
+.gp-orders-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201,0,0,0.3);
+}
+
+.gp-orders-btn.primary.pulse {
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(201,0,0,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(201,0,0,0); }
+  100% { box-shadow: 0 0 0 0 rgba(201,0,0,0); }
+}
+
+.gp-orders-btn.outline {
+  background: #fff;
+  border: 1px solid #cbd5e0;
+  color: #4a5568;
+}
+
+.gp-orders-btn.outline:hover {
+  background: #f8fafc;
+  border-color: #a0aec0;
+}
+
+.gp-orders-btn.disabled-look {
+  background: #f1f5f9;
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+
+
+/* EMPTY STATE */
+.gp-orders-empty {
+  text-align: center;
+  padding: 80px 0;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px dashed #cbd5e0;
+}
+
+.gp-orders-empty img {
+  width: 100px;
+  opacity: 0.5;
+  margin-bottom: 20px;
+}
+
+.gp-orders-empty h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0 0 10px 0;
+}
+
+.gp-orders-empty p {
+  color: #718096;
+  font-size: 14px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .gp-orders-wrapper {
+    flex-direction: column;
+  }
+  .gp-orders-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .gp-orders-filters {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .gp-filter-section {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gp-orders-card-premium {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .gp-card-right {
+    width: 100%;
+    border-left: none;
+    border-top: 1px dashed #e2e8f0;
+    padding-left: 0;
+    padding-top: 20px;
+  }
+}

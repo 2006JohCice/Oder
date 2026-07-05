@@ -1,0 +1,18 @@
+{
+  "header": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "my_account": "Tài khoản của tôi",
+    "logout": "Đăng xuất",
+    "cart": "Giỏ hàng",
+    "search_placeholder": "Tìm kiếm món ăn, nhà hàng...",
+    "orders": "Đơn hàng",
+    "settings": "Cài đặt"
+  },
+  "home": {
+    "welcome": "Giao Đồ Ăn Nhanh Chóng",
+    "explore": "Khám phá món ngon",
+    "restaurants": "Nhà hàng",
+    "near_you": "Gần bạn"
+  }
+}

@@ -85,7 +85,7 @@ const generateOtpEmailTemplate = (otp) => {
                 </div>
 
                 <p style="color:#666;">
-                  Mã OTP sẽ hết hạn sau <b>1 phút</b>.
+                  Mã OTP sẽ hết hạn sau <b>5 phút</b>.
                 </p>
 
                 <p style="font-size:12px;color:#999;">
@@ -242,7 +242,7 @@ module.exports.passwordRegisterOtp = async (req, res) => {
       email,
       otp: otpRandom,
       type: "register",
-      expireAt: Date.now() + 60 * 1000,
+      expireAt: Date.now() + 5 * 60 * 1000,
     });
 
     const subject = "Yêu cầu tạo tài khoản mới";
@@ -320,7 +320,7 @@ module.exports.register = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
-      fullName,
+      fullname: fullName,
       email,
       password: hashPassword,
     });
@@ -473,7 +473,7 @@ module.exports.forgotPassword = async (req, res) => {
       email,
       otp: otpRandom,
       type: "forgot",
-      expireAt: Date.now() + 60 * 1000,
+      expireAt: Date.now() + 5 * 60 * 1000,
     });
 
     const subject = "Yêu cầu đặt lại mật khẩu";

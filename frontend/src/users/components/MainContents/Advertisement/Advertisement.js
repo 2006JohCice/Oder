@@ -1,51 +1,74 @@
+import { useState, useEffect } from "react";
+import "../../../css/search-hero.css";
+
+const BANNERS = [
+  {
+    id: 1,
+    image: "https://vimages.coccoc.com/vimage?ns=recipe&url=https%3A%2F%2Fmonngonmoingay.com%2Fwp-content%2Fuploads%2F2019%2F07%2Fcanh-ngheu-mang-le-vi-lau-thai-500.jpg",
+    badge: "CPM CAMPAIGN",
+    title: "Tiệc Lẩu Thái \n Giảm Tới 40%",
+    desc: "Trải nghiệm hương vị chuẩn Bangkok ngay tại Sài Gòn."
+  },
+  {
+    id: 2,
+    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=80",
+    badge: "HEALTHY CHOICE",
+    title: "Tươi Mát Hè Này \n Combo Salad",
+    desc: "Nạp đầy năng lượng với các món chay và salad."
+  },
+  {
+    id: 3,
+    image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80",
+    badge: "FREESHIP",
+    title: "Món Ngon Tận Cửa \n Không Lo Phí Ship",
+    desc: "Miễn phí giao hàng cho đơn từ 150k."
+  }
+];
+
 function Advertisement() {
-  const promos = [
-    {
-      title: "Đặt Bàn Nhanh Hơn",
-      description: "Chọn khu vực, số khách giỏ hàng đến ngay trong lượt checkout mới.",
-      image:
-        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      title: "Combo tối ưu cho gia đình bạn",
-      description: "Món ăn gia đình oredr ngay tại đây.",
-      image:
-        "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80",
-    },
-  ];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % BANNERS.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <section className="promo-grid">
-      <article className="promo-hero">
-        <div className="promo-copy">
-          <p className="eyebrow">Không gian ăn uống</p>
-          <h2>Sạch Sẽ, Sang Trọng.</h2>
-          <p>
-            Đặt nhanh, card món ăn rõ ràng, checkout nhanh chóng đặt bàn & giao hàng tức thì.
-          </p>
-          <div className="promo-actions">
-            <a href="/products" className="primary-button no-underline ">
-              Xem Thực Đơn
-            </a>
-            <a href="/cart/checkout?mode=table" className="secondary-button no-underline" style ={{color:"black"}}>
-              Giữ Bàn Ngay
-            </a>
-          </div>
-        </div>
-      </article>
-
-      <div className="promo-aside">
-        {promos.map((promo) => (
-          <article key={promo.title} className="promo-card">
-            <img src={promo.image} alt={promo.title} />
-            <div>
-              <h3>{promo.title}</h3>
-              <p>{promo.description}</p>
+    <div className="gp-banner-wrapper">
+      <div className="gp-banner-card">
+        
+        {BANNERS.map((banner, index) => (
+            <div 
+                key={banner.id}
+                className={`gp-banner-slide ${index === currentIndex ? 'active' : ''}`}
+            >
+                <div className="gp-banner-image">
+                    <img src={banner.image} alt={banner.title} />
+                    <div className="gp-banner-overlay"></div>
+                </div>
+                
+                <div className="gp-banner-content">
+                    <span className="gp-banner-badge">{banner.badge}</span>
+                    <h2 style={{ whiteSpace: 'pre-line' }}>{banner.title}</h2>
+                    <p>{banner.desc}</p>
+                    <button className="gp-banner-btn">Khám phá ngay</button>
+                </div>
             </div>
-          </article>
         ))}
+
+        <div className="gp-banner-dots">
+            {BANNERS.map((_, index) => (
+                <span 
+                    key={index} 
+                    className={`gp-dot ${index === currentIndex ? 'gp-active' : ''}`}
+                    onClick={() => setCurrentIndex(index)}
+                ></span>
+            ))}
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
 

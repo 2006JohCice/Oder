@@ -5,10 +5,13 @@ const category = require("./category.route");
 const cartRouter = require("./cart.route");
 const checkOutRouter = require("./checkout.route");
 const userRoure = require("./user.route");
-const foodSuggestionRouter = require("./foodsugGestion");
 const tableRouter = require("./table.route");
 const restaurantRouter = require("./restaurant.route");
-
+const paymentRouter = require("./payment.route");
+const vendorRouter = require("./vendor.route");
+const recommendationRouter = require("./recommendation.route");
+const feedbackRouter = require("./feedback.route");
+const foodSuggestionRouter = require("./foodsugGestion");
 module.exports = (app) => {
     app.use("/api", homeRouter);
     app.use("/api", productRouer);
@@ -20,4 +23,8 @@ module.exports = (app) => {
     app.use("/api", foodSuggestionRouter);
     app.use("/api", tableRouter);
     app.use("/api", restaurantRouter);
+    app.use("/api/payment", paymentRouter);
+    app.use("/api/vendor", vendorRouter);
+    app.use("/api/recommend", recommendationRouter);
+    app.use("/api/feedback", feedbackRouter);
 };

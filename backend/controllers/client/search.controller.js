@@ -4,17 +4,21 @@ const Product = require("../../models/product.model")
 module.exports.index = async (req,res) =>{
     const keyword = req.query.keyword;
     console.log("ở đây",keyword)
-    if(keyword){
-        const keywordRegex = new RegExp(keyword,"i");
-        const products = await Product.find({
-            name:keywordRegex,
-            status:"active",
-            deleted:false
-        })
+    let query = {
+        status: "active",
+        deleted: false
+    };
 
+    if (keyword) {
+        const keywordRegex = new RegExp(keyword, "i");
+        query.name = keywordRegex;
+    }
+
+    try {
+        const products = await Product.find(query);
         res.json(products);
-
-    } 
-   
+    } catch (error) {
+        res.status(500).json({ message: "Lỗi tìm kiếm" });
+    }
 
 }

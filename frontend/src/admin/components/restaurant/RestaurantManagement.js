@@ -174,7 +174,7 @@ const RestaurantManagement = () => {
                         {restaurant.status === "inactive" && (
                           <button className="adm-btn adm-btn--primary adm-btn--icon" onClick={() => updateStatus(restaurant._id, "active")} title="Kích hoạt"><i className="bi bi-play-fill" /></button>
                         )}
-                        <Link to={`/restaurant/${restaurant._id}/products`} target="_blank" rel="noreferrer" className="adm-btn adm-btn--ghost adm-btn--icon" title="Xem menu">
+                        <Link to={`/restaurant/${restaurant.slug || restaurant._id}/products`} target="_blank" rel="noreferrer" className="adm-btn adm-btn--ghost adm-btn--icon" title="Xem menu">
                           <i className="bi bi-box-arrow-up-right" />
                         </Link>
                       </div>

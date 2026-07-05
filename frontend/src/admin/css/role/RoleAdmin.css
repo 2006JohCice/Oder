@@ -87,7 +87,7 @@
 
 .rol-stat-card--purple::after { background: var(--rol-accent); }
 .rol-stat-card--green::after  { background: var(--rol-green); }
-.rol-stat-card--yellow::after { background: var(--rol-yellow); }
+.rol-stat-card--#ffffff::after { background: var(--rol-#ffffff); }
 .rol-stat-card--sky::after    { background: var(--rol-sky); }
 
 .rol-stat-icon {
@@ -100,7 +100,7 @@
 
 .rol-stat-card--purple .rol-stat-icon { background: var(--rol-accent-dim); color: var(--rol-accent); }
 .rol-stat-card--green  .rol-stat-icon { background: var(--rol-green-dim);  color: var(--rol-green); }
-.rol-stat-card--yellow .rol-stat-icon { background: var(--rol-yellow-dim); color: var(--rol-yellow); }
+.rol-stat-card--#ffffff .rol-stat-icon { background: var(--rol-#ffffff-dim); color: var(--rol-#ffffff); }
 .rol-stat-card--sky    .rol-stat-icon { background: var(--rol-sky-dim);    color: var(--rol-sky); }
 
 .rol-stat-label {
@@ -120,7 +120,7 @@
 
 .rol-stat-card--purple .rol-stat-value { color: var(--rol-accent); }
 .rol-stat-card--green  .rol-stat-value { color: var(--rol-green); }
-.rol-stat-card--yellow .rol-stat-value { color: var(--rol-yellow); }
+.rol-stat-card--#ffffff .rol-stat-value { color: var(--rol-#ffffff); }
 .rol-stat-card--sky    .rol-stat-value { color: var(--rol-sky); }
 
 .rol-stat-sub {
@@ -213,7 +213,7 @@
 
 .rol-bar-fill--purple { background: linear-gradient(180deg, #818cf8, #6366f1); }
 .rol-bar-fill--green  { background: linear-gradient(180deg, #4ade80, #16a34a); }
-.rol-bar-fill--yellow { background: linear-gradient(180deg, #fcd34d, #d97706); }
+.rol-bar-fill--#ffffff { background: linear-gradient(180deg, #fcd34d, #d97706); }
 .rol-bar-fill--sky    { background: linear-gradient(180deg, #38bdf8, #0284c7); }
 
 .rol-bar-label {

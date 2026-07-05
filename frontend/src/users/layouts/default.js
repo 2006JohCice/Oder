@@ -15,13 +15,13 @@ import DoneOrder from "../components/pages/doneOrder";
 import RestaurantList from "../components/MainContents/RestaurantList";
 import RestaurantRegister from "../components/pages/RestaurantRegister";
 import RestaurantProducts from "../components/pages/RestaurantProducts";
+import BookTable from "../components/pages/BookTable";
 import RestaurantManagement from "../components/pages/RestaurantManagement";
 import UserSettings from "../components/pages/UserSettings";
 import FeedBack from "../components/pages/feedback";
 import Report from "../components/pages/Report";
 import Footer from "../components/foot/Footer";
-import Loading from "../utils/Loading";
-import CheckoutCartOneShop from "../components/pages/checkoutCartOneShop";
+import FeaturedProducts from "../components/MainContents/products/featuredProducts";
 function DefaultLayout() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -52,19 +52,12 @@ function DefaultLayout() {
       } catch (error) {
         console.error("Lỗi init:", error);
       } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000); 
+        setLoading(false);
       }
     };
 
     initApp();
   }, []);
-
-  // loading screen
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <main className="site-shell">
@@ -75,16 +68,17 @@ function DefaultLayout() {
           <Route path="/" element={<MainContent />} />
           <Route path="/products" element={<ProductsList />} />
           <Route path="/products/:slugCategory" element={<ProductCategoryPage />} />
-          <Route path="/products/detail/:slugProduct" element={<ProductDetail />} />
+          <Route path="/restaurant/:restaurantSlug/products/detail/:slugProduct" element={<ProductDetail />} />
           <Route path="/search" element={<SearchProduct />} />
+          <Route path="/featured" element={<FeaturedProducts />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/cart/checkout" element={<CheckoutCart />} />
-          <Route path="/cart/checkoutshop" element={<CheckoutCartOneShop />} />
           <Route path="/cart/checkout/success/:orderId" element={<OrderSuccess />} />
-          <Route path="/cart/doneOrder" element={<DoneOrder />} />
+          <Route path="/orders" element={<DoneOrder />} />
           <Route path="/restaurants" element={<RestaurantList />} />
           <Route path="/restaurant/register" element={<RestaurantRegister />} />
-          <Route path="/restaurant/:restaurantId/products" element={<RestaurantProducts />} />
+          <Route path="/restaurant/:restaurantSlug/products" element={<RestaurantProducts />} />
+          <Route path="/restaurant/:restaurantSlug/book-table" element={<BookTable />} />
           <Route path="/restaurant/manage" element={<RestaurantManagement />} />
           <Route path="/user/settings" element={<UserSettings />} />
           <Route path="/user/feedback" element={<FeedBack />} />

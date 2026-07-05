@@ -84,18 +84,19 @@ module.exports.authenOrder = async (req, res) => {
       }
 
       if (currentOrder.orderType === "dine_in" && currentOrder.tableInfo?.tableNumber) {
-        const tablePayload =
-          status === "completed" || status === "cancelled"
-            ? { status: "available", currentOrderId: "" }
-            : { status: "occupied", currentOrderId: String(currentOrder._id) };
+        const tableNumbers = String(currentOrder.tableInfo.tableNumber).split(',').map(t => t.trim()).filter(Boolean);
 
-        await Table.updateOne(
-          {
-            restaurant_id: currentOrder.restaurant_id,
-            tableNumber: currentOrder.tableInfo.tableNumber,
-          },
-          tablePayload
-        );
+        if (status === "completed" || status === "cancelled") {
+          await Table.updateMany(
+            { restaurant_id: currentOrder.restaurant_id, tableNumber: { $in: tableNumbers } },
+            { $set: { status: "available" }, $unset: { currentOrderId: 1 } }
+          );
+        } else {
+          await Table.updateMany(
+            { restaurant_id: currentOrder.restaurant_id, tableNumber: { $in: tableNumbers } },
+            { $set: { status: "occupied", currentOrderId: String(currentOrder._id) } }
+          );
+        }
       }
 
       await Order.updateOne(

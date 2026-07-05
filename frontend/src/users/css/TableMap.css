@@ -1,0 +1,656 @@
+/* ===== ADVANCED RESERVATION PREMIUM STYLES ===== */
+
+.gp-res-page-wrapper {
+  background-color: #f8fafc;
+  min-height: calc(100vh - 100px);
+  padding: 40px 20px 80px;
+  font-family: 'Inter', sans-serif;
+  color: #1a202c;
+}
+
+/* HEADER */
+.gp-res-header-premium {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 20px;
+}
+
+.gp-res-badge-top {
+  display: inline-block;
+  background: linear-gradient(135deg, #f6e05e, #d69e2e);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.gp-res-title-premium h1 {
+  font-size: 32px;
+  font-weight: 900;
+  color: #c90000;
+  margin: 0 0 5px 0;
+}
+
+.gp-res-title-premium h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 8px 0;
+}
+
+.gp-res-title-premium p {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+.gp-res-timer-premium {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  padding: 10px 20px;
+  border-radius: 30px;
+  color: #c90000;
+  font-size: 13px;
+}
+
+.gp-res-timer-premium .pulse-dot {
+  width: 10px;
+  height: 10px;
+  background: #c90000;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(201, 0, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(201, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 0, 0, 0); }
+}
+
+/* LAYOUT */
+.gp-reservation-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.gp-reservation-map-col {
+  flex: 1;
+}
+
+.gp-reservation-form-col {
+  width: 380px;
+  flex-shrink: 0;
+}
+
+/* 2D MAP CARD */
+.gp-map-premium-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.gp-map-legend-bar {
+  padding: 20px 25px;
+  border-bottom: 1px solid #edf2f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.gp-map-legend-bar h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a202c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gp-map-legend {
+  display: flex;
+  gap: 15px;
+}
+
+.gp-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.gpl-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+.gpl-dot.available { background: #fff; border-color: #cbd5e0; }
+.gpl-dot.selected { background: #c90000; box-shadow: 0 0 8px rgba(201,0,0,0.4); }
+.gpl-dot.booked { background: #a0aec0; }
+.gpl-dot.held { background: #ed8936; }
+
+/* FLOOR AREA */
+.gp-map-floor-area {
+  position: relative;
+  height: 500px;
+  background: #f1f5f9;
+  /* Blueprint Grid Pattern */
+  background-image: 
+    linear-gradient(rgba(203, 213, 224, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(203, 213, 224, 0.3) 1px, transparent 1px);
+  background-size: 40px 40px;
+  overflow: hidden;
+}
+
+/* Architects Details */
+.gp-map-wall-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 8px;
+  background: #94a3b8;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  padding-bottom: -15px;
+  border-bottom: 2px solid #cbd5e0;
+}
+.gp-map-wall-top::after {
+  content: "Khu vực cửa sổ - View Thành Phố";
+  position: absolute;
+  top: 15px;
+  background: rgba(255,255,255,0.8);
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+
+.gp-map-door-left {
+  position: absolute;
+  top: 50%; left: 0;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: left top;
+  background: #e2e8f0;
+  color: #475569;
+  padding: 5px 20px;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 0 0 8px 8px;
+  margin-left: -20px; /* Adjust for rotation */
+  margin-top: -60px;
+}
+
+.gp-map-bar-counter {
+  position: absolute;
+  bottom: 30px; left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 30px;
+  background: #e2e8f0;
+  border: 2px solid #cbd5e0;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.gp-map-plant {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #dcfce7;
+  border: 2px solid #86efac;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #16a34a;
+  font-size: 16px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* REALISTIC TABLES */
+.gp-table-premium {
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.gp-table-surface {
+  background: #fff;
+  border: 2px solid #cbd5e0;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  color: #1a202c;
+  transition: all 0.3s;
+}
+
+.gp-table-surface span {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.gp-table-surface small {
+  font-size: 9px;
+  color: #718096;
+  margin-top: 2px;
+}
+
+/* Table Types */
+.gp-table-premium-circle .gp-table-surface {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.gp-table-premium-large .gp-table-surface {
+  width: 120px;
+  height: 60px;
+  border-radius: 30px;
+}
+
+.gp-table-premium-rect .gp-table-surface {
+  width: 70px;
+  height: 50px;
+  border-radius: 8px;
+}
+
+/* Chairs System */
+.gp-chair {
+  position: absolute;
+  background: #edf2f7;
+  border: 1px solid #cbd5e0;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  z-index: 1;
+  transition: all 0.3s;
+}
+
+/* Circle: 4 chairs (top, right, bottom, left) */
+.gp-chair-circle-1 { top: -20px; left: 22px; }
+.gp-chair-circle-2 { right: -20px; top: 22px; }
+.gp-chair-circle-3 { bottom: -20px; left: 22px; }
+.gp-chair-circle-4 { left: -20px; top: 22px; }
+
+/* Large: 8 chairs (3 top, 3 bottom, 1 left, 1 right) */
+.gp-chair-large-1 { top: -20px; left: 20px; }
+.gp-chair-large-2 { top: -20px; left: 52px; }
+.gp-chair-large-3 { top: -20px; left: 84px; }
+.gp-chair-large-4 { bottom: -20px; left: 20px; }
+.gp-chair-large-5 { bottom: -20px; left: 52px; }
+.gp-chair-large-6 { bottom: -20px; left: 84px; }
+.gp-chair-large-7 { left: -20px; top: 22px; }
+.gp-chair-large-8 { right: -20px; top: 22px; }
+
+/* Rect: 2 chairs (1 top, 1 bottom) */
+.gp-chair-rect-1 { top: -20px; left: 27px; }
+.gp-chair-rect-2 { bottom: -20px; left: 27px; }
+
+/* Table Statuses */
+.gp-table-premium:hover:not(.status-booked):not(.status-held) {
+  transform: translateY(-5px);
+}
+.gp-table-premium:hover:not(.status-booked):not(.status-held) .gp-table-surface {
+  border-color: #a0aec0;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+.gp-table-premium.status-selected .gp-table-surface {
+  background: #c90000;
+  border-color: #9b0000;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(201, 0, 0, 0.4);
+}
+.gp-table-premium.status-selected .gp-chair {
+  background: #feb2b2;
+  border-color: #c90000;
+}
+
+.gp-table-premium.status-booked {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.gp-table-premium.status-booked .gp-table-surface {
+  background: #e2e8f0;
+  color: #a0aec0;
+}
+
+.gp-table-premium.status-held {
+  cursor: not-allowed;
+}
+.gp-table-premium.status-held .gp-table-surface {
+  background: #ed8936;
+  border-color: #dd6b20;
+  color: #fff;
+}
+.gp-table-premium.status-held .gp-chair {
+  background: #fbd38d;
+}
+
+/* INFO CARDS (Bottom Left) */
+.gp-info-cards-row {
+  display: flex;
+  gap: 20px;
+}
+
+.gp-info-card-premium {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  border: 1px solid #e2e8f0;
+}
+
+.gp-info-card-premium .icon {
+  font-size: 24px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.gp-info-card-premium.green .icon { background: #dcfce7; color: #16a34a; }
+.gp-info-card-premium.gold .icon { background: #fef3c7; color: #d97706; }
+
+.gp-info-card-premium h4 {
+  margin: 0 0 5px 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a202c;
+}
+
+.gp-info-card-premium p {
+  margin: 0;
+  font-size: 13px;
+  color: #718096;
+  line-height: 1.5;
+}
+
+
+/* WIDGET FORM (RIGHT) */
+.gp-res-widget {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.gp-widget-header {
+  background: #1a202c;
+  color: #fff;
+  padding: 20px 25px;
+}
+
+.gp-widget-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gp-widget-body {
+  padding: 25px;
+}
+
+.gp-input-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.gp-input-box {
+  flex: 1;
+}
+
+.gp-input-box label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a5568;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.gp-input-box input {
+  width: 100%;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #1a202c;
+  font-weight: 600;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.gp-input-box input:focus {
+  border-color: #c90000;
+  box-shadow: 0 0 0 3px rgba(201,0,0,0.1);
+}
+
+/* Slider */
+.gp-slider-box {
+  margin-bottom: 25px;
+}
+
+.gp-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.gp-slider-labels label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a5568;
+  text-transform: uppercase;
+}
+
+.gp-slider-labels .badge {
+  background: #c90000;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.gp-premium-slider {
+  width: 100%;
+  accent-color: #c90000;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  outline: none;
+}
+
+.gp-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 10px;
+  color: #a0aec0;
+  font-weight: 700;
+}
+
+/* Deposit Alert */
+.gp-deposit-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  color: #c90000;
+}
+
+.gp-deposit-alert i {
+  font-size: 20px;
+}
+
+.gp-deposit-alert strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.gp-deposit-alert p {
+  margin: 0;
+  font-size: 12px;
+  color: #718096;
+}
+
+/* Receipt */
+.gp-receipt-box {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e0;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.gp-receipt-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #4a5568;
+  margin-bottom: 12px;
+}
+
+.gp-receipt-line strong {
+  color: #1a202c;
+}
+
+.text-red {
+  color: #c90000 !important;
+}
+
+.gp-receipt-divider {
+  border-top: 1px dashed #cbd5e0;
+  margin: 15px 0;
+}
+
+.gp-receipt-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gp-receipt-total span {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.gp-receipt-total .total-price {
+  font-size: 20px;
+  font-weight: 900;
+  color: #c90000;
+}
+
+/* Footer Widget */
+.gp-widget-footer {
+  padding: 0 25px 25px;
+}
+
+.gp-btn-confirm {
+  width: 100%;
+  background: linear-gradient(135deg, #c90000, #9b0000);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 20px rgba(201,0,0,0.2);
+  transition: all 0.3s;
+}
+
+.gp-btn-confirm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px rgba(201,0,0,0.3);
+}
+
+.gp-btn-confirm:disabled {
+  background: #cbd5e0;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.gp-policy-text {
+  text-align: center;
+  font-size: 11px;
+  color: #a0aec0;
+  margin: 15px 0 0 0;
+}
+
+.gp-policy-text a {
+  color: #718096;
+  text-decoration: underline;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .gp-reservation-layout {
+    flex-direction: column;
+  }
+  .gp-reservation-form-col {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .gp-res-header-premium {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .gp-info-cards-row {
+    flex-direction: column;
+  }
+  .gp-map-floor-area {
+    height: 400px;
+  }
+}

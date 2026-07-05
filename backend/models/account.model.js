@@ -7,10 +7,14 @@ const accountSchema = new mongoose.Schema(
 
     fullname: String,
     email:String,
-    password:String,
+    password: {
+        type: String,
+        select: false,
+    },
     token:{
         type:String,
         default:generate.generateRandomString(20),
+        select: false,
     },
     phone:String,
     avatar:String,

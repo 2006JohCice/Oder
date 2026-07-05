@@ -1,0 +1,18 @@
+{
+  "header": {
+    "login": "Accesso",
+    "register": "Registrati",
+    "my_account": "Il mio account",
+    "logout": "Disconnettersi",
+    "cart": "Carrello",
+    "search_placeholder": "Cerca cibo, ristoranti...",
+    "orders": "Ordini",
+    "settings": "Impostazioni"
+  },
+  "home": {
+    "welcome": "Consegna Veloce di Cibo",
+    "explore": "Esplora piatti",
+    "restaurants": "Ristoranti",
+    "near_you": "Vicino a te"
+  }
+}

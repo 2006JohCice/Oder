@@ -14,6 +14,7 @@ const setting = require ('./setting.route')
 const advertisement = require ('./advertisement.route')
 const doneCart = require ('./doneCart')
 const restaurant = require('./restaurant.route')
+const voucher = require('./voucher.route')
 
 module.exports = (app) => {
     const prefixAdmin = systemConfig.prefixAdmin;
@@ -33,5 +34,6 @@ module.exports = (app) => {
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,setting) // doing
     app.use("/api" + prefixAdmin ,advertisement);
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,restaurant);
+    app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,voucher);
 
 }

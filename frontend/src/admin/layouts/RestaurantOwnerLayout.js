@@ -1,6 +1,5 @@
-﻿import React, { useEffect, useState } from "react";
-import "../layouts/RestaurantOwnerLayout.css";
-import "../css/admin.css";
+import React, { useEffect, useState } from "react";
+import "../css/RestaurantOwnerLayout.css";
 import SidebarRestaurant from "../components/restaurant/SidebarRestaurant";
 import HeaderRestaurant from "../components/restaurant/HeaderRestaurant";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -11,13 +10,16 @@ import RestaurantFeedbacks from "../components/restaurant/RestaurantFeedbacks";
 import RestaurantReports from "../components/restaurant/RestaurantReports";
 import RestaurantSettings from "../components/restaurant/RestaurantSettings";
 import RestaurantTables from "../components/restaurant/RestaurantTables";
+import RestaurantVouchers from "../components/restaurant/RestaurantVouchers";
+import Order from "../components/order/order";
 
 export default function RestaurantOwnerLayout() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [restaurant, setRestaurant] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -66,19 +68,27 @@ export default function RestaurantOwnerLayout() {
   return (
     <div className="restaurant-owner-app">
       <div className="restaurant-owner-container">
-        <SidebarRestaurant menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        
+        {/* Mobile Sidebar Overlay */}
+        {isSidebarOpen && (
+          <div className="ro-sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+        )}
+
+        <SidebarRestaurant isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} restaurant={restaurant} />
 
         <div className="restaurant-owner-main">
-          <HeaderRestaurant menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+          <HeaderRestaurant user={user} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
           <div className="restaurant-owner-content">
             <Routes>
               <Route path="/" element={<RestaurantDashboard restaurant={restaurant} />} />
               <Route path="/products" element={<RestaurantProducts restaurant={restaurant} />} />
               <Route path="/orders" element={<RestaurantOrders restaurant={restaurant} />} />
+              <Route path="/order-list" element={<Order isMerchant={true} />} />
               <Route path="/feedbacks" element={<RestaurantFeedbacks restaurant={restaurant} />} />
               <Route path="/reports" element={<RestaurantReports restaurant={restaurant} />} />
               <Route path="/tables" element={<RestaurantTables restaurant={restaurant} />} />
               <Route path="/settings" element={<RestaurantSettings restaurant={restaurant} />} />
+              <Route path="/vouchers" element={<RestaurantVouchers restaurant={restaurant} />} />
             </Routes>
           </div>
         </div>

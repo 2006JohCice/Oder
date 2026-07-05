@@ -1,0 +1,204 @@
+/* MERCHANT LIVE ORDERS - LIGHT THEME (Admin Style) */
+
+.adm-kanban-board {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+.adm-kanban-column {
+  flex: 1;
+  min-width: 320px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+}
+
+.adm-kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #edf2f7;
+  margin-bottom: 5px;
+}
+
+.adm-kanban-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-kanban-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.adm-kanban-dot.new { background-color: #3498DB; }
+.adm-kanban-dot.prep { background-color: #F39C12; }
+.adm-kanban-dot.ready { background-color: #1ABB9C; }
+
+.adm-kanban-count {
+  background: #e2e8f0;
+  color: #4a5568;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+/* CARDS */
+.adm-order-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  border: 1px solid #edf2f7;
+  border-left: 4px solid #cbd5e0;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.adm-order-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+.adm-order-card.new { border-left-color: #3498DB; }
+.adm-order-card.prep { border-left-color: #F39C12; }
+.adm-order-card.ready { border-left-color: #1ABB9C; }
+
+.adm-order-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.adm-order-id {
+  font-weight: 700;
+  color: #1a202c;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+.adm-order-id:hover {
+  text-decoration: underline;
+  color: #3498DB;
+}
+.adm-order-time {
+  font-size: 0.75rem;
+  color: #718096;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.adm-order-time.alert {
+  color: #dd6b20;
+}
+
+.adm-order-customer {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.adm-order-customer i {
+  color: #a0aec0;
+}
+
+.adm-order-items {
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #4a5568;
+  margin-bottom: 15px;
+  flex: 1;
+}
+.adm-order-items div {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.adm-order-items div:last-child {
+  margin-bottom: 0;
+}
+.item-qty {
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.adm-order-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #edf2f7;
+  padding-top: 10px;
+}
+.adm-order-total {
+  font-weight: 700;
+  color: #e53e3e;
+  font-size: 1.05rem;
+}
+
+.adm-order-btn {
+  background: #3498DB;
+  color: #fff;
+  border: none;
+  padding: 6px 15px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.adm-order-btn:hover {
+  background: #2980b9;
+}
+.adm-order-btn.prep {
+  background: #F39C12;
+}
+.adm-order-btn.prep:hover {
+  background: #d68910;
+}
+.adm-order-btn.wide {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.adm-order-badge {
+  text-align: center;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* Custom Scrollbar for Kanban columns */
+.adm-kanban-column::-webkit-scrollbar {
+  width: 6px;
+}
+.adm-kanban-column::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 4px;
+}
+.adm-kanban-column::-webkit-scrollbar-thumb {
+  background: #cbd5e0; 
+  border-radius: 4px;
+}
+.adm-kanban-column::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0; 
+}

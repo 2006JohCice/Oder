@@ -10,6 +10,11 @@
   /* Reset admin styles for user context */
 }
 
+.site-shell {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 /* User cart styles */
 .order-item-copy {
   display: grid;

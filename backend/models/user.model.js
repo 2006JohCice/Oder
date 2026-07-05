@@ -5,7 +5,14 @@ const userSchema = new mongoose.Schema(
 
     fullname: String,
     email:String,
-    password:String,
+    password: {
+        type: String,
+        select: false,
+    },
+    points: {
+      type: Number,
+      default: 0
+    },
     role: {
       type: String,
       enum: ["user", "owner", "staff", "admin"],
@@ -18,7 +25,8 @@ const userSchema = new mongoose.Schema(
     },
     tokenUser:{
         type:String,
-        default:generate.generateRandomString(20),
+        default: () => generate.generateRandomString(20),
+        select: false,
     },
     phone:String,
     avatar:String,

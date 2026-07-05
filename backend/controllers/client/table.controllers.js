@@ -1,4 +1,4 @@
-﻿// const Table = require("../../models/table.model");
+// const Table = require("../../models/table.model");
 // const TABLE_CATALOG = require("../../helpers/tableCatalog");
 
 // const ensureTables = async () => {
@@ -80,62 +80,42 @@ module.exports.available = async (req, res) => {
       tableNumber: 1,
     });
 
-    // nếu chưa chọn giờ/ngày
     if (!visitDate || !arrivalTime) {
       return res.status(200).json({
+        allTables: tables,
         tables: tables.filter(
-          (table) =>
-            table.status === "available"
+          (table) => table.status === "available"
         ),
       });
     }
 
-    const bookingSlotKey =
-      `${visitDate}_${arrivalTime}`;
+    const bookingSlotKey = `${visitDate}_${arrivalTime}`;
 
-    const bookedOrders =
-      await Order.find({
-        restaurant_id: restaurantId,
+    const bookedOrders = await Order.find({
+      restaurant_id: restaurantId,
+      orderType: "dine_in",
+      bookingSlotKey,
+      orderStatus: {
+        $nin: ["cancelled", "completed"],
+      },
+    }).select("tableInfo");
 
-        orderType: "dine_in",
+    const bookedTableNumbers = new Set(
+      bookedOrders.map((order) => String(order.tableInfo?.tableNumber))
+    );
 
-        bookingSlotKey,
-
-        orderStatus: {
-          $nin: [
-            "cancelled",
-            "completed",
-          ],
-        },
-      }).select("tableInfo");
-
-    const bookedTableNumbers =
-      new Set(
-        bookedOrders.map((order) =>
-          String(
-            order.tableInfo?.tableNumber
-          )
-        )
-      );
-
-    const availableTables =
-      tables.filter(
-        (table) =>
-          table.status === "available" &&
-          !bookedTableNumbers.has(
-            String(table.tableNumber)
-          )
-      );
+    const availableTables = tables.filter(
+      (table) => table.status === "available" && !bookedTableNumbers.has(String(table.tableNumber))
+    );
 
     return res.status(200).json({
+      allTables: tables,
       tables: availableTables,
     });
   } catch (error) {
     console.error(error);
-
     return res.status(500).json({
-      message:
-        "Không thể lấy danh sách bàn",
+      message: "Không thể lấy danh sách bàn",
     });
   }
 };

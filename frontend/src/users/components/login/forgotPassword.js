@@ -1,229 +1,231 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-const RegisterPageUser = () => {
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../../css/AuthUser.css";
+
+const LoginPageUserForgot = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    newPassword: "",
     confirmPassword: "",
-    otp: "",
+    verificationCode: ""
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [messagePassword, setMessagePassword] = useState("");
   const [alert, setAlert] = useState("");
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [sendOtp, setSendOtp] = useState(false);
-
-  // Validate passwords match whenever password fields change
-  useEffect(() => {
-    if (formData.password && formData.confirmPassword && formData.email) {
-      setSendOtp(formData.password === formData.confirmPassword);
-    } else {
-
-      setSendOtp(false);
-    }
-  }, [formData.password, formData.confirmPassword, formData.email]);
-
-  useEffect(() => {
-    if (timeLeft === 0) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeLeft]);
+  const [step, setStep] = useState(1); // Step 1: Request Email, Step 2: Verify & Reset
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
   };
-  const handlClickOtp = async (e) => {
-    setMessage("");
-    setMessagePassword("");
 
-    const url = "/api/user/password/forgot";
+  const handleRequestCode = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setAlert("");
+    setMessage("");
+
     try {
-      setTimeLeft(60);
-      const res = await fetch(url, {
+      const res = await fetch(`/api/user/password/forgot`, {
         method: "POST",
-        //   credentials: "include",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ email: formData.email })
       });
       const result = await res.json();
-      setMessage(result.message);
-      setMessagePassword(result.messagePassword);
-      setAlert(result.alerts);
+      if (res.ok && result.success) {
+        setStep(2);
+        setAlert(result.message || "Mã xác nhận đã được gửi vào email của bạn.");
+      } else {
+        setMessage(result.message || "Email không tồn tại trong hệ thống.");
+      }
     } catch (error) {
-      console.error("Lỗi kết nối server Error:", error);
-      // setMessage("");
+      console.error("Lỗi:", error);
+      setMessage("Lỗi kết nối server. Vui lòng thử lại sau.");
     } finally {
       setIsLoading(false);
     }
   };
-  const handleSubmit = async (e) => {
+
+  const [otpArray, setOtpArray] = useState(["", "", "", "", "", ""]);
+  
+  const handleOtpChange = (element, index) => {
+    if (isNaN(element.value)) return false;
+    const newOtp = [...otpArray];
+    newOtp[index] = element.value;
+    setOtpArray(newOtp);
+    setFormData(prev => ({ ...prev, verificationCode: newOtp.join("") }));
+    
+    // Focus next input
+    if (element.nextSibling && element.value) {
+      element.nextSibling.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      if (!otpArray[index] && e.target.previousSibling) {
+        e.target.previousSibling.focus();
+      }
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').slice(0, 6).split('');
+    const newOtp = [...otpArray];
+    pastedData.forEach((char, i) => {
+      if (!isNaN(char) && i < 6) newOtp[i] = char;
+    });
+    setOtpArray(newOtp);
+    setFormData(prev => ({ ...prev, verificationCode: newOtp.join("") }));
+    
+    const lastInput = document.getElementById(`otp-${Math.min(pastedData.length - 1, 5)}`);
+    if (lastInput) lastInput.focus();
+  };
+
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setAlert("");
     setMessage("");
-    setMessagePassword("");
 
-    const url = "/api/user/password/otp";
+    if (formData.newPassword !== formData.confirmPassword) {
+      setMessage("Mật khẩu xác nhận không khớp.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const res = await fetch(url, {
+      const payload = {
+        email: formData.email,
+        password: formData.newPassword,
+        confirmPassword: formData.confirmPassword,
+        otp: formData.verificationCode
+      };
+
+      const res = await fetch(`/api/user/password/otp`, {
         method: "POST",
-        //   credentials: "include",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload)
       });
       const result = await res.json();
-      if (res.ok) {
+      if (res.ok && result.success) {
+        alert("Khôi phục mật khẩu thành công! Vui lòng đăng nhập lại.");
         navigate("/user/auth/login");
       } else {
-        setMessage(result.message);
-        setMessagePassword(result.messagePassword);
-        setAlert(result.alerts);
+        setMessage(result.message || "Mã xác nhận không hợp lệ hoặc đã hết hạn.");
       }
     } catch (error) {
-      console.error("Lỗi kết nối server Error:", error);
-      // setMessage("");
+      console.error("Lỗi:", error);
+      setMessage("Lỗi kết nối server.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="login-wrapper">
-      {/* LEFT */}
-      <div className="login-left">
-        <div className="login-box">
-          <header className="login-header">
-            <div className="icon-login">
-              <img
-                className="admin-logo_login"
-                alt="Admin Logo"
-                src="/Textlogo.png"
-              />
-              {/* <h1 className="logo-text" style={{ color: "#c00" }}>ORDER</h1>
-                            <h1 className="logo-text" style={{ color: "#c00" }}>SHOP</h1> */}
-            </div>
-            <p className="subtitle" style={{ color: "#c00" }}>
-              Order - Shop
-            </p>
-          </header>
+    <div className="auth-page-wrapper">
+      
+      {/* LEFT SIDE: FORM */}
+      <div className="auth-left">
+        <div className="auth-form-container">
+          
+          <Link to="/" className="auth-logo">
+            <img src="/Textlogo.png" alt="Gourmet Pulse Logo" style={{ filter: 'brightness(0) saturate(100%) invert(13%) sepia(87%) saturate(5885%) hue-rotate(352deg) brightness(89%) contrast(110%)' }} />
+          </Link>
 
-          <form className="login-form" onSubmit={handleSubmit}>
-            <div className="input-group">
-              {message && <div className="error-alert">{message}</div>}
-              <input
-                type="text"
-                name="email"
-                placeholder="Email "
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <h1 className="auth-title">Khôi phục mật khẩu</h1>
+          <p className="auth-subtitle">
+            {step === 1 ? "Đừng lo lắng! Nhập email của bạn và chúng tôi sẽ gửi mã khôi phục." : "Nhập mã xác nhận từ email và tạo mật khẩu mới của bạn."}
+          </p>
 
-            <div className="input-group">
-              {messagePassword && (
-                <div className="error-alert">{messagePassword}</div>
-              )}
-              <input
-                type="password"
-                name="password"
-                placeholder="Mật khẩu mới"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="input-group">
-              {messagePassword && (
-                <div className="error-alert">{messagePassword}</div>
-              )}
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Xác Nhập Lại Mật khẩu"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          {message && <div className="auth-alert-error"><i className="bi bi-exclamation-circle-fill"></i> {message}</div>}
+          {alert && <div className="auth-alert-success"><i className="bi bi-check-circle-fill"></i> {alert}</div>}
 
-            <div className="input-group">
-              <input
-                type="text"
-                name="otp"
-                placeholder="Xác Thực OTP Qua Email"
-                value={formData.otp}
-                onChange={handleChange}
-                required
-              />
-              {/* <button type="button" className="btn btn-info" style={{ marginTop: "10px",borderRadius:"10px" }} onClick ={handlClickOtp}>Gửi OTP</button> */}
-              <button
-                type="button"
-                className="btn btn-info"
-                style={{ marginTop: "10px", borderRadius: "10px", backgroundColor: sendOtp ? "#007bff" : "#ccc", color: "#fff", border: "none", cursor: sendOtp ? "pointer" : "not-allowed", padding: "10px 20px" }}
-                onClick={handlClickOtp}
-                disabled={timeLeft > 0 || sendOtp === false}
-              >
-                {timeLeft > 0 ? `Gửi lại sau (${timeLeft}s)` : "Gửi OTP"}
+          {step === 1 ? (
+            <form className="auth-form" onSubmit={handleRequestCode}>
+              <div className="auth-input-group">
+                <label>Email đã đăng ký</label>
+                <i className="bi bi-envelope auth-input-icon"></i>
+                <input type="email" name="email" className="auth-input" placeholder="example@domain.com" value={formData.email} onChange={handleChange} required />
+              </div>
+
+              <button type="submit" className="auth-submit-btn" disabled={isLoading}>
+                {isLoading ? "Đang gửi..." : "Gửi Liên Kết Khôi Phục"}
+                {!isLoading && <i className="bi bi-send-fill"></i>}
               </button>
-            </div>
-            <button type="submit" className="login-btn" disabled={isLoading}>
-              {isLoading ? "Đang Ktra..." : "Thay Đổi"}
-            </button>
-          </form>
+            </form>
+          ) : (
+            <form className="auth-form" onSubmit={handleResetPassword}>
+              <div className="auth-input-group">
+                <label style={{textAlign: 'center', display: 'block', fontSize: 16, marginBottom: 15}}>Nhập mã OTP 6 số</label>
+                <div className="auth-otp-container" onPaste={handleOtpPaste}>
+                  {otpArray.map((data, index) => {
+                    return (
+                      <input
+                        className="auth-otp-input"
+                        type="text"
+                        name="otp"
+                        maxLength="1"
+                        key={index}
+                        id={`otp-${index}`}
+                        value={data}
+                        onChange={e => handleOtpChange(e.target, index)}
+                        onKeyDown={e => handleOtpKeyDown(e, index)}
+                        onFocus={e => e.target.select()}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
 
-          <div
-            className="login-footer"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Link to="/user/auth/register" className="forgot-password">
-              Đăng Ký Mới
-            </Link>
-            <Link to="/user/auth/login" className="forgot-password">
-              Đăng Nhập
-            </Link>
+              <div className="auth-input-group">
+                <label>Mật khẩu mới</label>
+                <i className="bi bi-lock auth-input-icon"></i>
+                <input type="password" name="newPassword" className="auth-input" placeholder="Tạo mật khẩu mới" value={formData.newPassword} onChange={handleChange} required minLength={6} />
+              </div>
+
+              <div className="auth-input-group">
+                <label>Xác nhận mật khẩu mới</label>
+                <i className="bi bi-shield-lock auth-input-icon"></i>
+                <input type="password" name="confirmPassword" className="auth-input" placeholder="Nhập lại mật khẩu mới" value={formData.confirmPassword} onChange={handleChange} required minLength={6} />
+              </div>
+
+              <button type="submit" className="auth-submit-btn" disabled={isLoading}>
+                {isLoading ? "Đang cập nhật..." : "Đặt Lại Mật Khẩu"}
+                {!isLoading && <i className="bi bi-check2-circle"></i>}
+              </button>
+            </form>
+          )}
+
+          <div className="auth-switch-page">
+            <Link to="/user/auth/login"><i className="bi bi-arrow-left"></i> Quay lại Đăng nhập</Link>
           </div>
-          {alert && <div className="error-alert">{alert}</div>}
+
         </div>
       </div>
 
-      {/* RIGHT */}
-      <div className="login-right">
-        <div className="right-content">
-          {/* <h1 className="right-logo"><span>LO</span><span>GO</span></h1> */}
-          <a href="/" class="mb-0 mb-lg-12">
-            <img
-              alt="Logo"
-              src="/Textlogo.png"
-              class="h-60px h-lg-75px"
-              style={{ width: "190px" }}
-            ></img>
-          </a>
-
-          <div className="mockup-area">
-            <img src="/Textlogo.png" alt="dashboard" />
+      {/* RIGHT SIDE: BANNER */}
+      <div className="auth-right">
+        <img src="https://images.unsplash.com/photo-1495474472204-51e4431f4a92?auto=format&fit=crop&w=1920&q=80" alt="Coffee Banner" className="auth-banner-img" style={{opacity: 0.7}} />
+        <div className="auth-banner-overlay"></div>
+        <div className="auth-banner-content">
+          <h2>Mọi chuyện rồi sẽ ổn thôi.</h2>
+          <p>Hệ thống bảo mật của Gourmet Pulse luôn ở đây để bảo vệ tài khoản và dữ liệu của bạn an toàn tuyệt đối.</p>
+          
+          <div className="auth-tags">
+            <div className="auth-tag"><i className="bi bi-shield-lock-fill" style={{color:'#fbd38d'}}></i> Bảo mật 2 lớp</div>
+            <div className="auth-tag"><i className="bi bi-envelope-check-fill" style={{color:'#fbd38d'}}></i> Khôi phục qua Email</div>
           </div>
-
-          <h2>Nhanh - Gọn - Lẹ</h2>
-          <p>Nếu Bạn Quên Gửi Lời Yêu Thương Xin Đừng Lo Chúng Tôi Sẽ Gửi Lời Yêu Thương Nhanh Nhất. </p>
         </div>
       </div>
+
     </div>
   );
 };
 
-export default RegisterPageUser;
+export default LoginPageUserForgot;

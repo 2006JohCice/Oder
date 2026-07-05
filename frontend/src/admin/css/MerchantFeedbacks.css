@@ -1,0 +1,310 @@
+/* MERCHANT FEEDBACKS (CUSTOMER CARE) CSS */
+
+.ro-feedbacks-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.ro-stat-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.ro-stat-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.ro-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.ro-stat-icon.red { background: #fff5f5; color: #e53e3e; }
+.ro-stat-icon.orange { background: #fffff0; color: #dd6b20; }
+.ro-stat-icon.green { background: #e6fffa; color: #319795; }
+
+.ro-stat-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 20px;
+}
+
+.ro-stat-badge.trend-up {
+  background: #e6fffa;
+  color: #319795;
+}
+
+.ro-stat-badge.alert {
+  background: #fff5f5;
+  color: #e53e3e;
+}
+
+.ro-stat-label {
+  font-size: 13px;
+  color: #4a5568;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.ro-stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a202c;
+}
+
+.ro-stat-value small {
+  font-size: 14px;
+  color: #a0aec0;
+  font-weight: 500;
+}
+
+.ro-stat-value.danger {
+  color: #e53e3e;
+}
+
+/* MAIN LAYOUT */
+.ro-feedbacks-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 30px;
+}
+
+.ro-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ro-section-header h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0;
+}
+
+.ro-section-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c90000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* REVIEWS COLUMN */
+.ro-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ro-review-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.ro-review-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.ro-review-user img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ro-review-user-info {
+  flex: 1;
+}
+
+.ro-review-user-info h5 {
+  margin: 0 0 3px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.ro-review-user-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #a0aec0;
+}
+
+.ro-review-rating {
+  background: #fffff0;
+  color: #dd6b20;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ro-review-text {
+  font-size: 14px;
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.ro-review-images {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.ro-review-images img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.ro-review-actions {
+  display: flex;
+  gap: 20px;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 15px;
+}
+
+.ro-review-action-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #718096;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+}
+
+.ro-review-action-btn.reply {
+  color: #c90000;
+}
+
+/* SUPPORT TICKETS COLUMN */
+.ro-tickets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ro-ticket-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.ro-ticket-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ro-ticket-id {
+  font-size: 12px;
+  font-weight: 700;
+  color: #718096;
+}
+
+.ro-ticket-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.ro-ticket-badge.new { background: #e53e3e; color: #fff; }
+.ro-ticket-badge.processing { background: #fffaf0; color: #dd6b20; border: 1px solid #fbd38d; }
+.ro-ticket-badge.resolved { background: #e6fffa; color: #319795; }
+
+.ro-ticket-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 5px 0;
+}
+
+.ro-ticket-desc {
+  font-size: 13px;
+  color: #718096;
+  margin: 0 0 15px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ro-ticket-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ro-ticket-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.ro-ticket-user img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ro-ticket-time {
+  font-size: 11px;
+  color: #a0aec0;
+}
+
+.ro-tickets-view-all {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  background: #f8fafc;
+  color: #c90000;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.ro-tickets-view-all:hover {
+  background: #edf2f7;
+}

@@ -1,4 +1,4 @@
-﻿const { mongoose } = require('../config/database');
+const { mongoose } = require('../config/database');
 const slug = require('mongoose-slug-updater');
 
 mongoose.plugin(slug);
@@ -26,9 +26,21 @@ const restaurantSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    openTime: {
+      type: String,
+      default: '08:00',
+    },
+    closeTime: {
+      type: String,
+      default: '22:00',
+    },
     locationLabel: {
       type: String,
       default: '',
+    },
+    location: {
+      lat: { type: Number, default: 21.028511 }, // Default to Hanoi
+      lng: { type: Number, default: 105.804817 },
     },
     tableCount: {
       type: Number,

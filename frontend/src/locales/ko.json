@@ -1,0 +1,18 @@
+{
+  "header": {
+    "login": "로그인",
+    "register": "가입하기",
+    "my_account": "내 계정",
+    "logout": "로그아웃",
+    "cart": "장바구니",
+    "search_placeholder": "음식, 레스토랑 검색...",
+    "orders": "주문",
+    "settings": "설정"
+  },
+  "home": {
+    "welcome": "빠른 음식 배달",
+    "explore": "맛있는 음식 탐색",
+    "restaurants": "레스토랑",
+    "near_you": "내 주변"
+  }
+}

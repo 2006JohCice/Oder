@@ -5,28 +5,32 @@ import CardProducts from "../mixi/cardProducts/cardProducts";
 function SearchProduct() {
   const location = useLocation();
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const searchParams = new URLSearchParams(location.search);
 
   useEffect(() => {
-    fetch(`/api/search/${location.search}`)
+    setLoading(true);
+    fetch(`/api/search${location.search}`)
       .then((res) => res.json())
       .then((resData) => setData(Array.isArray(resData) ? resData : []))
-      .catch(() => setData([]));
+      .catch(() => setData([]))
+      .finally(() => setLoading(false));
   }, [location.search]);
 
   return (
     <section className="section-shell">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Ket qua tim kiem</p>
-          <h2>{searchParams.get("keyword") || "Bo loc hien tai"}</h2>
+          <p className="eyebrow">Kết quả tìm kiếm</p>
+          <h2>{searchParams.get("keyword") || "Tất cả sản phẩm"}</h2>
         </div>
-        <p>
-          Khu vuc: {searchParams.get("location") || "Tat ca"} | Gia:{" "}
-          {searchParams.get("price") || "Tat ca"} | Bua an: {searchParams.get("meal") || "Tat ca"}
+        <p style={{color: '#718096', fontSize: '14px', marginTop: '10px'}}>
+          Khu vực: <strong>{searchParams.get("location") || "Tất cả"}</strong> | 
+          Giá: <strong>{searchParams.get("price") || "Tất cả"}</strong> | 
+          Bữa ăn: <strong>{searchParams.get("meal") || "Tất cả"}</strong>
         </p>
       </div>
-      <CardProducts data={data} />
+      <CardProducts data={data} loading={loading} />
     </section>
   );
 }
