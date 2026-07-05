@@ -199,6 +199,20 @@ const LoginPageUserForgot = () => {
                 {isLoading ? "Đang cập nhật..." : "Đặt Lại Mật Khẩu"}
                 {!isLoading && <i className="bi bi-check2-circle"></i>}
               </button>
+
+              <div style={{ textAlign: "center", marginTop: "15px" }}>
+                <span style={{ fontSize: "14px", color: "#666" }}>
+                  Chưa nhận được mã?{" "}
+                  <button 
+                    type="button" 
+                    onClick={handleRequestCode}
+                    style={{ background: "none", border: "none", color: "#d9534f", cursor: "pointer", fontWeight: "bold", padding: 0 }}
+                    disabled={isLoading}
+                  >
+                    Gửi lại mã
+                  </button>
+                </span>
+              </div>
             </form>
           )}
 

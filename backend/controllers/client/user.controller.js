@@ -401,7 +401,7 @@ module.exports.login = async (req, res) => {
   } catch (error) {
     console.error(error);
 
-    return sendResponse(res, 500, false, "Lỗi máy chủ");
+    return sendResponse(res, 500, false, "Lỗi máy chủ: " + error.message + " | Stack: " + error.stack);
   }
 };
 
@@ -450,6 +450,9 @@ module.exports.forgotPassword = async (req, res) => {
         "Email không tồn tại"
       );
     }
+
+    // Xóa các OTP cũ của email này để tránh lỗi trùng lặp và rác DB
+    await ForgotPassword.deleteMany({ email, type: "forgot" });
 
     const otpRandom = generateHelper.generateRandomNumber(6);
 
