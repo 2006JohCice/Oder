@@ -42,73 +42,57 @@ const generateOtpEmailTemplate = (otp) => {
   <head>
     <meta charset="UTF-8" />
   </head>
-
-  <body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
-
-    <table width="100%" cellpadding="0" cellspacing="0">
+  <body style="margin:0;padding:0;background-color:#1a1a1a;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#1a1a1a;">
       <tr>
-        <td align="center" style="padding:20px;">
-
-          <table width="500" cellpadding="0" cellspacing="0"
-            style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-
+        <td align="center" style="padding:40px 20px;">
+          <table width="600" cellpadding="0" cellspacing="0" style="background-color:#2a2a2a;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.5);border:1px solid #3a3a3a;">
+            
+            <!-- Header Section with Dark Red Theme -->
             <tr>
-              <td style="padding:30px;text-align:center;">
+              <td style="background: linear-gradient(135deg, #8B0000 0%, #4A0000 100%);padding:40px 0;text-align:center;border-bottom:3px solid #D4AF37;">
+                <h1 style="color:#ffffff;margin:0;font-size:28px;letter-spacing:2px;font-weight:600;text-transform:uppercase;">Gourmet Pulse</h1>
+                <p style="color:#D4AF37;margin:10px 0 0 0;font-size:14px;letter-spacing:4px;text-transform:uppercase;">Xác Thực Tài Khoản</p>
+              </td>
+            </tr>
 
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png"
-                  width="60"
-                  alt="OTP"
-                />
-
-                <h2 style="color:#333;">
-                  Xác thực tài khoản
-                </h2>
-
-                <p style="color:#666;">
-                  Đây là mã OTP của bạn:
+            <!-- Content Section -->
+            <tr>
+              <td style="padding:40px 40px;text-align:center;">
+                <h2 style="color:#ffffff;margin:0 0 20px 0;font-size:22px;font-weight:400;">Kính chào Quý khách,</h2>
+                <p style="color:#cccccc;line-height:1.6;font-size:15px;margin:0 0 30px 0;">
+                  Chúng tôi đã nhận được yêu cầu khôi phục mật khẩu cho tài khoản của Quý khách. Vui lòng sử dụng mã bảo mật dưới đây để tiếp tục quá trình xác thực.
                 </p>
 
-                <div style="margin:20px 0;">
-                  <span style="
-                    display:inline-block;
-                    background:#4CAF50;
-                    color:#fff;
-                    font-size:28px;
-                    letter-spacing:5px;
-                    padding:15px 25px;
-                    border-radius:8px;
-                    font-weight:bold;
-                  ">
+                <div style="margin:30px 0;">
+                  <span style="display:inline-block;background-color:#111111;color:#D4AF37;font-size:36px;letter-spacing:8px;padding:20px 40px;border-radius:8px;font-weight:bold;border:1px solid #D4AF37;box-shadow:0 4px 15px rgba(212, 175, 55, 0.1);">
                     ${otp}
                   </span>
                 </div>
 
-                <p style="color:#666;">
-                  Mã OTP sẽ hết hạn sau <b>5 phút</b>.
+                <p style="color:#999999;font-size:14px;margin:30px 0 0 0;">
+                  Mã xác thực này sẽ hết hạn sau <b style="color:#D4AF37;">5 phút</b>.
                 </p>
-
-                <p style="font-size:12px;color:#999;">
-                  Nếu bạn không yêu cầu thao tác này, vui lòng bỏ qua email.
+                <p style="color:#777777;font-size:13px;margin:15px 0 0 0;">
+                  Vì lý do bảo mật, vui lòng <b style="color:#ffffff;">không chia sẻ</b> mã này với bất kỳ ai.<br/>
+                  Nếu Quý khách không yêu cầu thao tác này, vui lòng bỏ qua email.
                 </p>
-
               </td>
             </tr>
 
+            <!-- Footer Section -->
             <tr>
-              <td style="background:#f0f0f0;padding:15px;text-align:center;">
-                <p style="margin:0;font-size:12px;color:#888;">
-                  © ORDER SHOP
+              <td style="background-color:#222222;padding:25px;text-align:center;border-top:1px solid #333333;">
+                <p style="margin:0;font-size:12px;color:#666666;letter-spacing:1px;">
+                  © ${new Date().getFullYear()} GOURMET PULSE. ALL RIGHTS RESERVED.
                 </p>
               </td>
             </tr>
 
           </table>
-
         </td>
       </tr>
     </table>
-
   </body>
   </html>
   `;

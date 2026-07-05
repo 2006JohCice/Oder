@@ -1,0 +1,30 @@
+.top-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, #ff0000, #ff4d4d, #ff0000);
+  background-size: 200% 100%;
+  z-index: 9999;
+  animation: loadProgress 1.5s infinite linear, shimmer 2s infinite linear;
+  box-shadow: 0 0 10px #ff0000;
+}
+
+@keyframes loadProgress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}

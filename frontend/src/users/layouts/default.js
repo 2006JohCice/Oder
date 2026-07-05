@@ -1,27 +1,31 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense, lazy } from "react";
 
 // import "../css/user.css";
 import Header from "../components/Header";
 import MainContent from "../components/HouseMain";
 import { Routes, Route } from "react-router-dom";
-import Cart from "../components/pages/cart";
-import ProductsList from "../components/MainContents/products/productList";
-import ProductCategoryPage from "../components/pages/ProductForCategory";
-import ProductDetail from "../components/MainContents/products/detailProducts/detailProducts";
-import SearchProduct from "../components/listSearchProducts/searchProducts";
-import OrderSuccess from "../components/pages/success";
-import CheckoutCart from "../components/pages/checkoutCart";
-import DoneOrder from "../components/pages/doneOrder";
-import RestaurantList from "../components/MainContents/RestaurantList";
-import RestaurantRegister from "../components/pages/RestaurantRegister";
-import RestaurantProducts from "../components/pages/RestaurantProducts";
-import BookTable from "../components/pages/BookTable";
-import RestaurantManagement from "../components/pages/RestaurantManagement";
-import UserSettings from "../components/pages/UserSettings";
-import FeedBack from "../components/pages/feedback";
-import Report from "../components/pages/Report";
 import Footer from "../components/foot/Footer";
-import FeaturedProducts from "../components/MainContents/products/featuredProducts";
+import TopProgressBar from "../components/TopProgressBar";
+
+// Áp dụng Lazy Loading cho các component
+const Cart = lazy(() => import("../components/pages/cart"));
+const ProductsList = lazy(() => import("../components/MainContents/products/productList"));
+const ProductCategoryPage = lazy(() => import("../components/pages/ProductForCategory"));
+const ProductDetail = lazy(() => import("../components/MainContents/products/detailProducts/detailProducts"));
+const SearchProduct = lazy(() => import("../components/listSearchProducts/searchProducts"));
+const OrderSuccess = lazy(() => import("../components/pages/success"));
+const CheckoutCart = lazy(() => import("../components/pages/checkoutCart"));
+const DoneOrder = lazy(() => import("../components/pages/doneOrder"));
+const RestaurantList = lazy(() => import("../components/MainContents/RestaurantList"));
+const RestaurantRegister = lazy(() => import("../components/pages/RestaurantRegister"));
+const RestaurantProducts = lazy(() => import("../components/pages/RestaurantProducts"));
+const BookTable = lazy(() => import("../components/pages/BookTable"));
+const RestaurantManagement = lazy(() => import("../components/pages/RestaurantManagement"));
+const UserSettings = lazy(() => import("../components/pages/UserSettings"));
+const FeedBack = lazy(() => import("../components/pages/feedback"));
+const Report = lazy(() => import("../components/pages/Report"));
+const FeaturedProducts = lazy(() => import("../components/MainContents/products/featuredProducts"));
+
 function DefaultLayout() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -64,26 +68,28 @@ function DefaultLayout() {
       <Header />
 
       <div className="site-main">
-        <Routes>
-          <Route path="/" element={<MainContent />} />
-          <Route path="/products" element={<ProductsList />} />
-          <Route path="/products/:slugCategory" element={<ProductCategoryPage />} />
-          <Route path="/restaurant/:restaurantSlug/products/detail/:slugProduct" element={<ProductDetail />} />
-          <Route path="/search" element={<SearchProduct />} />
-          <Route path="/featured" element={<FeaturedProducts />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/cart/checkout" element={<CheckoutCart />} />
-          <Route path="/cart/checkout/success/:orderId" element={<OrderSuccess />} />
-          <Route path="/orders" element={<DoneOrder />} />
-          <Route path="/restaurants" element={<RestaurantList />} />
-          <Route path="/restaurant/register" element={<RestaurantRegister />} />
-          <Route path="/restaurant/:restaurantSlug/products" element={<RestaurantProducts />} />
-          <Route path="/restaurant/:restaurantSlug/book-table" element={<BookTable />} />
-          <Route path="/restaurant/manage" element={<RestaurantManagement />} />
-          <Route path="/user/settings" element={<UserSettings />} />
-          <Route path="/user/feedback" element={<FeedBack />} />
-          <Route path="/user/reports" element={<Report />} />
-        </Routes>
+        <Suspense fallback={<TopProgressBar />}>
+          <Routes>
+            <Route path="/" element={<MainContent />} />
+            <Route path="/products" element={<ProductsList />} />
+            <Route path="/products/:slugCategory" element={<ProductCategoryPage />} />
+            <Route path="/restaurant/:restaurantSlug/products/detail/:slugProduct" element={<ProductDetail />} />
+            <Route path="/search" element={<SearchProduct />} />
+            <Route path="/featured" element={<FeaturedProducts />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/cart/checkout" element={<CheckoutCart />} />
+            <Route path="/cart/checkout/success/:orderId" element={<OrderSuccess />} />
+            <Route path="/orders" element={<DoneOrder />} />
+            <Route path="/restaurants" element={<RestaurantList />} />
+            <Route path="/restaurant/register" element={<RestaurantRegister />} />
+            <Route path="/restaurant/:restaurantSlug/products" element={<RestaurantProducts />} />
+            <Route path="/restaurant/:restaurantSlug/book-table" element={<BookTable />} />
+            <Route path="/restaurant/manage" element={<RestaurantManagement />} />
+            <Route path="/user/settings" element={<UserSettings />} />
+            <Route path="/user/feedback" element={<FeedBack />} />
+            <Route path="/user/reports" element={<Report />} />
+          </Routes>
+        </Suspense>
       </div>
 
       <Footer />
