@@ -16,7 +16,7 @@ module.exports.loginPost = async (req, res) => {
     const user = await Account.findOne({
         email: email,
         deleted: false
-    })
+    }).select("+password +token");
 
     if (!user) {
         return res.status(400).json({

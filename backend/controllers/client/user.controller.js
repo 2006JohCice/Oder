@@ -367,7 +367,7 @@ module.exports.login = async (req, res) => {
     const user = await User.findOne({
       email,
       deleted: false,
-    });
+    }).select("+password +tokenUser");
 
     if (!user) {
       return sendResponse(
