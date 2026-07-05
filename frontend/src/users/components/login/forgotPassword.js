@@ -43,8 +43,8 @@ const LoginPageUserForgot = () => {
         setMessage(result.message || "Email không tồn tại trong hệ thống.");
       }
     } catch (error) {
-      console.error("Lỗi:", error);
-      setMessage("Lỗi kết nối server. Vui lòng thử lại sau.");
+      console.error("Lỗi kết nối server Error:", error);
+      setAlert("Lỗi kết nối server: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -114,14 +114,14 @@ const LoginPageUserForgot = () => {
       });
       const result = await res.json();
       if (res.ok && result.success) {
-        alert("Khôi phục mật khẩu thành công! Vui lòng đăng nhập lại.");
+        window.alert("Khôi phục mật khẩu thành công! Vui lòng đăng nhập lại.");
         navigate("/user/auth/login");
       } else {
         setMessage(result.message || "Mã xác nhận không hợp lệ hoặc đã hết hạn.");
       }
     } catch (error) {
       console.error("Lỗi:", error);
-      setMessage("Lỗi kết nối server.");
+      setMessage("Lỗi kết nối server: " + error.message);
     } finally {
       setIsLoading(false);
     }
