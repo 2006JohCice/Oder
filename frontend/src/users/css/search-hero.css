@@ -540,6 +540,7 @@
 @media (max-width: 992px) {
   .gp-hero-3col-layout {
     grid-template-columns: 1fr;
+    height: auto;
   }
   .gp-hero-col-left {
     flex-direction: row;

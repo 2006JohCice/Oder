@@ -180,7 +180,7 @@ const RestaurantChatWeb = ({ restaurant }) => {
   return (
     <div className="ro-chatweb-container">
       {/* SIDEBAR */}
-      <div className="ro-chatweb-sidebar">
+      <div className={`ro-chatweb-sidebar ${activeRoom ? 'hidden-on-mobile' : ''}`}>
         <div className="ro-chatweb-sidebar-header">
           <h2>Tin nhắn</h2>
         </div>
@@ -214,9 +214,12 @@ const RestaurantChatWeb = ({ restaurant }) => {
 
       {/* MAIN CHAT AREA */}
       {activeRoom ? (
-        <div className="ro-chatweb-main">
+        <div className="ro-chatweb-main mobile-full">
           <div className="ro-chatweb-main-header">
              <div className="ro-chatweb-main-title">
+                <button className="ro-chatweb-back-btn" onClick={() => setActiveRoom(null)}>
+                   <i className="bi bi-chevron-left"></i>
+                </button>
                 <div className="ro-chatweb-avatar" style={{width: 40, height: 40, fontSize: 16}}>
                    {(activeRoomName)[0]?.toUpperCase()}
                 </div>

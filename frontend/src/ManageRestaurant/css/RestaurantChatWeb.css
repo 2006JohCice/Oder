@@ -259,3 +259,39 @@
   font-size: 18px;
   font-weight: 500;
 }
+
+/* MOBILE RESPONSIVE CHAT */
+.ro-chatweb-back-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #1a202c;
+  cursor: pointer;
+  margin-right: 10px;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .ro-chatweb-sidebar {
+    width: 100%;
+  }
+  .ro-chatweb-sidebar.hidden-on-mobile {
+    display: none;
+  }
+  .ro-chatweb-main.mobile-full {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+  }
+  .ro-chatweb-back-btn {
+    display: block;
+  }
+  .ro-chatweb-container {
+    position: relative;
+    overflow: hidden;
+  }
+}
