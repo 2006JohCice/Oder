@@ -1,0 +1,261 @@
+/* RestaurantChatWeb.css */
+.ro-chatweb-container {
+  display: flex;
+  height: calc(100vh - 70px);
+  background-color: #f0f2f5;
+  border-top: 1px solid #e2e8f0;
+  margin: -24px; /* offset the layout padding if any */
+}
+
+.ro-chatweb-sidebar {
+  width: 350px;
+  background-color: #fff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ro-chatweb-sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ro-chatweb-sidebar-header h2 {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.ro-chatweb-search {
+  padding: 10px 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ro-chatweb-search input {
+  width: 100%;
+  padding: 10px 16px;
+  background-color: #f0f2f5;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+}
+
+.ro-chatweb-room-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.ro-chatweb-room {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.ro-chatweb-room:hover {
+  background-color: #f5f6f8;
+}
+
+.ro-chatweb-room.active {
+  background-color: #e6f2ff;
+}
+
+.ro-chatweb-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #c90000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  margin-right: 12px;
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+.ro-chatweb-room-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.ro-chatweb-room-name {
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ro-chatweb-room-lastmsg {
+  font-size: 13px;
+  color: #65676b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ro-chatweb-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #e4e6eb; /* slightly darker background for chat area like Zalo */
+}
+
+.ro-chatweb-main-header {
+  height: 66px;
+  background-color: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.ro-chatweb-main-title {
+  font-weight: 700;
+  font-size: 18px;
+  color: #1a202c;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ro-chatweb-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ro-chatweb-bubble-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 60%;
+}
+
+.ro-chatweb-bubble-wrapper.me {
+  align-self: flex-end;
+}
+
+.ro-chatweb-bubble-wrapper.other {
+  align-self: flex-start;
+}
+
+.ro-chatweb-bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.ro-chatweb-bubble-wrapper.me .ro-chatweb-bubble {
+  background-color: #c90000;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.ro-chatweb-bubble-wrapper.other .ro-chatweb-bubble {
+  background-color: #fff;
+  color: #1a202c;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.ro-chatweb-time {
+  font-size: 11px;
+  color: #65676b;
+  margin-top: 4px;
+}
+
+.ro-chatweb-bubble-wrapper.me .ro-chatweb-time {
+  text-align: right;
+}
+
+.ro-chatweb-input-area {
+  background-color: #fff;
+  padding: 15px 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ro-chatweb-input-area form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ro-chatweb-input {
+  flex: 1;
+  padding: 12px 16px;
+  background-color: #f0f2f5;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  font-size: 15px;
+}
+
+.ro-chatweb-send-btn {
+  background-color: #c90000;
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.ro-chatweb-send-btn:hover {
+  background-color: #a30000;
+}
+
+/* Typing Indicator Animation */
+.typing-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  height: 20px;
+  padding: 4px 8px;
+}
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background-color: #90949c;
+  border-radius: 50%;
+  animation: typing 1.4s infinite both;
+}
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+@keyframes typing {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* Empty State */
+.ro-chatweb-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #65676b;
+  background-color: #f0f2f5;
+  font-size: 18px;
+  font-weight: 500;
+}

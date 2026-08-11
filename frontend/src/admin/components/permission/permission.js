@@ -37,6 +37,13 @@ const permissionGroups = [
       ["role-permission", "Phân quyền hệ thống"],
     ],
   },
+  {
+    title: "Quảng cáo & Banner",
+    icon: "bi-image",
+    keys: [
+      ["advertisement-view", "Quản lý Banner"],
+    ],
+  },
 ];
 
 const PermissionPage = () => {

@@ -23,6 +23,18 @@ module.exports.registerRestaurant = async (req, res) => {
 
     await newRestaurant.save();
 
+    // Lấy instance của io từ app
+    const io = req.app.get('io');
+    if (io) {
+      const { emitNotification } = require('../../helpers/notification');
+      await emitNotification(io, {
+        title: "Đăng ký nhà hàng mới",
+        message: `Nhà hàng "${name}" vừa được đăng ký và đang chờ duyệt.`,
+        type: "system",
+        link: "/admin/restaurants"
+      });
+    }
+
     return res.status(201).json({
       message: "Đăng ký nhà hàng thành công, vui lòng chờ Admin phê duyệt.",
       restaurant: newRestaurant

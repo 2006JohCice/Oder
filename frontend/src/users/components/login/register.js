@@ -223,7 +223,7 @@ const RegisterPageUser = () => {
 
               <div className="auth-options" style={{marginTop: 5}}>
                 <label className="auth-checkbox">
-                  <input type="checkbox" required /> Tôi đồng ý với Điều khoản dịch vụ & Chính sách bảo mật.
+                  <input type="checkbox" required /> Tôi đồng ý với <Link to="/legal/terms">Điều khoản dịch vụ</Link> &amp; <Link to="/legal/privacy">Chính sách bảo mật</Link>.
                 </label>
               </div>
 

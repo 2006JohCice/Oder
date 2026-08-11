@@ -1,24 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../css/foot/Footer.css";
+import NewsletterRegisterModal from "./NewsletterRegisterModal";
 
 const Footer = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("tokenUser");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setShowModal(true);
+  };
+
   return (
     <footer className="gp-footer">
-      <div className="gp-footer-newsletter">
-        <div className="gp-footer-container">
-          <div className="gp-fn-content">
-            <div className="gp-fn-text">
-              <h3>Đăng ký nhận ưu đãi!</h3>
-              <p>Nhận ngay mã giảm giá 50k cho đơn hàng đầu tiên và nhiều ưu đãi độc quyền hàng tuần.</p>
+      {!isLoggedIn && (
+        <div className="gp-footer-newsletter">
+          <div className="gp-footer-container">
+            <div className="gp-fn-content">
+              <div className="gp-fn-text">
+                <h3>Đăng ký nhận ưu đãi!</h3>
+                <p>Nhận ngay mã giảm giá 50k cho đơn hàng đầu tiên và nhiều ưu đãi độc quyền hàng tuần.</p>
+              </div>
+              <form className="gp-fn-form" onSubmit={handleSubscribe}>
+                <input 
+                  type="email" 
+                  placeholder="Nhập địa chỉ email của bạn..." 
+                  required 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <button type="submit">Đăng ký ngay</button>
+              </form>
             </div>
-            <form className="gp-fn-form" onSubmit={(e) => e.preventDefault()}>
-              <input type="email" placeholder="Nhập địa chỉ email của bạn..." required />
-              <button type="submit">Đăng ký ngay</button>
-            </form>
           </div>
         </div>
-      </div>
+      )}
+
+      {showModal && (
+        <NewsletterRegisterModal 
+          email={email} 
+          onClose={() => setShowModal(false)} 
+          onSuccess={(msg) => {
+            alert(msg);
+            setShowModal(false);
+            window.location.reload(); // Reload to apply login state
+          }} 
+        />
+      )}
 
       <div className="gp-footer-main">
         <div className="gp-footer-container">
@@ -70,8 +108,8 @@ const Footer = () => {
               <h4>Hỗ Trợ Khách Hàng</h4>
               <ul className="gp-fc-links">
                 <li><Link to="#">Trung tâm trợ giúp</Link></li>
-                <li><Link to="#">Chính sách bảo mật</Link></li>
-                <li><Link to="#">Điều khoản sử dụng</Link></li>
+                <li><Link to="/legal/privacy">Chính sách bảo mật</Link></li>
+                <li><Link to="/legal/terms">Điều khoản dịch vụ</Link></li>
                 <li><Link to="#">Phản hồi khiếu nại</Link></li>
               </ul>
               

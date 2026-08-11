@@ -278,7 +278,7 @@
 
 .gp-fa-honor-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 25px;
 }
 
@@ -439,18 +439,12 @@
   .gp-fa-mp-stats-glass {
     width: 100%;
   }
-  .gp-fa-honor-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 600px) {
   .gp-fa-gold-title { font-size: 32px; }
   .gp-fa-gold-subtitle { font-size: 32px; }
   .gp-fa-mp-name { font-size: 32px; }
-  .gp-fa-honor-grid {
-    grid-template-columns: 1fr;
-  }
   .gp-fa-light-add {
     opacity: 1;
     bottom: 15px;

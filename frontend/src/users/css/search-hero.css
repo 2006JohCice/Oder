@@ -8,13 +8,15 @@
   margin: 20px auto 40px;
   padding: 0 15px;
   align-items: stretch;
+  height: 460px; /* Fixed height for perfect balance */
 }
 
 /* LEFT SIDEBAR */
 .gp-hero-col-left {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 15px;
 }
 
 /* RIGHT SIDEBAR */
@@ -30,7 +32,7 @@
   position: relative;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   background: #000;
-  min-height: 400px;
+  height: 100%;
 }
 
 
@@ -193,6 +195,9 @@
   width: 100%;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   border: 1px solid rgba(201,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .gp-search-box {
@@ -233,7 +238,7 @@
   margin-bottom: 15px;
 }
 
-.gp-search-suggestions span {
+.gp-search-suggestions .gp-sug-chip {
   font-size: 11px;
   color: #c90000;
   background: #fff5f5;
@@ -245,7 +250,7 @@
   border: 1px solid #fed7d7;
 }
 
-.gp-search-suggestions span:hover {
+.gp-search-suggestions .gp-sug-chip:hover {
   background: #c90000;
   color: #fff;
   border-color: #c90000;
@@ -255,6 +260,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+  margin-top: auto;
 }
 
 .gp-filter-chip {
@@ -462,7 +468,6 @@
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 400px;
 }
 
 .gp-vad-image img {

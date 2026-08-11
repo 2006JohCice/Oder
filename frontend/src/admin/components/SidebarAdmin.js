@@ -146,6 +146,15 @@ function SidebarAdmin({ menuOpen, setMenuOpen }) {
             </Link>
           )}
 
+          <Link
+            to={`${prefixAdmin}admin/legal`}
+            className={pathname === "admin/legal" ? "active" : ""}
+            onClick={handleNavigate}
+          >
+            <i className="admin-ico bi bi-file-earmark-text"></i>
+            <span>Pháp lý</span>
+          </Link>
+
           {hasPermission("role-permission") && (
             <Link
               to={`${prefixAdmin}admin/restaurants`}
@@ -157,16 +166,32 @@ function SidebarAdmin({ menuOpen, setMenuOpen }) {
             </Link>
           )}
 
-          {hasPermission("advertisement-view") && (
-            <Link
-              to={`${prefixAdmin}admin/advertisement`}
-              className={pathname === "admin/advertisement" ? "active" : ""}
-              onClick={handleNavigate}
-            >
-              <i className="admin-ico bi bi-megaphone"></i>
-              <span>Advertisement</span>
-            </Link>
-          )}
+          <Link
+            to={`${prefixAdmin}admin/advertisement`}
+            className={pathname === "admin/advertisement" ? "active" : ""}
+            onClick={handleNavigate}
+          >
+            <i className="admin-ico bi bi-megaphone"></i>
+            <span>Advertisement</span>
+          </Link>
+
+          <Link
+            to={`${prefixAdmin}admin/platform-vouchers`}
+            className={pathname === "admin/platform-vouchers" ? "active" : ""}
+            onClick={handleNavigate}
+          >
+            <i className="admin-ico bi bi-ticket-perforated"></i>
+            <span>Voucher Sàn</span>
+          </Link>
+
+          <Link
+            to={`${prefixAdmin}admin/seo`}
+            className={pathname === "admin/seo" || pathname === "admin/seo/create" ? "active" : ""}
+            onClick={handleNavigate}
+          >
+            <i className="admin-ico bi bi-globe"></i>
+            <span>SEO & Blog</span>
+          </Link>
 
           <Link
             to={`${prefixAdmin}admin/chatting`}

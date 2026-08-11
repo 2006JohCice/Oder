@@ -12,6 +12,11 @@ const vendorRouter = require("./vendor.route");
 const recommendationRouter = require("./recommendation.route");
 const feedbackRouter = require("./feedback.route");
 const foodSuggestionRouter = require("./foodsugGestion");
+const searchHistoryRouter = require("./searchHistory.route");
+const visitRouter = require("./visit.route");
+const policyRouter = require("./policy.route");
+const aiRouter = require("./ai.route");
+
 module.exports = (app) => {
     app.use("/api", homeRouter);
     app.use("/api", productRouer);
@@ -27,4 +32,8 @@ module.exports = (app) => {
     app.use("/api/vendor", vendorRouter);
     app.use("/api/recommend", recommendationRouter);
     app.use("/api/feedback", feedbackRouter);
+    app.use("/api/search-history", searchHistoryRouter);
+    app.use("/api/visit", visitRouter);
+    app.use("/api/policies", policyRouter);
+    app.use("/api/ai", aiRouter);
 };

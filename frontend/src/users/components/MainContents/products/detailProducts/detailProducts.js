@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import FeaturedProducts from "../../../MainContents/products/featuredProducts";
+import CardProducts from "../../../mixi/cardProducts/cardProducts";
 import { useCart } from "../../../mixi/cart/CartContext";
-import { formatCurrency } from "../../../../utils/shop";
+import { formatCurrency, isRestaurantClosed } from "../../../../utils/shop";
 import { notifyApp } from "../../../../../shared/notifications/ToastProvider";
 import RestaurantReview from "../../../mixi/RestaurantReview/RestaurantReview";
 import "../../../../css/DetailProducts.css";
@@ -24,11 +25,23 @@ function ProductDetail() {
   // Auth state
   const [user, setUser] = useState(null);
 
+  const [restaurantProducts, setRestaurantProducts] = useState([]);
+
   useEffect(() => {
     // Fetch product details
     fetch(`/api/products/detail/${slugProduct}`)
       .then((res) => res.json())
-      .then((data) => setDetailProduct(data))
+      .then((data) => {
+        setDetailProduct(data);
+        if (data && data.restaurantInfo && data.restaurantInfo._id) {
+          fetch(`/api/restaurants/${data.restaurantInfo._id}/products`)
+            .then(res => res.json())
+            .then(resData => {
+              setRestaurantProducts(resData.products ? resData.products.filter(p => p._id !== data._id).slice(0, 4) : []);
+            })
+            .catch(() => setRestaurantProducts([]));
+        }
+      })
       .catch(() => setDetailProduct(null));
 
     // Fetch user to check login status
@@ -53,12 +66,10 @@ function ProductDetail() {
   }, 0);
   const totalPrice = (basePrice + addonsTotal) * quantity;
 
-  // Mock Images
-  const mockImages = [
-    detailProduct?.img || "https://images.unsplash.com/photo-1544025162-8111142154ea?w=1920&q=80",
-    "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=1920&q=80",
-    "https://images.unsplash.com/photo-1558030006-450675393462?w=1920&q=80"
-  ];
+  // Dynamic Images
+  const mockImages = detailProduct?.img 
+    ? detailProduct.img.split(',').map(url => url.trim()).filter(Boolean)
+    : ["https://images.unsplash.com/photo-1544025162-8111142154ea?w=1920&q=80"];
 
   const handleToggleAddon = (id) => {
     setSelectedAddons(prev => 
@@ -66,7 +77,15 @@ function ProductDetail() {
     );
   };
 
+  const isClosed = isRestaurantClosed(detailProduct?.restaurantInfo?.openTime, detailProduct?.restaurantInfo?.closeTime);
+
   const handleAddToCart = async () => {
+    if (!detailProduct?._id || isAdding) return;
+    if (isClosed) {
+      notifyApp("Nhà hàng đã đóng cửa, không thể đặt món", "info");
+      return;
+    }
+    setIsAdding(true);
     if (!detailProduct?._id || isAdding) return;
     setIsAdding(true);
 
@@ -175,6 +194,14 @@ function ProductDetail() {
                   
                   {/* Related Products */}
                   <div className="gp-pd-related">
+                      {restaurantProducts.length > 0 && (
+                        <>
+                          <h2>Sản Phẩm Cùng Nhà Hàng</h2>
+                          <div style={{ marginBottom: '30px' }}>
+                            <CardProducts data={restaurantProducts} />
+                          </div>
+                        </>
+                      )}
                       <h2>Gợi Ý Phù Hợp</h2>
                       <FeaturedProducts isWidget={true} />
                   </div>
@@ -248,8 +275,13 @@ function ProductDetail() {
                           </div>
                       </div>
 
-                      <button className="gp-pd-add-btn" onClick={handleAddToCart} disabled={isAdding}>
-                          {isAdding ? "Đang xử lý..." : "Thêm Vào Giỏ Hàng"}
+                      <button 
+                        className="gp-pd-add-btn" 
+                        onClick={handleAddToCart} 
+                        disabled={isAdding || isClosed}
+                        style={isClosed ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+                      >
+                        {isAdding ? "ĐANG THÊM..." : (isClosed ? "ĐÓNG CỬA" : "THÊM VÀO GIỎ")}
                       </button>
 
                   </div>

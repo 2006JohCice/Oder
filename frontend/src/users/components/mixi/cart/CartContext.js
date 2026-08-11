@@ -59,6 +59,35 @@ export function CartProvider({ children }) {
     }
   }, [fetchCart]);
 
+  const addToCart = useCallback(async (productId, quantity, addons = [], notes = "") => {
+    const res = await fetch("/api/cart/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        productId,
+        quantity,
+        addons,
+        notes
+      }),
+    });
+
+    if (res.status === 401) {
+      throw new Error("Login required");
+    }
+
+    const result = await res.json().catch(() => ({}));
+    if (res.ok) {
+      await fetchCart();
+      return result;
+    } else {
+      if (result.message && result.message.includes("khác nhà hàng")) {
+          throw new Error("Different restaurant");
+      }
+      throw new Error(result.message || "Không thể thêm món ăn");
+    }
+  }, [fetchCart]);
+
   //  load 1 lần khi app start
   useEffect(() => {
     fetchCart();
@@ -70,8 +99,9 @@ export function CartProvider({ children }) {
     totalQuantity,
     loading,
     fetchCart,
-    updateQuantity
-  }), [cartItems, totalQuantity, loading, fetchCart, updateQuantity]);
+    updateQuantity,
+    addToCart
+  }), [cartItems, totalQuantity, loading, fetchCart, updateQuantity, addToCart]);
 
   return (
     <CartContext.Provider value={value}>

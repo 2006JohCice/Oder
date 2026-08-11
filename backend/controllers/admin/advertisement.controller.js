@@ -23,8 +23,8 @@ module.exports.updateAdvertisements = async (req, res) => {
             {},
             {
                 $set: {
-                    "ads1.images": ads1,
-                    "ads2.images": ads2
+                    "ads1.items": ads1,
+                    "ads2.items": ads2
                 }
             },
             { upsert: true, new: true }

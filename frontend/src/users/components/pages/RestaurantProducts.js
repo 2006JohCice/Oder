@@ -1,10 +1,11 @@
 import "../../css/RestaurantChildrenProducts.css";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../mixi/cart/CartContext";
 import CardProducts from "../mixi/cardProducts/cardProducts";
 import RestaurantReview from "../mixi/RestaurantReview/RestaurantReview";
 import { formatCurrency } from "../../utils/shop";
+import { apiFetch } from "../../../utils/apiFetch";
 
 const RestaurantProducts = () => {
   const { restaurantSlug } = useParams();
@@ -15,6 +16,10 @@ const RestaurantProducts = () => {
   const [products, setProducts] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const searchInputRef = useRef(null);
   const [activeTab, setActiveTab] = useState("all");
   const [updatingItemId, setUpdatingItemId] = useState(null);
 
@@ -29,19 +34,28 @@ const RestaurantProducts = () => {
           (item) => item.slug === restaurantSlug || item._id === restaurantSlug
         );
         setRestaurant(foundRestaurant || null);
-      }
+        
+        if (foundRestaurant) {
+          setLikesCount(foundRestaurant.likesCount || 0);
+          
+          try {
+            const likedRes = await apiFetch("/api/user/liked-restaurants");
+            if (likedRes && likedRes.likedRestaurants && likedRes.likedRestaurants.includes(foundRestaurant._id)) {
+              setIsLiked(true);
+            }
+          } catch(e) {}
 
-      if (foundRestaurant) {
-        const productsRes = await fetch(`/api/restaurants/${foundRestaurant._id}/products`);
-        const productsData = await productsRes.json();
-        if (productsRes.ok) {
-          setProducts(productsData.products || []);
-        }
+          const productsRes = await fetch(`/api/restaurants/${foundRestaurant._id}/products`);
+          const productsData = await productsRes.json();
+          if (productsRes.ok) {
+            setProducts(productsData.products || []);
+          }
 
-        const vouchersRes = await fetch(`/api/restaurants/${foundRestaurant._id}/vouchers`);
-        if (vouchersRes.ok) {
-          const vouchersData = await vouchersRes.json();
-          setVouchers(vouchersData.vouchers || []);
+          const vouchersRes = await fetch(`/api/restaurants/${foundRestaurant._id}/vouchers`);
+          if (vouchersRes.ok) {
+            const vouchersData = await vouchersRes.json();
+            setVouchers(vouchersData.vouchers || []);
+          }
         }
       }
     } catch (error) {
@@ -56,7 +70,6 @@ const RestaurantProducts = () => {
     fetchCart();
   }, [fetchRestaurantData]);
 
-  // Group products by categoryName
   const categories = useMemo(() => {
     const cats = new Set();
     products.forEach(p => { if (p.categoryName) cats.add(p.categoryName); });
@@ -93,7 +106,6 @@ const RestaurantProducts = () => {
     const closeTime = closeH + closeM / 60;
 
     if (closeTime < openTime) {
-      // Crosses midnight
       if (currentTime >= closeTime && currentTime < openTime) return true;
       return false;
     } else {
@@ -103,15 +115,44 @@ const RestaurantProducts = () => {
   };
 
   const isClosed = checkIsClosed();
-  const handleCheckout = () => {
-    navigate("/cart/checkout");
-  };
 
   const handleUpdateQuantity = async (productId, newQuantity) => {
       if (newQuantity < 1) return;
       setUpdatingItemId(productId);
       await updateQuantity(productId, newQuantity);
       setUpdatingItemId(null);
+  };
+
+  const handleLike = async () => {
+    try {
+      const res = await apiFetch(`/api/user/like-restaurant/${restaurant._id}`, { method: 'POST' });
+      if (res.success) {
+        setIsLiked(res.isLiked);
+        setLikesCount(prev => res.isLiked ? prev + 1 : prev - 1);
+      } else {
+        alert("Vui lòng đăng nhập để yêu thích nhà hàng!");
+      }
+    } catch(err) {
+      alert("Vui lòng đăng nhập để yêu thích nhà hàng!");
+    }
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: restaurant.name,
+        url: window.location.href,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Đã copy link nhà hàng!");
+    }
+  };
+
+  const handleSearchClick = () => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
   };
 
   const restaurantGroup = cartItems?.restaurantGroups?.find(g => g.restaurantId === restaurant?._id);
@@ -121,60 +162,88 @@ const RestaurantProducts = () => {
 
   return (
     <div className="gp-restaurant-detail-page">
-      {/* HERO SECTION */}
       <section className="gp-rd-hero">
         <div className="gp-rd-hero-bg">
           <img src={restaurant.logo || "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1920&q=80"} alt="Cover" />
           <div className="gp-rd-hero-overlay"></div>
         </div>
 
-        <header className="gp-rd-header-transparent">
-          <button className="gp-rd-icon-btn" onClick={() => navigate(-1)}>
+        <header className="gp-rd-header-transparent" style={{ top: 80 }}>
+          <button className="gp-rd-icon-btn" onClick={() => navigate(-1)} title="Quay lại">
             <i className="bi bi-arrow-left"></i>
           </button>
-          <div className="gp-rd-header-actions">
-            <button className="gp-rd-icon-btn"><i className="bi bi-search"></i></button>
-            <button className="gp-rd-icon-btn"><i className="bi bi-heart"></i></button>
-            <button className="gp-rd-icon-btn"><i className="bi bi-share"></i></button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button 
+              className="gp-rd-icon-btn" 
+              onClick={handleLike} 
+              style={{ color: isLiked ? '#c90000' : '#fff', width: 'auto', padding: '0 16px', borderRadius: '20px', fontWeight: 600 }}
+              title="Yêu thích"
+            >
+              <i className={`bi bi-heart${isLiked ? '-fill' : ''}`} style={{ marginRight: 6 }}></i> {likesCount}
+            </button>
+            <button 
+              className="gp-rd-icon-btn" 
+              onClick={handleShare}
+              style={{ width: 'auto', padding: '0 16px', borderRadius: '20px', fontWeight: 600 }}
+              title="Chia sẻ"
+            >
+              <i className="bi bi-share" style={{ marginRight: 6 }}></i> Chia sẻ
+            </button>
+            <button 
+              className="gp-rd-icon-btn" 
+              onClick={handleSearchClick}
+              style={{ width: 'auto', padding: '0 16px', borderRadius: '20px', fontWeight: 600 }}
+              title="Tìm món"
+            >
+              <i className="bi bi-search" style={{ marginRight: 6 }}></i> Tìm món
+            </button>
           </div>
         </header>
 
-        {/* Floating Restaurant Info Card */}
-        <div className="gp-rd-info-wrapper">
-            <div className="gp-rd-info-card glass">
-                <div className="gp-rd-logo">
-                    <img src={restaurant.logo || "https://ui-avatars.com/api/?name=R&background=000&color=fff"} alt="Logo" />
-                </div>
-                <div className="gp-rd-info-text">
-                    <div className="gp-rd-badges">
-                        <span className="gp-rd-badge-gold"><i className="bi bi-award-fill"></i> Premium Partner</span>
-                        <span className="gp-rd-badge-dark"><i className="bi bi-shop"></i> {restaurant.type || "Nhà hàng 5 Sao"}</span>
-                    </div>
-                    <h1>{restaurant.name}</h1>
-                    <div className="gp-rd-meta">
-                        <span className="gp-rd-meta-star"><i className="bi bi-star-fill"></i> {Number(restaurant.ratingAverage || 4.9).toFixed(1)} (2.5k+)</span>
-                        <span><i className="bi bi-geo-alt-fill"></i> {restaurant.address || "TP Hồ Chí Minh"}</span>
-                        {isClosed ? (
-                          <span className="text-danger"><i className="bi bi-clock-fill"></i> Đóng Cửa ({restaurant.openTime} - {restaurant.closeTime})</span>
-                        ) : (
-                          <span className="text-success"><i className="bi bi-clock-fill"></i> Đang Mở ({restaurant.openTime || "00:00"} - {restaurant.closeTime || "23:59"})</span>
-                        )}
-                        <Link to={`/restaurant/${restaurant._id}/book-table`} style={{background: '#c90000', color: '#fff', padding: '6px 15px', borderRadius: '20px', marginLeft: 'auto', fontSize: '13px', textDecoration: 'none', fontWeight: 'bold'}}>
-                            <i className="bi bi-calendar2-check"></i> Xem sơ đồ & Đặt bàn
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </div>
       </section>
 
-      {/* MAIN LAYOUT */}
+      <div className="gp-rd-info-wrapper">
+          <div className="gp-rd-info-card glass">
+              <div className="gp-rd-logo">
+                  <img src={restaurant.logo || "https://ui-avatars.com/api/?name=R&background=000&color=fff"} alt="Logo" />
+              </div>
+              <div className="gp-rd-info-text">
+                  <div className="gp-rd-badges">
+                      <span className="gp-rd-badge-gold"><i className="bi bi-award-fill"></i> Premium Partner</span>
+                      <span className="gp-rd-badge-dark"><i className="bi bi-shop"></i> {restaurant.type || "Nhà hàng 5 Sao"}</span>
+                  </div>
+                  <h1>{restaurant.name}</h1>
+                  <div className="gp-rd-meta">
+                      <span className="gp-rd-meta-star"><i className="bi bi-star-fill"></i> {Number(restaurant.ratingAverage || 4.9).toFixed(1)} (2.5k+)</span>
+                      <span><i className="bi bi-geo-alt-fill"></i> {restaurant.address || "TP Hồ Chí Minh"}</span>
+                      {isClosed ? (
+                        <span className="text-danger"><i className="bi bi-clock-fill"></i> Đóng Cửa ({restaurant.openTime} - {restaurant.closeTime})</span>
+                      ) : (
+                        <span className="text-success"><i className="bi bi-clock-fill"></i> Đang Mở ({restaurant.openTime || "00:00"} - {restaurant.closeTime || "23:59"})</span>
+                      )}
+                      <div style={{ display: 'flex', gap: 10, marginTop: 15, flexWrap: 'wrap' }}>
+                        <button 
+                          onClick={() => {
+                            window.dispatchEvent(new CustomEvent('open_restaurant_chat', { detail: { restaurantId: restaurant._id, restaurantName: restaurant.name } }));
+                          }}
+                          className="gp-rd-tab active"
+                          style={{ padding: '6px 12px', marginBottom: 0 }}
+                        >
+                          <i className="bi bi-chat-dots"></i> Chat với nhà hàng
+                        </button>
+                        <Link to={`/restaurant/${restaurant._id}/book-table`} style={{background: '#c90000', color: '#fff', padding: '6px 15px', borderRadius: '20px', fontSize: '13px', textDecoration: 'none', fontWeight: 'bold'}}>
+                            <i className="bi bi-calendar2-check"></i> Xem sơ đồ & Đặt bàn
+                        </Link>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
       <div className="gp-rd-main-container">
         
-        {/* LEFT CONTENT */}
         <div className="gp-rd-content">
           
-          {/* Vouchers Section (Tickets) */}
           {vouchers.length > 0 && (
             <div className="gp-rd-vouchers">
               <h3><i className="bi bi-ticket-perforated-fill text-danger"></i> Ưu đãi đặc biệt</h3>
@@ -190,7 +259,19 @@ const RestaurantProducts = () => {
                       <div className="gp-rd-ticket-right">
                           <p>{v.description || `Đơn tối thiểu ${v.minOrderValue / 1000}k`}</p>
                           <code>{v.code}</code>
-                          <button onClick={() => alert("Đã lưu mã " + v.code)}>Lưu</button>
+                          <button onClick={async () => {
+                            try {
+                                const res = await fetch(`/api/user/save-voucher/${v._id}`, { method: 'POST', credentials: 'include' });
+                                const data = await res.json();
+                                if (data.success) {
+                                    alert('Lưu mã thành công, bạn có thể xem trong Kho Voucher');
+                                } else {
+                                    alert(data.message || 'Lỗi khi lưu mã');
+                                }
+                            } catch (e) {
+                                alert('Lỗi kết nối');
+                            }
+                          }}>Lưu</button>
                       </div>
                   </div>
                 ))}
@@ -198,7 +279,6 @@ const RestaurantProducts = () => {
             </div>
           )}
 
-          {/* Sticky Menu Tabs */}
           <div className="gp-rd-tabs-wrapper">
               <div className="gp-rd-tabs">
                 {categories.map((cat) => (
@@ -213,11 +293,19 @@ const RestaurantProducts = () => {
               </div>
           </div>
 
-          {/* Product List */}
-          <div className="gp-rd-product-section">
-            <h2 className="gp-rd-section-title">
-              {activeTab === "all" ? "Thực Đơn" : activeTab}
-            </h2>
+          <div className="gp-rd-content">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+            <h2 className="gp-rd-section-title" style={{ margin: 0 }}>{activeTab === "all" ? "Thực Đơn" : activeTab}</h2>
+            <div style={{ position: 'relative' }}>
+              <input 
+                ref={searchInputRef}
+                type="text" 
+                placeholder="Tìm món ăn..." 
+                style={{ padding: '8px 15px 8px 35px', borderRadius: 20, border: '1px solid #e2e8f0', outline: 'none' }}
+              />
+              <i className="bi bi-search" style={{ position: 'absolute', left: 12, top: 9, color: '#a0aec0' }}></i>
+            </div>
+          </div>
             <CardProducts data={visibleProducts} isClosed={isClosed} />
           </div>
           

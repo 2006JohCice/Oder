@@ -39,3 +39,25 @@ export const getTableLabel = (table) => {
   if (!table) return "";
   return `${table.tableNumber} - ${table.area}`;
 };
+
+export const isRestaurantClosed = (openTime, closeTime) => {
+  if (!openTime || !closeTime) return false;
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  const currentTime = currentHour + currentMinute / 60;
+
+  const [openH, openM] = openTime.split(":").map(Number);
+  const oTime = openH + (openM || 0) / 60;
+
+  const [closeH, closeM] = closeTime.split(":").map(Number);
+  const cTime = closeH + (closeM || 0) / 60;
+
+  if (cTime < oTime) {
+    if (currentTime >= cTime && currentTime < oTime) return true;
+    return false;
+  } else {
+    if (currentTime < oTime || currentTime >= cTime) return true;
+    return false;
+  }
+};

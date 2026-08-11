@@ -39,7 +39,14 @@ const userSchema = new mongoose.Schema(
         default:false,
     },
     deleteAt: Date,
-
+    likedRestaurants: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Restaurant'
+    }],
+    savedVouchers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Voucher'
+    }],
     },{
         timestamps: true
     });

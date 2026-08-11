@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CardProducts from "../../mixi/cardProducts/cardProducts";
+import RecommendedRestaurants from "./RecommendedRestaurants";
 import "../../../css/ForYou.css";
 
 function Products() {
@@ -44,6 +45,9 @@ function Products() {
                 <p className="gp-foryou-subtitle">Những gợi ý ẩm thực tuyệt vời nhất dựa trên sở thích của bạn.</p>
             </div>
         </div>
+
+        {/* Recommended Restaurants Section */}
+        <RecommendedRestaurants />
 
         {/* Restaurants Slider */}
         {restaurantsData.length > 0 && (

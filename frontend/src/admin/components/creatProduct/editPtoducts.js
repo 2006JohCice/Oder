@@ -234,14 +234,34 @@ function EditProducts({ idEdit, setProducts }) {
 
           <div className="mb-3">
             <label className="form-label"><i className="bi bi-image"></i> Ảnh (URL)</label>
-            <input
-              type="url"
-              name="img"
-              value={dataEdit.img}
-              onChange={handleChange}
-              className="form-control createProducts-input"
-              required
-            />
+            {(dataEdit.img ? dataEdit.img.split(',') : ['']).map((url, i, arr) => (
+              <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                <input
+                  type="url"
+                  className="form-control createProducts-input"
+                  placeholder="Dán link ảnh"
+                  value={url}
+                  onChange={e => {
+                    const newUrls = [...arr];
+                    newUrls[i] = e.target.value;
+                    setDataEdit({ ...dataEdit, img: newUrls.join(',') });
+                  }}
+                  required
+                />
+                {arr.length > 1 && (
+                  <button type="button" onClick={() => {
+                    const newUrls = [...arr];
+                    newUrls.splice(i, 1);
+                    setDataEdit({ ...dataEdit, img: newUrls.join(',') });
+                  }} className="btn btn-danger"><i className="bi bi-dash"></i></button>
+                )}
+              </div>
+            ))}
+            <button type="button" onClick={() => {
+              const currentUrls = dataEdit.img ? dataEdit.img.split(',') : [''];
+              currentUrls.push('');
+              setDataEdit({ ...dataEdit, img: currentUrls.join(',') });
+            }} className="btn btn-secondary btn-sm mt-1"><i className="bi bi-plus"></i> Thêm ảnh</button>
           </div>
 
           <div className="mb-3">

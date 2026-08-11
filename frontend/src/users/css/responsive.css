@@ -1,0 +1,74 @@
+/* --- USER LAYOUT RESPONSIVE (MOBILE & IPAD) --- */
+
+@media (max-width: 1024px) {
+  /* iPad / Tablet */
+  .site-main {
+      padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile and iPad Portrait */
+
+  /* Tables in Cart & Orders */
+  .cart-table, .order-table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      white-space: nowrap;
+  }
+  
+  /* Make all main containers stack vertically if they use flex row */
+  .cart-container {
+      margin: 10px auto;
+      padding: 10px;
+  }
+  
+  .cart-summary {
+      max-width: 100%;
+      margin-top: 15px;
+  }
+
+  /* Checkout page forms */
+  .checkout-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+  }
+
+  .checkout-left, .checkout-right {
+      width: 100%;
+      padding: 10px;
+  }
+
+  /* Products list in products page */
+  .gp-list-card {
+      flex-direction: column !important;
+  }
+  
+  .gp-lc-media {
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: flex-end !important;
+      margin-top: 15px !important;
+  }
+
+  /* Booking page */
+  .book-table-container {
+      padding: 15px !important;
+      margin: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mobile strict */
+  .cart-table th, .cart-table td {
+      padding: 5px;
+      font-size: 14px;
+  }
+  
+  .home-btn {
+      font-size: 13px !important;
+      padding: 8px 10px !important;
+  }
+}

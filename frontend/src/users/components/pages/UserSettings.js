@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../../css/UserSettings.css";
 import { notifyApp } from "../../../shared/notifications/ToastProvider";
 
@@ -7,7 +7,10 @@ function UserSettings() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile");
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const tabParam = searchParams.get("tab") || "profile";
+  const [activeTab, setActiveTab] = useState(tabParam);
   
   const [formData, setFormData] = useState({
     fullname: "",

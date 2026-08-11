@@ -1,0 +1,227 @@
+/* Re-using some ma- styles if they don't exist globally */
+.ma-container {
+  padding: 20px;
+}
+
+.ma-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ma-header-title h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #2A3F54;
+}
+
+.ma-btn-primary {
+  background-color: #1ABB9C;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ma-btn-primary:hover {
+  background-color: #169F85;
+}
+
+.ma-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.ma-card-body {
+  padding: 20px;
+}
+
+.ma-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ma-table th, .ma-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #E6E9ED;
+  text-align: left;
+}
+
+.ma-table th {
+  background-color: #f8f9fa;
+  color: #2A3F54;
+  font-weight: 600;
+}
+
+.ma-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ma-badge-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.ma-badge-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.ma-btn-icon {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.ma-btn-icon:hover {
+  opacity: 0.8;
+}
+
+/* Modal CSS */
+.lm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.lm-modal-content {
+  background: #fff;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.lm-modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lm-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #2c3e50;
+}
+
+.lm-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.lm-close-btn:hover {
+  color: #343a40;
+}
+
+.lm-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.lm-form-group {
+  margin-bottom: 20px;
+}
+
+.lm-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.lm-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.lm-input:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.lm-help-text {
+  display: block;
+  margin-top: 5px;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.lm-editor-wrapper {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.lm-switch-group label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.lm-modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.lm-btn-secondary {
+  background-color: #2A3F54;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.lm-btn-secondary:hover {
+  background-color: #1a2733;
+}
+
+.lm-btn-primary {
+  background-color: #1ABB9C;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.lm-btn-primary:hover {
+  background-color: #169F85;
+}

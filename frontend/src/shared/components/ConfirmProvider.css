@@ -1,0 +1,118 @@
+.gp-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: gpFadeIn 0.2s ease-out;
+}
+
+.gp-confirm-modal {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  transform: scale(0.95);
+  animation: gpScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.gp-confirm-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.gp-confirm-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #f0f9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.gp-confirm-icon i {
+  font-size: 28px;
+  color: #0284c7 !important;
+}
+
+.gp-confirm-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gp-confirm-body {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.gp-confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.gp-confirm-cancel-btn,
+.gp-confirm-ok-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.gp-confirm-cancel-btn {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.gp-confirm-cancel-btn:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+.gp-confirm-ok-btn {
+  background-color: #dc2626; /* Primary brand color / red */
+  color: white;
+}
+
+.gp-confirm-ok-btn:hover {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2);
+}
+
+@keyframes gpFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gpScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

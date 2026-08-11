@@ -29,6 +29,20 @@ const voucherSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    maxUsage: {
+      type: Number,
+      default: 0, // 0 = unlimited
+    },
+    usedCount: {
+      type: Number,
+      default: 0,
+    },
+    usedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      }
+    ],
     expirationDate: {
       type: Date,
       required: true,
@@ -36,7 +50,7 @@ const voucherSchema = new mongoose.Schema(
     restaurant_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Restaurant',
-      required: true,
+      default: null
     },
     status: {
       type: String,

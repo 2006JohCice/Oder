@@ -1,17 +1,59 @@
 import { useEffect, useState } from "react";
+import { notifyApp } from '../../shared/notifications/ToastProvider';
+import { confirmApp } from '../../shared/notifications/ConfirmProvider';
 import "../css/search-hero.css";
 
 function UserRewardCard() {
   const [user, setUser] = useState(null);
+  const pointsRequired = 1000;
 
-  useEffect(() => {
-    fetch("/api/user/me", { credentials: "include" })
+  const fetchUser = () => {
+    fetch(`/api/user/me?t=${new Date().getTime()}`, { 
+      credentials: "include",
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data && data.user) setUser(data.user);
       })
       .catch(() => {});
+  };
+
+  useEffect(() => {
+    fetchUser();
   }, []);
+
+  const handleRedeem = async (e) => {
+    e.preventDefault();
+    if (user.points < pointsRequired) {
+      notifyApp(`Bạn cần thêm ${pointsRequired - user.points} điểm để đổi ưu đãi này!`, 'error');
+      return;
+    }
+
+    const isConfirmed = await confirmApp("Đổi ưu đãi", `Bạn có chắc muốn dùng ${pointsRequired} điểm để đổi lấy mã giảm giá 10% (Tối đa 50k)?`);
+    
+    if (!isConfirmed) return;
+
+    try {
+      const response = await fetch("/api/user/redeem-reward", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        notifyApp(`Đổi ưu đãi thành công! Mã của bạn là ${result.data?.voucher?.code || result.voucher?.code}`, "success");
+        setUser(prev => ({ ...prev, points: prev.points - pointsRequired }));
+        fetchUser(); // Refresh points
+      } else {
+        notifyApp(result.message || "Lỗi khi đổi điểm.", "error");
+      }
+    } catch (err) {
+      notifyApp("Lỗi kết nối.", "error");
+    }
+  };
 
   if (!user) {
     return (
@@ -77,7 +119,7 @@ function UserRewardCard() {
         </p>
       </div>
 
-      <a href="/user/settings" className="gp-reward-btn">
+      <a href="#" onClick={handleRedeem} className="gp-reward-btn">
         <i className="bi bi-gift-fill"></i> Đổi ưu đãi ngay
       </a>
     </div>

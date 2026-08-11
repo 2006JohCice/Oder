@@ -2,9 +2,11 @@ const bcrypt = require("bcryptjs");
 
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
+const ChatMessage = require("../../models/chat-message.model");
 const Restaurant = require("../../models/restaurant.model");
 const RestaurantFeedback = require("../../models/restaurant-feedback.model");
 const RestaurantReport = require("../../models/restaurant-report.model");
+const Voucher = require('../../models/voucher.model');
 
 const generateHelper = require("../../helpers/generate");
 const sendMailHelper = require("../../helpers/sendMail");
@@ -174,7 +176,7 @@ const recalculateRestaurantRating = async (restaurantId) => {
 module.exports.getUser = async (req, res) => {
   try {
     const users = await User.find({
-      deleted: false,
+      deleted: { $ne: true },
     }).select("-password -tokenUser");
 
     return sendResponse(res, 200, true, "Lấy danh sách user thành công", {
@@ -783,5 +785,173 @@ module.exports.submitReport = async (req, res) => {
     console.error(error);
 
     return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+module.exports.toggleLikeRestaurant = async (req, res) => {
+  try {
+    const user = res.locals.user;
+    if (!user) return sendResponse(res, 401, false, "Chưa đăng nhập");
+
+    const restaurantId = req.params.id;
+    const isLiked = user.likedRestaurants && user.likedRestaurants.includes(restaurantId);
+
+    if (isLiked) {
+      // Unlike
+      await User.updateOne(
+        { _id: user._id },
+        { $pull: { likedRestaurants: restaurantId } }
+      );
+      await require('../../models/restaurant.model').updateOne(
+        { _id: restaurantId },
+        { $inc: { likesCount: -1 } }
+      );
+      return sendResponse(res, 200, true, "Đã bỏ thích", { isLiked: false });
+    } else {
+      // Like
+      await User.updateOne(
+        { _id: user._id },
+        { $addToSet: { likedRestaurants: restaurantId } }
+      );
+      await require('../../models/restaurant.model').updateOne(
+        { _id: restaurantId },
+        { $inc: { likesCount: 1 } }
+      );
+      return sendResponse(res, 200, true, "Đã thích", { isLiked: true });
+    }
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+module.exports.getLikedRestaurants = async (req, res) => {
+  try {
+    const user = res.locals.user;
+    if (!user) return sendResponse(res, 401, false, "Chưa đăng nhập");
+
+    return sendResponse(res, 200, true, "Thành công", {
+      likedRestaurants: user.likedRestaurants || []
+    });
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+module.exports.redeemReward = async (req, res) => {
+  try {
+    const user = res.locals.user;
+    if (!user) return sendResponse(res, 401, false, "Chưa đăng nhập");
+
+    const POINTS_COST = 1000;
+    const DISCOUNT_PERCENT = 10;
+    const MAX_DISCOUNT = 50000;
+
+    if (user.points < POINTS_COST) {
+      return sendResponse(res, 400, false, "Không đủ điểm để đổi ưu đãi. Cần tối thiểu " + POINTS_COST + " điểm.");
+    }
+
+    // Trừ điểm
+    await User.updateOne({ _id: user._id }, { $inc: { points: -POINTS_COST } });
+
+    // Tạo mã giảm giá hệ thống (Voucher)
+    const code = `RW-${user._id.toString().substring(0, 5).toUpperCase()}-${Date.now().toString().slice(-4)}`;
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 30); // 30 ngày
+
+    const newVoucher = new Voucher({
+      code: code,
+      discountType: 'percent',
+      discountValue: DISCOUNT_PERCENT,
+      minOrderValue: 0,
+      maxDiscountAmount: MAX_DISCOUNT,
+      maxUsage: 1,
+      expirationDate: expirationDate,
+      description: "Mã giảm giá quy đổi từ điểm thưởng",
+      restaurant_id: null // Áp dụng toàn hệ thống
+    });
+
+    await newVoucher.save();
+
+    // Lưu voucher vào kho của user
+    await User.updateOne(
+      { _id: user._id },
+      { $push: { savedVouchers: newVoucher._id } }
+    );
+
+    return sendResponse(res, 200, true, "Đổi ưu đãi thành công", {
+      voucher: newVoucher
+    });
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+module.exports.getMyVouchers = async (req, res) => {
+  try {
+    const user = res.locals.user;
+    if (!user) return sendResponse(res, 401, false, "Chưa đăng nhập");
+
+    // Lấy thông tin user cùng với các voucher đã lưu và populate restaurant_id
+    const userWithVouchers = await User.findById(user._id).populate({
+      path: 'savedVouchers',
+      populate: {
+        path: 'restaurant_id',
+        select: 'slug name'
+      }
+    });
+    
+    // Lọc bỏ những voucher đã hết hạn hoặc bị xóa
+    const validVouchers = userWithVouchers.savedVouchers.filter(v => 
+      !v.deleted && 
+      v.status === 'active'
+    );
+
+    return sendResponse(res, 200, true, "Thành công", {
+      vouchers: validVouchers
+    });
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+module.exports.saveVoucher = async (req, res) => {
+  try {
+    const user = res.locals.user;
+    if (!user) return sendResponse(res, 401, false, "Chưa đăng nhập");
+
+    const voucherId = req.params.id;
+
+    const voucher = await Voucher.findOne({ _id: voucherId, deleted: false, status: 'active' });
+    if (!voucher) {
+      return sendResponse(res, 404, false, "Voucher không tồn tại hoặc đã hết hạn");
+    }
+
+    if (user.savedVouchers && user.savedVouchers.includes(voucherId)) {
+      return sendResponse(res, 400, false, "Bạn đã lưu voucher này rồi");
+    }
+
+    await User.updateOne(
+      { _id: user._id },
+      { $addToSet: { savedVouchers: voucherId } }
+    );
+
+    return sendResponse(res, 200, true, "Lưu voucher thành công");
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, false, "Lỗi máy chủ");
+  }
+};
+
+module.exports.getChatHistory = async (req, res) => {
+  try {
+    const { room } = req.params;
+    const messages = await ChatMessage.find({ room, deleted: false }).sort({ createdAt: 1 });
+    res.json({ messages });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi Server", error });
   }
 };

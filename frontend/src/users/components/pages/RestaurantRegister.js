@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -227,7 +227,7 @@ const RestaurantRegister = () => {
                     <li><strong>Số điện thoại:</strong> {formData.phone || <span style={{color: 'red'}}>Chưa nhập</span>}</li>
                     <li><strong>Giấy tờ pháp lý:</strong> {files.businessLicense ? "Đã tải lên" : "Chưa tải lên"}</li>
                   </ul>
-                  <p style={{marginTop: '20px', color: '#555'}}><i>Bằng việc nhấn "Gửi hồ sơ đăng ký", bạn đồng ý với các Điều khoản & Chính sách của Gourmet Pulse.</i></p>
+                  <p style={{marginTop: '20px', color: '#555'}}><i>Bằng việc nhấn "Gửi hồ sơ đăng ký", bạn đồng ý với <Link to="/legal/terms">Điều khoản dịch vụ</Link> &amp; <Link to="/legal/privacy">Chính sách bảo mật</Link> của Gourmet Pulse.</i></p>
                 </div>
               </div>
             )}

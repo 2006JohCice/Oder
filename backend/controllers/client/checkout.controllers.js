@@ -4,6 +4,7 @@ const Order = require("../../models/orders.model");
 const Table = require("../../models/table.model");
 const Restaurant = require("../../models/restaurant.model");
 const User = require("../../models/user.model");
+const Voucher = require("../../models/voucher.model");
 const generateHelper = require("../../helpers/generate");
 
 const DEPOSIT_AMOUNT = 200000;
@@ -316,8 +317,63 @@ module.exports.order = async (req, res) => {
         });
       }
 
-      const totalAmount =
+      let totalAmount =
         calculateTotal(group.products);
+        
+      /* =========================
+         FIX 9 - VOUCHER SYSTEM
+      ========================= */
+      let discountAmount = 0;
+      let appliedVoucherId = null;
+
+      if (requestGroup.voucherCode) {
+        const voucher = await Voucher.findOne({
+          code: String(requestGroup.voucherCode).toUpperCase(),
+          $or: [
+            { restaurant_id: group.restaurantId },
+            { restaurant_id: null }
+          ],
+          status: 'active',
+          deleted: false
+        });
+
+        if (voucher) {
+          const now = new Date();
+          if (new Date(voucher.expirationDate) > now) {
+            if (voucher.maxUsage === 0 || voucher.usedCount < voucher.maxUsage) {
+               let userId = null;
+               if (req.cookies.tokenUser) {
+                  const user = await User.findOne({ tokenUser: req.cookies.tokenUser });
+                  if (user) userId = user._id;
+               }
+               
+               if (!userId || (userId && !voucher.usedBy.includes(userId))) {
+                  if (totalAmount >= voucher.minOrderValue) {
+                     if (voucher.discountType === 'amount') {
+                        discountAmount = voucher.discountValue;
+                     } else {
+                        let pctDiscount = (totalAmount * voucher.discountValue) / 100;
+                        if (voucher.maxDiscountAmount && pctDiscount > voucher.maxDiscountAmount) {
+                           pctDiscount = voucher.maxDiscountAmount;
+                        }
+                        discountAmount = pctDiscount;
+                     }
+                     appliedVoucherId = voucher._id;
+                     
+                     const updateQuery = { $inc: { usedCount: 1 } };
+                     if (userId) {
+                         updateQuery.$push = { usedBy: userId };
+                     }
+                     await Voucher.updateOne({ _id: voucher._id }, updateQuery);
+                  }
+               }
+            }
+          }
+        }
+      }
+
+      totalAmount -= discountAmount;
+      if (totalAmount < 0) totalAmount = 0;
       
       totalCartAmount += totalAmount;
 
@@ -355,6 +411,8 @@ module.exports.order = async (req, res) => {
         products: group.products,
 
         totalAmount,
+        discountAmount,
+        voucher_id: appliedVoucherId,
 
         depositAmount:
           normalizedGroup.orderType ===
@@ -463,7 +521,9 @@ module.exports.order = async (req, res) => {
     if (req.cookies.tokenUser) {
         const user = await User.findOne({ tokenUser: req.cookies.tokenUser, deleted: false });
         if (user) {
-            const pointsToAdd = 50 + Math.floor(totalCartAmount / 100000) * 10;
+            // Lợi nhuận của sàn giả sử là 10% tổng đơn, trích 50% lợi nhuận đó thành điểm thưởng (tức 5% tổng đơn)
+            const profit = totalCartAmount * 0.10;
+            const pointsToAdd = Math.floor(profit * 0.50) || 10;
             await User.updateOne({ _id: user._id }, { $inc: { points: pointsToAdd } });
         }
     }

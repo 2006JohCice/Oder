@@ -1,9 +1,9 @@
-/* --- PAGE WRAPPER --- */
 .gp-restaurant-detail-page {
   background-color: #f4f7f6;
   min-height: 100vh;
   padding-bottom: 80px;
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
 /* --- HERO SECTION --- */
@@ -78,12 +78,11 @@
 
 /* Floating Restaurant Info Card */
 .gp-rd-info-wrapper {
-  position: absolute;
-  bottom: -40px; /* Overlap main content */
-  left: 0; right: 0;
+  position: relative;
+  margin-top: -60px; /* Pull it up to overlap hero */
+  z-index: 10;
   display: flex;
   justify-content: center;
-  z-index: 10;
   padding: 0 20px;
 }
 
@@ -177,7 +176,7 @@
 .gp-rd-main-container {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 70px 20px 40px 20px; /* Top padding for overlap */
+  padding: 30px 20px 40px 20px; /* Reduced top padding since info card is now in flow */
   display: flex;
   gap: 30px;
   align-items: flex-start;
@@ -697,6 +696,7 @@
 @media (max-width: 1024px) {
   .gp-rd-main-container {
       flex-direction: column;
+      align-items: stretch;
   }
   .gp-rd-sidebar {
       width: 100%;
@@ -718,9 +718,14 @@
       width: 80px; height: 80px;
       margin-top: -50px;
   }
-  .gp-rd-badges { justify-content: center; }
+  .gp-rd-info-wrapper {
+      margin-top: -100px;
+  }
+  .gp-rd-meta {
+      align-items: center;
+  }
   .gp-rd-meta { flex-direction: column; gap: 5px; }
-  .gp-rd-main-container { padding-top: 120px; } /* more space for tall card */
+  .gp-rd-main-container { padding-top: 80px; }
   
   .gp-list-card { flex-direction: column; }
   .gp-lc-media { flex-direction: row; justify-content: space-between; align-items: flex-end; margin-top: 15px; }

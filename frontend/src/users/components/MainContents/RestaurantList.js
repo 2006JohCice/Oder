@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { calculateDistance, calculateETA } from "../../../utils/geo";
 import "../../css/RestaurantList.css";
 
-const categories = ["Tất Cả", "Đồ ăn vặt", "Đồ uống", "Món Á", "Món Âu", "Thức ăn nhanh", "Tráng miệng", "Chay"];
+const deliveryCategories = ["Tất Cả", "Đồ ăn vặt", "Đồ uống", "Món Á", "Món Âu", "Thức ăn nhanh", "Tráng miệng", "Chay"];
+const bookingCategories = ["Tất Cả", "Hẹn hò", "Gia đình", "Tiệc tùng", "Tiếp khách", "Buffet", "Ngoài trời", "Phòng riêng"];
 
 const RestaurantList = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLocation, setUserLocation] = useState(null);
   
+  const location = useLocation();
+  const isBookingMode = new URLSearchParams(location.search).get('mode') === 'booking';
+  const currentCategories = isBookingMode ? bookingCategories : deliveryCategories;
+
   // UI States
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Tất Cả");
@@ -109,7 +114,7 @@ const RestaurantList = () => {
         <div className="gp-rl-filter-group">
           <h4>Danh Mục</h4>
           <div className="gp-rl-categories">
-            {categories.map(cat => (
+            {currentCategories.map(cat => (
               <div 
                 key={cat} 
                 className={`gp-rl-cat-item ${activeCategory === cat ? 'active' : ''}`}
@@ -157,8 +162,8 @@ const RestaurantList = () => {
         {/* HEADER & SORTING */}
         <div className="gp-rl-header-area">
           <div className="gp-rl-header-text">
-            <h1>Nhà Hàng Nổi Bật</h1>
-            <p>Khám phá {displayedRestaurants.length} địa điểm ẩm thực tuyệt vời nhất được cộng đồng đánh giá cao.</p>
+            <h1>{isBookingMode ? "Đặt Bàn Nhà Hàng" : "Nhà Hàng Nổi Bật"}</h1>
+            <p>Khám phá {displayedRestaurants.length} địa điểm {isBookingMode ? "lý tưởng để đặt bàn" : "ẩm thực tuyệt vời nhất"} được cộng đồng đánh giá cao.</p>
           </div>
           
           <div className="gp-rl-sort-bar">
@@ -175,11 +180,16 @@ const RestaurantList = () => {
         {displayedRestaurants.length > 0 ? (
           <div className="gp-rl-grid">
             {displayedRestaurants.map((restaurant, idx) => {
-              // Determine badge based on rating & index
               let badge = null;
-              if (Number(restaurant.ratingAverage || 5) >= 4.8) badge = { text: "PREMIUM", color: "gold" };
-              else if (idx % 3 === 0) badge = { text: "FREESHIP", color: "green" };
-              else if (idx % 4 === 0) badge = { text: "TÀI TRỢ", color: "gray" };
+              if (isBookingMode) {
+                if (Number(restaurant.ratingAverage || 5) >= 4.8) badge = { text: "PREMIUM", color: "gold" };
+                else if (idx % 3 === 0) badge = { text: "BÀN TRỐNG", color: "green" };
+                else if (idx % 4 === 0) badge = { text: "VIEW ĐẸP", color: "gray" };
+              } else {
+                if (Number(restaurant.ratingAverage || 5) >= 4.8) badge = { text: "PREMIUM", color: "gold" };
+                else if (idx % 3 === 0) badge = { text: "FREESHIP", color: "green" };
+                else if (idx % 4 === 0) badge = { text: "TÀI TRỢ", color: "gray" };
+              }
 
               return (
                 <RestaurantCard 
@@ -187,6 +197,7 @@ const RestaurantList = () => {
                   restaurant={restaurant} 
                   badge={badge} 
                   userLocation={userLocation}
+                  isBookingMode={isBookingMode}
                 />
               );
             })}
@@ -207,7 +218,7 @@ const RestaurantList = () => {
   );
 };
 
-function RestaurantCard({ restaurant, badge, userLocation }) {
+function RestaurantCard({ restaurant, badge, userLocation, isBookingMode }) {
   const restaurantLoc = restaurant.location || { lat: 21.028511, lng: 105.804817 };
   const realDist = userLocation ? calculateDistance(userLocation.lat, userLocation.lng, restaurantLoc.lat, restaurantLoc.lng) : (Math.random() * 5 + 1).toFixed(1);
   const realTime = userLocation ? calculateETA(realDist) : Math.floor(Math.random() * 20 + 10);
@@ -240,10 +251,19 @@ function RestaurantCard({ restaurant, badge, userLocation }) {
           </div>
         )}
         
-        {/* Delivery Time Floating Box */}
+        {/* Time / Booking Slot Floating Box */}
         <div className="gp-rl-time-box">
-          <span>{realTime}</span>
-          <small>Phút</small>
+          {isBookingMode ? (
+            <>
+              <i className="bi bi-calendar-check" style={{ fontSize: '1.2rem', marginBottom: '2px', display: 'block', color: 'var(--gp-primary)' }}></i>
+              <small>Có bàn trống</small>
+            </>
+          ) : (
+            <>
+              <span>{realTime}</span>
+              <small>Phút</small>
+            </>
+          )}
         </div>
       </div>
       

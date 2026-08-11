@@ -1,0 +1,910 @@
+[
+  {
+    "keywords": [
+      "chào",
+      "xin chào",
+      "hello",
+      "hi",
+      "hey",
+      "chào bạn",
+      "alo",
+      "ê",
+      "chào shop",
+      "chào ad",
+      "chào e",
+      "chào em",
+      "cho hỏi",
+      "cho e hỏi",
+      "cho mình hỏi",
+      "chào nhà hàng",
+      "helo",
+      "chao",
+      "chao ban",
+      "hí",
+      "hí bạn",
+      "salut"
+    ],
+    "answer": "Chào mừng bạn đến với nhà hàng! 🌟 Tôi là Trợ lý AI VIP. Bạn đang thèm món gì, hay cần đặt bàn, xem menu? Hãy cho tôi biết nhé!"
+  },
+  {
+    "keywords": [
+      "tên gì",
+      "bạn là ai",
+      "ai đấy",
+      "bot",
+      "ai",
+      "bạn tên gì",
+      "may la ai",
+      "mày là ai",
+      "assistant",
+      "trợ lý ảo",
+      "con người hay bot",
+      "chatbot"
+    ],
+    "answer": "Tôi là Trợ lý AI thông minh của nhà hàng, luôn túc trực 24/7 để giúp bạn đặt món, xem menu và giải đáp mọi thắc mắc! 🤖"
+  },
+  {
+    "keywords": [
+      "cảm ơn",
+      "thank you",
+      "thanks",
+      "tốt",
+      "tuyệt",
+      "giỏi quá",
+      "ok",
+      "oke",
+      "dạ vâng",
+      "rồi",
+      "cam on",
+      "cảm ơn nhiều",
+      "thks",
+      "tks",
+      "cảm ơn bạn nhé",
+      "biết rồi",
+      "ok bạn",
+      "oki",
+      "được rồi"
+    ],
+    "answer": "Dạ không có gì! Phục vụ bạn là niềm vui của tôi. Chúc bạn một ngày tuyệt vời và một bữa ăn thật ngon miệng! ❤️"
+  },
+  {
+    "keywords": [
+      "chúc ngủ ngon",
+      "tạm biệt",
+      "bye",
+      "goodbye",
+      "bye bye",
+      "byee",
+      "hẹn gặp lại",
+      "chào tạm biệt",
+      "off đây",
+      "tam biet"
+    ],
+    "answer": "Tạm biệt bạn! Hẹn gặp lại bạn tại nhà hàng vào một ngày gần nhất nhé! 👋"
+  },
+  {
+    "keywords": [
+      "buổi sáng",
+      "chào buổi sáng",
+      "good morning",
+      "sáng nay",
+      "gm",
+      "sáng sớm",
+      "chao buoi sang"
+    ],
+    "answer": "Chào buổi sáng! 🌅 Bắt đầu ngày mới với một tô Phở Bò Wagyu hay một ly cà phê đậm đà của nhà hàng thì sao nhỉ?"
+  },
+  {
+    "keywords": [
+      "món tiêu biểu",
+      "món hot",
+      "best seller",
+      "món nào ngon",
+      "gợi ý món",
+      "signature",
+      "món đặc biệt",
+      "nhà hàng có món gì ngon",
+      "món nổi bật",
+      "món ngon nhất",
+      "gợi ý cho tôi",
+      "recommend",
+      "món khách hay gọi",
+      "món phải thử"
+    ],
+    "answer": "Dạ, món Signature của chúng tôi là <b>Phở Bò Wagyu</b> thượng hạng và <b>Set BBQ Hải Sản Nướng Đá</b>. Đảm bảo ăn một lần là nhớ mãi! 😍<br/><br/>👉 <a href='/products' style='color: #e50914; font-weight: bold;'>Xem Menu VIP tại đây</a>"
+  },
+  {
+    "keywords": [
+      "thực đơn",
+      "menu",
+      "các món",
+      "bán gì",
+      "có món gì",
+      "đồ ăn",
+      "cho xem menu",
+      "xem thực đơn",
+      "có gì ăn",
+      "list món",
+      "menu ạ",
+      "cho xin menu",
+      "menu giá",
+      "bảng giá món"
+    ],
+    "answer": "Thực đơn của chúng tôi rất đa dạng từ Khai vị, Món chính (Steak, BBQ, Hải sản) cho đến Tráng miệng và Đồ uống. 🍷<br/><br/>👉 <a href='/products' style='color: #10b981; font-weight: bold;'>Truy cập Thực Đơn tại đây</a>"
+  },
+  {
+    "keywords": [
+      "phở",
+      "phở bò",
+      "bún bò",
+      "bún chả",
+      "bún",
+      "phở gà",
+      "pho",
+      "bun cha",
+      "bún riêu",
+      "bún mọc",
+      "bún đậu"
+    ],
+    "answer": "Nhắc đến các món nước, <b>Phở Bò Wagyu</b> và <b>Bún Chả Hà Nội</b> là 2 món có lượt tìm kiếm kỷ lục tại quán! Nước dùng hầm xương 24h ngọt thanh tự nhiên. 🍜<br/><br/>👉 <a href='/products' style='color: #007bff; font-weight: bold;'>Đặt ngay 1 tô nóng hổi!</a>"
+  },
+  {
+    "keywords": [
+      "lẩu",
+      "đồ nướng",
+      "bbq",
+      "buffet",
+      "nướng",
+      "thịt nướng",
+      "hải sản nướng",
+      "lẩu thái",
+      "tomyum",
+      "lau",
+      "nuong",
+      "buffet lẩu",
+      "buffet nướng",
+      "lẩu bò",
+      "lẩu gà"
+    ],
+    "answer": "Bạn là fan của BBQ và Lẩu? Nhà hàng có ngay <b>Set Nướng Tảng Tứ Xuyên</b> và <b>Lẩu Thái Tomyum</b> chua cay bùng vị. 🥩🍲<br/><br/>👉 <a href='/products' style='color: #ff5722; font-weight: bold;'>Chốt đơn Set Lẩu Nướng tại đây</a>"
+  },
+  {
+    "keywords": [
+      "pizza",
+      "mì ý",
+      "pasta",
+      "đồ tây",
+      "steak",
+      "bò bít tết",
+      "spaghetti",
+      "beefsteak",
+      "món âu",
+      "món tây"
+    ],
+    "answer": "Bên cạnh đồ Việt, chúng tôi có phục vụ <b>Bò bít tết Striploin</b> nướng đá núi lửa và các loại <b>Mì Ý Hải Sản</b> sốt kem nấm chuẩn vị Âu! 🍝🥩"
+  },
+  {
+    "keywords": [
+      "gà rán",
+      "gà chiên",
+      "gà nướng",
+      "cánh gà",
+      "gà",
+      "chicken",
+      "đùi gà"
+    ],
+    "answer": "Món <b>Gà rán sốt chua ngọt Hàn Quốc</b> giòn rụm bên ngoài, mọng nước bên trong đang cực kỳ đắt hàng. Trẻ em hay người lớn đều mê! 🍗"
+  },
+  {
+    "keywords": [
+      "hải sản",
+      "tôm",
+      "cua",
+      "mực",
+      "ghẹ",
+      "cá",
+      "tôm hùm",
+      "seafood",
+      "sò",
+      "ốc",
+      "nghêu"
+    ],
+    "answer": "Hải sản tại nhà hàng luôn được nhập tươi sống mỗi ngày: Tôm hùm bỏ lò phô mai, Mực nướng sa tế, Cua sốt Singapore. 🦞🦀"
+  },
+  {
+    "keywords": [
+      "sushi",
+      "sashimi",
+      "đồ nhật",
+      "cá hồi",
+      "món nhật",
+      "salmon"
+    ],
+    "answer": "Tuy là nhà hàng đa phong cách, nhưng set <b>Sashimi Cá Hồi Thượng Hạng</b> của chúng tôi được chính tay bếp trưởng người Nhật chế biến. Cực kỳ tươi ngon! 🍣"
+  },
+  {
+    "keywords": [
+      "khai vị",
+      "soup",
+      "súp",
+      "salad",
+      "gỏi",
+      "appetizer",
+      "món khai vị"
+    ],
+    "answer": "Để bắt đầu bữa tiệc, bạn có thể thử Súp Bào Ngư Vi Cá, Salad Bơ Ức Gà hoặc Gỏi Ngó Sen Tôm Thịt. Rất nhẹ nhàng và kích thích vị giác! 🥗"
+  },
+  {
+    "keywords": [
+      "trà sữa",
+      "nước uống",
+      "đồ uống",
+      "nước ép",
+      "sinh tố",
+      "cà phê",
+      "cafe",
+      "coffee",
+      "milk tea",
+      "trà",
+      "nước ngọt"
+    ],
+    "answer": "Quán có <b>Trà sữa Trân châu Đường đen Hokkaido</b>, Cà phê pha máy Ý, và đa dạng các loại nước ép trái cây tươi nhiệt đới mát lạnh. 🧋🥤"
+  },
+  {
+    "keywords": [
+      "rượu",
+      "bia",
+      "rượu vang",
+      "cocktail",
+      "soju",
+      "đồ có cồn",
+      "wine",
+      "beer",
+      "mocktail"
+    ],
+    "answer": "Nhà hàng có quầy Bar phục vụ Cocktail pha chế tại bàn, tháp Bia tươi thủ công và tủ Rượu vang nhập khẩu từ Pháp, Ý, Chile. 🍷🍻"
+  },
+  {
+    "keywords": [
+      "tráng miệng",
+      "bánh ngọt",
+      "kem",
+      "chè",
+      "hoa quả",
+      "trái cây",
+      "dessert",
+      "ice cream",
+      "bánh"
+    ],
+    "answer": "Để kết thúc bữa ăn hoàn hảo, hãy thử Bánh Tiramisu, Kem Gelato Ý 3 vị hoặc Chè Khúc Bạch thanh mát của nhà hàng nhé! 🍰🍧"
+  },
+  {
+    "keywords": [
+      "chay",
+      "món chay",
+      "ăn chay",
+      "thuần chay",
+      "vegan",
+      "vegetarian",
+      "đồ chay"
+    ],
+    "answer": "Dạ nhà hàng có menu dành riêng cho người ăn chay (Vegetarian/Vegan). 🥗<br/><br/>👉 <a href='/products' style='color: #10b981; font-weight: bold;'>Xem Menu Chay Dinh Dưỡng</a>"
+  },
+  {
+    "keywords": [
+      "dị ứng",
+      "không hành",
+      "không cay",
+      "kiêng",
+      "bị dị ứng",
+      "không đậu phộng",
+      "dị ứng hải sản",
+      "allergy",
+      "dị ứng đồ ăn",
+      "kiêng đồ"
+    ],
+    "answer": "Chúng tôi cực kỳ quan tâm đến sức khỏe thực khách. Nếu bạn dị ứng (hải sản, đậu phộng...) hoặc kiêng (không cay, không hành), vui lòng ghi chú vào đơn hàng, bếp trưởng sẽ chế biến riêng cho bạn! 👨‍🍳"
+  },
+  {
+    "keywords": [
+      "gluten free",
+      "không gluten",
+      "ăn kiêng",
+      "keto",
+      "eat clean",
+      "low carb",
+      "giảm cân"
+    ],
+    "answer": "Nhà hàng có các tùy chọn món ăn Keto, Eat Clean và Gluten-free (Salad diêm mạch, Ức gà nướng áp chảo). Bạn hoàn toàn an tâm thưởng thức nhé!"
+  },
+  {
+    "keywords": [
+      "trẻ em",
+      "em bé",
+      "baby",
+      "kid menu",
+      "đồ ăn cho bé",
+      "cháo",
+      "trẻ nhỏ",
+      "con nít",
+      "menu cho bé"
+    ],
+    "answer": "Chúng tôi có Kid Menu với các món cháo dinh dưỡng, súp gà ngô non, và khoai tây chiên tạo hình vui nhộn dành riêng cho các bé. 👶🍟"
+  },
+  {
+    "keywords": [
+      "đặt bàn",
+      "đặt chỗ",
+      "book bàn",
+      "đặt lịch",
+      "giữ chỗ",
+      "bàn trống",
+      "muốn đặt bàn",
+      "cần đặt bàn",
+      "reservation",
+      "book table",
+      "đặt bàn tối nay",
+      "đặt bàn cuối tuần"
+    ],
+    "answer": "Để có vị trí ngồi đẹp, bạn hãy đặt bàn trước nhé. Có hỗ trợ trang trí sinh nhật! 🎂<br/><br/>👉 <a href='/restaurants?mode=booking' style='color: #f59e0b; font-weight: bold;'>Click Đặt Bàn Nhanh</a>"
+  },
+  {
+    "keywords": [
+      "sinh nhật",
+      "kỷ niệm",
+      "hẹn hò",
+      "trang trí",
+      "party",
+      "tiệc",
+      "date",
+      "kỷ niệm ngày cưới",
+      "cầu hôn",
+      "surprise"
+    ],
+    "answer": "Nhà hàng nhận setup tiệc sinh nhật, kỷ niệm lãng mạn miễn phí (gồm hoa, nến và biển tên). Nếu đặt bàn trên 10 người, sẽ có tặng kèm bánh kem! 🎉"
+  },
+  {
+    "keywords": [
+      "đông người",
+      "công ty",
+      "tất niên",
+      "hội thảo",
+      "liên hoan",
+      "phòng riêng",
+      "vip",
+      "tiệc công ty",
+      "event",
+      "team building",
+      "họp mặt"
+    ],
+    "answer": "Nhà hàng có hệ thống phòng VIP cách âm (chứa từ 10 - 50 người) trang bị sẵn máy chiếu, dàn karaoke hiện đại rất phù hợp cho liên hoan công ty. 🎤"
+  },
+  {
+    "keywords": [
+      "hủy bàn",
+      "đổi giờ",
+      "thay đổi lịch",
+      "hủy đặt chỗ",
+      "đến muộn",
+      "dời lịch",
+      "cancel",
+      "hủy đặt bàn"
+    ],
+    "answer": "Nếu bạn muốn hủy bàn hoặc đổi giờ, vui lòng gọi điện thoại trực tiếp cho hotline hoặc nhắn tin 'gặp nhân viên' để được hỗ trợ ngay lập tức nhé."
+  },
+  {
+    "keywords": [
+      "ship",
+      "giao hàng",
+      "mang về",
+      "giao tận nơi",
+      "ship đồ",
+      "take away",
+      "đặt mang về",
+      "có giao không",
+      "delivery",
+      "giao đồ ăn",
+      "ship món"
+    ],
+    "answer": "Nhà hàng có dịch vụ Giao hàng tiêu chuẩn 5 sao. Freeship cho đơn hàng từ 500k trong bán kính 5km. 🛵<br/><br/>👉 <a href='/products' style='color: #ea580c; font-weight: bold;'>Đặt giao tận nơi ngay!</a>"
+  },
+  {
+    "keywords": [
+      "bao lâu",
+      "thời gian giao",
+      "khi nào tới",
+      "ship bao lâu",
+      "đợi lâu không",
+      "mấy phút giao",
+      "giao nhanh không"
+    ],
+    "answer": "Thời gian giao hàng thường dao động từ 20 - 45 phút tùy thuộc vào khoảng cách và tình hình kẹt xe. Đồ ăn luôn được đóng gói giữ nhiệt cẩn thận! ⏰"
+  },
+  {
+    "keywords": [
+      "phí ship",
+      "tiền ship",
+      "giá ship",
+      "giao hàng bao nhiêu tiền",
+      "phí giao hàng",
+      "ship mất bao nhiêu"
+    ],
+    "answer": "Phí ship cơ bản là 20.000đ cho 3km đầu tiên, và 5.000đ cho mỗi km tiếp theo. Tuy nhiên, đơn hàng trên 500k sẽ được hoàn toàn FREESHIP! 💸"
+  },
+  {
+    "keywords": [
+      "ứng dụng giao hàng",
+      "shopeefood",
+      "grab",
+      "grabfood",
+      "beamin",
+      "gojek",
+      "app giao đồ ăn"
+    ],
+    "answer": "Ngoài đặt trực tiếp qua website, bạn cũng có thể tìm thấy chúng tôi trên các ứng dụng ShopeeFood, GrabFood, BeFood và Gojek với nhiều mã giảm giá riêng biệt."
+  },
+  {
+    "keywords": [
+      "thanh toán",
+      "chuyển khoản",
+      "trả thẻ",
+      "quẹt thẻ",
+      "tiền mặt",
+      "phương thức thanh toán",
+      "payment",
+      "trả bằng gì",
+      "quét mã qr"
+    ],
+    "answer": "Chúng tôi hỗ trợ đa dạng phương thức: Tiền mặt, Thẻ tín dụng/Ghi nợ, Chuyển khoản QR, Ví điện tử (Momo, ZaloPay, VNPay). 💳"
+  },
+  {
+    "keywords": [
+      "xuất hóa đơn",
+      "vat",
+      "hóa đơn đỏ",
+      "lấy hóa đơn",
+      "hóa đơn công ty",
+      "invoice"
+    ],
+    "answer": "Nhà hàng có hỗ trợ xuất hóa đơn VAT điện tử (8% hoặc 10% tùy món) ngay trong ngày. Bạn vui lòng cung cấp MST và Email cho nhân viên khi thanh toán."
+  },
+  {
+    "keywords": [
+      "hoàn tiền",
+      "refund",
+      "hủy đơn",
+      "trả lại tiền",
+      "hoàn phí"
+    ],
+    "answer": "Đối với đơn hàng thanh toán trước, nếu bạn hủy đơn hợp lệ trước khi bếp chuẩn bị món, tiền sẽ được hoàn về tài khoản của bạn trong 24-48 giờ làm việc. 💰"
+  },
+  {
+    "keywords": [
+      "khuyến mãi",
+      "mã giảm giá",
+      "voucher",
+      "sale",
+      "giảm giá",
+      "coupon",
+      "ưu đãi",
+      "chương trình",
+      "discount",
+      "khuyến mại",
+      "có sale không"
+    ],
+    "answer": "Tuyệt vời! Chúng tôi đang có giảm 20% cho thành viên mới và mua 1 tặng 1 đồ uống. 🎉<br/><br/>👉 <a href='/user/vouchers' style='color: #ef4444; font-weight: bold;'>Lấy Voucher Tại Đây</a>"
+  },
+  {
+    "keywords": [
+      "thành viên",
+      "tích điểm",
+      "thẻ vip",
+      "member",
+      "đăng ký thành viên",
+      "loyalty",
+      "hạng thành viên",
+      "membership"
+    ],
+    "answer": "Chương trình Khách hàng thân thiết: Tích lũy 5% giá trị hóa đơn. Khi nâng hạng VIP/Platinum, bạn sẽ được giảm trực tiếp 10%-15% cho mọi hóa đơn vĩnh viễn! 👑"
+  },
+  {
+    "keywords": [
+      "giờ mở cửa",
+      "thời gian",
+      "mấy giờ mở",
+      "mấy giờ đóng",
+      "lúc nào mở",
+      "đóng cửa chưa",
+      "khi nào nghỉ",
+      "giờ hoạt động",
+      "open hours",
+      "còn mở không"
+    ],
+    "answer": "Hệ thống nhà hàng mở cửa liên tục từ <b>08:00 sáng đến 23:00 tối</b> hàng ngày (kể cả Lễ Tết). Đặc biệt 18:00 - 20:00 có Live Music! 🎸"
+  },
+  {
+    "keywords": [
+      "địa chỉ",
+      "ở đâu",
+      "địa điểm",
+      "chỉ đường",
+      "vị trí",
+      "địa chỉ nhà hàng",
+      "chi nhánh",
+      "cơ sở",
+      "location",
+      "address",
+      "quán ở đâu"
+    ],
+    "answer": "Chúng tôi có các chi nhánh tại trung tâm. Không gian sang trọng, bãi đỗ ô tô miễn phí.<br/><br/>👉 <a href='/restaurants' style='color: #4f46e5; font-weight: bold;'>Xem bản đồ chi nhánh</a>"
+  },
+  {
+    "keywords": [
+      "chỗ để xe",
+      "đỗ xe",
+      "ô tô",
+      "bãi xe",
+      "xe máy",
+      "gửi xe",
+      "parking",
+      "có chỗ đậu xe không"
+    ],
+    "answer": "Nhà hàng có bãi đỗ xe vô cùng rộng rãi ngay mặt tiền, có bảo vệ trông giữ 24/7. Hỗ trợ đỗ xe ô tô (cả xe 45 chỗ) hoàn toàn miễn phí! 🚗🏍️"
+  },
+  {
+    "keywords": [
+      "wifi",
+      "mạng",
+      "mật khẩu wifi",
+      "pass wifi",
+      "wifi pass",
+      "internet"
+    ],
+    "answer": "Hệ thống Wifi miễn phí phủ sóng toàn nhà hàng. Tên Wifi: 'Nha Hang VIP', Mật khẩu: '12345678'. 📶"
+  },
+  {
+    "keywords": [
+      "thú cưng",
+      "chó",
+      "mèo",
+      "pet",
+      "mang chó",
+      "mang thú cưng",
+      "cún cưng"
+    ],
+    "answer": "Rất hoan nghênh! Chúng tôi là nhà hàng Pet-friendly. Tuy nhiên bạn vui lòng giữ bé trong lồng hoặc rọ mõm để không ảnh hưởng đến thực khách khác nhé. 🐶😺"
+  },
+  {
+    "keywords": [
+      "hút thuốc",
+      "phòng hút thuốc",
+      "smoking",
+      "chỗ hút thuốc lá"
+    ],
+    "answer": "Nhà hàng quy định không hút thuốc trong phòng máy lạnh. Chúng tôi có bố trí khu vực ban công sân vườn (Outdoor) dành riêng cho khách hút thuốc. 🚬"
+  },
+  {
+    "keywords": [
+      "dress code",
+      "trang phục",
+      "mặc đồ",
+      "mặc gì",
+      "ăn mặc thế nào"
+    ],
+    "answer": "Nhà hàng không có quy định quá khắt khe về trang phục (Dress code). Bạn có thể mặc đồ dạo phố lịch sự, thoải mái là được. Tuy nhiên xin tránh mặc đồ ngủ! 👗👔"
+  },
+  {
+    "keywords": [
+      "link quán",
+      "cho tôi link",
+      "trang chủ",
+      "website",
+      "truy cập",
+      "vào trang web",
+      "link",
+      "trang web nhà hàng"
+    ],
+    "answer": "Dạ, đây là trang chủ chính thức của hệ thống nhà hàng chúng tôi: 🎁<br/><br/>👉 <a href='/' style='color: #3b82f6; font-weight: bold; font-size: 1.1em;'>Nhấn vào đây để về Trang Chủ</a>"
+  },
+  {
+    "keywords": [
+      "số điện thoại",
+      "sđt",
+      "hotline",
+      "gọi điện",
+      "số hotline",
+      "liên hệ"
+    ],
+    "answer": "Hotline tổng đài CSKH của nhà hàng là: <b>1900 8888</b>. Cần hỗ trợ gấp bạn cứ gọi trực tiếp nhé! 📞"
+  },
+  {
+    "keywords": [
+      "zalo",
+      "facebook",
+      "fanpage",
+      "mạng xã hội",
+      "tiktok",
+      "instagram",
+      "kênh mạng xã hội"
+    ],
+    "answer": "Bạn có thể kết nối với chúng tôi qua Zalo OA, Facebook Fanpage hoặc TikTok để theo dõi các video ẩm thực thú vị nhé. Tìm tên 'Nhà Hàng VIP' là ra ngay!"
+  },
+  {
+    "keywords": [
+      "gặp nhân viên",
+      "nhân viên hỗ trợ",
+      "nói chuyện với người",
+      "gặp tư vấn viên",
+      "admin",
+      "tư vấn trực tiếp",
+      "cần hỗ trợ",
+      "giúp tôi",
+      "help",
+      "gặp người thật",
+      "chat với người",
+      "hỗ trợ trực tiếp"
+    ],
+    "answer": "Dạ, yêu cầu hỗ trợ trực tiếp của bạn đã được tôi gửi vào hòm thư Admin. Nhân viên CSKH sẽ phản hồi bạn trong 1 phút nữa! ⚡",
+    "notifyAdmin": true
+  },
+  {
+    "keywords": [
+      "khiếu nại",
+      "phàn nàn",
+      "bực mình",
+      "tệ",
+      "chậm",
+      "dở",
+      "thái độ",
+      "không ngon",
+      "đợi lâu",
+      "báo cáo",
+      "complain",
+      "tệ quá",
+      "phục vụ kém",
+      "phàn nàn dịch vụ"
+    ],
+    "answer": "Tôi vô cùng xin lỗi vì trải nghiệm chưa tốt của bạn. Hệ thống đã lập tức ghi nhận phàn nàn này là **Mức Độ Ưu Tiên Cao Nhất** và báo trực tiếp cho Quản lý nhà hàng. Quản lý sẽ liên hệ xin lỗi và xử lý cho bạn ngay bây giờ!",
+    "notifyAdmin": true
+  },
+  {
+    "keywords": [
+      "hợp tác",
+      "đối tác",
+      "quảng cáo",
+      "marketing",
+      "đầu tư",
+      "mua sỉ",
+      "nhượng quyền",
+      "franchise",
+      "hợp tác kinh doanh",
+      "làm đại lý"
+    ],
+    "answer": "Cảm ơn bạn đã quan tâm đến việc hợp tác. Vui lòng để lại Email và SĐT, hệ thống đã gửi yêu cầu này đến bộ phận Phát triển kinh doanh để liên hệ lại với bạn.",
+    "notifyAdmin": true
+  },
+  {
+    "keywords": [
+      "ngon",
+      "đẹp",
+      "xuất sắc",
+      "đỉnh",
+      "10 điểm",
+      "tuyệt vời",
+      "quá ngon",
+      "amazing",
+      "xịn"
+    ],
+    "answer": "Cảm ơn lời khen của bạn! Đó là động lực to lớn để đội ngũ nhà hàng phục vụ tốt hơn mỗi ngày. 🥰"
+  },
+  {
+    "keywords": [
+      "chán",
+      "thất vọng",
+      "không thích",
+      "không hợp khẩu vị"
+    ],
+    "answer": "Tôi rất tiếc nếu món ăn chưa hợp khẩu vị của bạn. Xin bạn nán lại để quản lý có thể lắng nghe và đổi món khác cho bạn nhé!",
+    "notifyAdmin": true
+  },
+  {
+    "keywords": [
+      "lạnh",
+      "nóng",
+      "điều hòa",
+      "máy lạnh",
+      "nhiệt độ",
+      "quá lạnh",
+      "quá nóng",
+      "chỉnh nhiệt độ"
+    ],
+    "answer": "Dạ, nếu bạn thấy nhiệt độ phòng chưa phù hợp, bạn hãy báo ngay bạn nhân viên phục vụ gần nhất để điều chỉnh điều hòa nhé!"
+  },
+  {
+    "keywords": [
+      "ngồi ngoài",
+      "sân vườn",
+      "ban công",
+      "view",
+      "cảnh đẹp",
+      "outdoor",
+      "ngồi ngoài trời",
+      "chỗ chụp ảnh đẹp"
+    ],
+    "answer": "Nhà hàng có khu vực ban công cực chill ngắm view thành phố về đêm. Hãy ghi chú 'Thích ngồi ngoài' khi đặt bàn nhé! 🌃"
+  },
+  {
+    "keywords": [
+      "ngồi trong",
+      "trong nhà",
+      "yên tĩnh",
+      "indoor",
+      "phòng lạnh"
+    ],
+    "answer": "Khu vực bên trong nhà hàng có máy lạnh mát mẻ, âm nhạc du dương và rất yên tĩnh, phù hợp cho các buổi gặp mặt đối tác."
+  },
+  {
+    "keywords": [
+      "đặt cọc",
+      "cần cọc không",
+      "tiền cọc",
+      "cọc bàn",
+      "deposit"
+    ],
+    "answer": "Đối với đặt bàn thường (dưới 10 khách), bạn không cần đặt cọc. Riêng các phòng VIP hoặc tiệc trên 10 khách, nhà hàng sẽ thu cọc giữ chỗ 20% giá trị dự kiến để đảm bảo phục vụ tốt nhất cho bạn. 💵"
+  },
+  {
+    "keywords": [
+      "đơn tối thiểu",
+      "giá trị đơn hàng tối thiểu",
+      "đặt bao nhiêu tiền mới giao",
+      "min order"
+    ],
+    "answer": "Đơn hàng giao tận nơi cần đạt tối thiểu 150.000đ. Dưới mức này, bạn vui lòng đến trực tiếp nhà hàng hoặc đặt qua các ứng dụng giao hàng đối tác nhé. 🧾"
+  },
+  {
+    "keywords": [
+      "giao xa",
+      "giao ngoại thành",
+      "giao tỉnh",
+      "giao xa được không",
+      "bán kính giao hàng",
+      "khu vực giao hàng"
+    ],
+    "answer": "Hiện tại nhà hàng phục vụ giao hàng trong bán kính 8km từ chi nhánh gần nhất. Ngoài phạm vi này, bạn có thể tham khảo đặt qua GrabFood/ShopeeFood để được hỗ trợ giao xa hơn. 🛵"
+  },
+  {
+    "keywords": [
+      "đặt trước bao lâu",
+      "đặt bàn trước mấy ngày",
+      "cần báo trước không",
+      "book trước bao lâu"
+    ],
+    "answer": "Với bàn thường, bạn có thể đặt trước 1-2 tiếng là được phục vụ ngay. Riêng phòng VIP hoặc tiệc đông người, nhà hàng khuyến khích đặt trước ít nhất 1 ngày để chuẩn bị chu đáo nhất! 📅"
+  },
+  {
+    "keywords": [
+      "đổi món",
+      "đổi món đã gọi",
+      "gọi nhầm món",
+      "hủy món",
+      "thêm món sau khi gọi"
+    ],
+    "answer": "Trong vòng 5 phút sau khi gọi món (trước khi bếp bắt đầu chế biến), bạn hoàn toàn có thể đổi hoặc hủy món thoải mái. Sau thời gian này vui lòng báo nhân viên để được hỗ trợ tùy trường hợp cụ thể nhé!"
+  },
+  {
+    "keywords": [
+      "thiếu món",
+      "thiếu đồ",
+      "sai món",
+      "giao sai",
+      "gọi món không đúng",
+      "thiếu đồ ăn"
+    ],
+    "answer": "Mình thành thật xin lỗi vì sự cố này! Vui lòng nhắn 'gặp nhân viên' kèm mã đơn hàng, nhà hàng sẽ bổ sung món thiếu hoặc hoàn tiền ngay cho bạn trong thời gian sớm nhất. 🙏",
+    "notifyAdmin": true
+  },
+  {
+    "keywords": [
+      "menu tiếng anh",
+      "english menu",
+      "menu song ngữ",
+      "khách nước ngoài",
+      "phục vụ tiếng anh"
+    ],
+    "answer": "Nhà hàng có Menu song ngữ Việt - Anh và đội ngũ nhân viên có thể giao tiếp cơ bản bằng tiếng Anh để phục vụ quý khách quốc tế. 🌍<br/><br/>👉 <a href='/products' style='color: #10b981; font-weight: bold;'>View English Menu</a>"
+  },
+  {
+    "keywords": [
+      "giờ cao điểm",
+      "đông khách",
+      "phải chờ bàn",
+      "đợi bàn",
+      "hết bàn",
+      "kín bàn"
+    ],
+    "answer": "Vào khung giờ vàng 18:00 - 20:00 cuối tuần, nhà hàng thường khá đông khách. Để tránh phải chờ lâu, bạn nên đặt bàn trước qua website hoặc hotline nhé! ⏳"
+  },
+  {
+    "keywords": [
+      "buffet giá",
+      "giá buffet",
+      "buffet bao nhiêu tiền",
+      "vé buffet"
+    ],
+    "answer": "Buffet BBQ & Lẩu của nhà hàng có giá từ 259.000đ/người (áp dụng T2-T6) và 329.000đ/người (cuối tuần & lễ). Trẻ em dưới 1m giảm 50%, dưới 1m3 giảm 30%. 🍖"
+  },
+  {
+    "keywords": [
+      "trẻ sơ sinh",
+      "ghế ăn cho bé",
+      "ghế trẻ em",
+      "cũi cho bé",
+      "baby chair",
+      "high chair"
+    ],
+    "answer": "Nhà hàng có trang bị ghế ăn dặm (high chair) miễn phí cho bé, cùng khu vực thay tã sạch sẽ tại nhà vệ sinh. Bạn cứ yên tâm đưa bé đến dùng bữa nhé! 👶🪑"
+  },
+  {
+    "keywords": [
+      "phụ thu",
+      "phí dịch vụ",
+      "service charge",
+      "phụ thu cuối tuần",
+      "phụ thu lễ tết"
+    ],
+    "answer": "Nhà hàng áp dụng phụ thu dịch vụ 5% trên hóa đơn vào ngày thường. Riêng dịp Lễ, Tết sẽ có phụ thu 10% để đảm bảo chất lượng phục vụ tốt nhất trong ngày cao điểm. 📋"
+  },
+  {
+    "keywords": [
+      "tiền tip",
+      "boa",
+      "tip nhân viên",
+      "có cần tip không",
+      "tip bao nhiêu"
+    ],
+    "answer": "Nhà hàng không bắt buộc tiền tip. Nếu bạn hài lòng với dịch vụ và muốn gửi lời cảm ơn đến nhân viên phục vụ, đó hoàn toàn là tùy tâm của bạn nhé! 😊"
+  },
+  {
+    "keywords": [
+      "đặt online",
+      "đặt qua web",
+      "đặt qua app",
+      "cách đặt món online",
+      "hướng dẫn đặt hàng"
+    ],
+    "answer": "Đặt món rất đơn giản: chọn món trong Thực đơn 👉 thêm vào giỏ hàng 👉 điền thông tin giao/nhận 👉 chọn thanh toán và xác nhận đơn. Chỉ mất chưa đầy 2 phút! 🛒<br/><br/>👉 <a href='/products' style='color: #10b981; font-weight: bold;'>Đặt món ngay</a>"
+  },
+  {
+    "keywords": [
+      "quên đồ",
+      "để quên đồ",
+      "thất lạc đồ",
+      "tìm đồ thất lạc",
+      "lost and found"
+    ],
+    "answer": "Nếu bạn để quên đồ tại nhà hàng, vui lòng gọi ngay hotline 1900 8888 kèm thông tin bàn/thời gian dùng bữa, bộ phận lễ tân sẽ kiểm tra và liên hệ lại với bạn sớm nhất! 🔎"
+  },
+  {
+    "keywords": [
+      "noel",
+      "giáng sinh",
+      "tết dương lịch",
+      "tết nguyên đán",
+      "năm mới",
+      "countdown"
+    ],
+    "answer": "Vào các dịp Lễ lớn (Giáng Sinh, Tết Dương Lịch, Tết Nguyên Đán), nhà hàng có menu đặc biệt theo mùa và trang trí lung linh riêng cho từng dịp lễ. Đặt bàn sớm để không bỏ lỡ nhé! 🎄🎇"
+  },
+  {
+    "keywords": [
+      "độ cay",
+      "cay không",
+      "mức độ cay",
+      "chọn độ cay",
+      "cay ít",
+      "cay nhiều"
+    ],
+    "answer": "Hầu hết các món có vị cay (lẩu Thái, mì cay...) đều có thể tùy chỉnh mức độ cay theo yêu cầu: Không cay - Cay nhẹ - Cay vừa - Cay đậm. Bạn cứ ghi chú khi đặt món nhé! 🌶️"
+  }
+]

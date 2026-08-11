@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../layouts/AdminLayout.css";
 import "../css/admin.css";
+import "../css/responsive.css";
 import SidebarAdmin from "../components/SidebarAdmin";
 import HeaderAdmin from "../components/HeaderAdmin";
 import { Routes, Route } from "react-router-dom";
@@ -25,6 +26,10 @@ import Advertisement from "../components/ads/advertisement";
 import { apiFetch } from "../../utils/apiFetch";
 import Order from "../components/order/order";
 import RestaurantManagement from "../components/restaurant/RestaurantManagement";
+import SeoList from "../components/seo/SeoList";
+import SeoForm from "../components/seo/SeoForm";
+import PlatformVouchers from "../components/vouchers/PlatformVouchers";
+import LegalManagement from "../components/legal/LegalManagement";
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -88,7 +93,7 @@ export default function AdminDashboard() {
             <Route path="/deailCloud" element={<Could />} />
             <Route path="/setting" element={<SettingsAdmin />} />
             <Route path="/chatting" element={<ChatUI />} />
-            <Route path="/advertisement" element={role?.permissions?.includes("advertisement-view") ? <Advertisement /> : ""} />
+            <Route path="/advertisement" element={<Advertisement />} />
             <Route
               path="/myeditor"
               element={role?.permissions?.includes("products-category-view") ? <MyEditor /> : ""}
@@ -117,6 +122,11 @@ export default function AdminDashboard() {
               path="/restaurants"
               element={role?.permissions?.includes("role-permission") ? <RestaurantManagement /> : ""}
             />
+            <Route path="/seo" element={<SeoList />} />
+            <Route path="/seo/create" element={<SeoForm />} />
+            <Route path="/seo/edit/:id" element={<SeoForm />} />
+            <Route path="/platform-vouchers" element={<PlatformVouchers />} />
+            <Route path="/legal" element={<LegalManagement />} />
           </Routes>
 
           <footer className="admin-footer">© {new Date().getFullYear()} Order Admin Panel</footer>

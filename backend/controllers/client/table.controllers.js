@@ -100,9 +100,13 @@ module.exports.available = async (req, res) => {
       },
     }).select("tableInfo");
 
-    const bookedTableNumbers = new Set(
-      bookedOrders.map((order) => String(order.tableInfo?.tableNumber))
-    );
+    const bookedTableNumbers = new Set();
+    bookedOrders.forEach((order) => {
+      const nums = String(order.tableInfo?.tableNumber || "").split(',').map(n => n.trim());
+      nums.forEach(n => {
+          if (n) bookedTableNumbers.add(n);
+      });
+    });
 
     const availableTables = tables.filter(
       (table) => table.status === "available" && !bookedTableNumbers.has(String(table.tableNumber))

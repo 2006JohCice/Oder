@@ -1,11 +1,10 @@
-const userAdmins = require("../../models/UserAdmin.model");
+const User = require("../../models/user.model");
 const paginationHelper = require("../../helpers/pagination")
-const userAdmin = require("../../models/UserAdmin.model")
 //[GET] /api/admin/usersAdmin
 module.exports.userAdmin = async (req, res) => {
 
     let final = {
-        deleted: false,
+        deleted: { $ne: true },
     }
     if (req.query.status) {
         final.status = req.query.status;
@@ -16,12 +15,12 @@ module.exports.userAdmin = async (req, res) => {
     if (req.query.userName_email) {
         const regx = new RegExp(req.query.userName_email, "i");
         final.$or = [
-            { name: regx },
+            { fullname: regx },
             { email: regx }
         ];
     }
     //Pagination
-    const countProducts = await userAdmins.countDocuments(final);
+    const countProducts = await User.countDocuments(final);
     let objPagination = paginationHelper(
         {
             pagePage: 1,
@@ -34,7 +33,7 @@ module.exports.userAdmin = async (req, res) => {
     //Endl Pagination
 
     try {
-        const data = await userAdmins.find(final).limit(objPagination.limitItems).skip(objPagination.skip);
+        const data = await User.find(final).limit(objPagination.limitItems).skip(objPagination.skip);
         res.json({
             data,
             objPagination
@@ -54,7 +53,7 @@ module.exports.deleteUserAdmin = async (req, res) => {
     try {
         const { id } = req.params
         console.log(id)
-        const deleted = await userAdmin.updateOne({ _id: id }, { deleted: true})
+        const deleted = await User.updateOne({ _id: id }, { deleted: true})
         if (!deleted) {
             return res.status(404).json({
                 success: false,
@@ -78,7 +77,7 @@ module.exports.deleteUserAdmin = async (req, res) => {
 module.exports.editUserAdmin = async (req,res) =>{  
   
     try {
-        const userEdit = await userAdmin.updateOne({ _id: req.params.id }, req.body);
+        const userEdit = await User.updateOne({ _id: req.params.id }, req.body);
         res.json({
             userEdit,
             message: "Cập nhật người dùng thành công",

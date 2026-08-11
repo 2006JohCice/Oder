@@ -31,6 +31,11 @@ export default function CheckoutCart() {
   const { fetchCart, updateQuantity } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Vouchers state
+  const [availableVouchers, setAvailableVouchers] = useState([]);
+  const [selectedVouchers, setSelectedVouchers] = useState({});
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -53,16 +58,36 @@ export default function CheckoutCart() {
   }
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const shopsParam = searchParams.get("shops") ? searchParams.get("shops").split(",") : [];
+
     const loadCart = async () => {
-      const res = await fetch("/api/cart", { credentials: "include" });
-      if (res.status === 401) {
-        navigate("/user/auth/login");
-        return;
-      }
-      const data = await res.json();
-      setCartData(data || {});
-      if (data && data.restaurantGroups) {
-          setSelectedRestaurants(data.restaurantGroups.map(g => g.restaurantId));
+      try {
+        const res = await fetch("/api/cart", { credentials: "include" });
+        if (res.status === 401) {
+          navigate("/user/auth/login");
+          return;
+        }
+        const data = await res.json();
+        setCartData(data || {});
+        
+        let fetchedGroups = Array.isArray(data?.restaurantGroups) ? data.restaurantGroups : [];
+        if (shopsParam.length > 0) {
+            fetchedGroups = fetchedGroups.filter(g => shopsParam.includes(g.restaurantId));
+        }
+
+        if (fetchedGroups.length === 0) {
+            navigate("/");
+            return;
+        }
+
+        if (data && data.restaurantGroups) {
+            setSelectedRestaurants(data.restaurantGroups.map(g => g.restaurantId));
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     loadCart();
@@ -84,6 +109,45 @@ export default function CheckoutCart() {
     };
     loadProfile();
   }, [navigate]);
+
+  // Fetch vouchers for selected restaurants
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      let allVouchers = [];
+      for (const restaurantId of selectedRestaurants) {
+        try {
+          const res = await fetch(`/api/restaurants/${restaurantId}/vouchers`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.vouchers) {
+              allVouchers = [...allVouchers, ...data.vouchers];
+            }
+          }
+        } catch (error) {
+          console.error("Lỗi khi tải mã giảm giá:", error);
+        }
+      }
+      setAvailableVouchers(allVouchers);
+      
+      // Clear selected vouchers if their restaurant is unselected
+      setSelectedVouchers(prev => {
+        const newSelected = { ...prev };
+        Object.keys(newSelected).forEach(resId => {
+          if (!selectedRestaurants.includes(resId)) {
+            delete newSelected[resId];
+          }
+        });
+        return newSelected;
+      });
+    };
+    
+    if (selectedRestaurants.length > 0) {
+      fetchVouchers();
+    } else {
+      setAvailableVouchers([]);
+      setSelectedVouchers({});
+    }
+  }, [selectedRestaurants]);
 
   const handleChange = (e) => {
       setFormData(prev => ({...prev, [e.target.name]: e.target.value}));
@@ -114,6 +178,7 @@ export default function CheckoutCart() {
           address: formData.address,
           orderType: "delivery",
           tableInfo: {},
+          voucherCode: selectedVouchers[group.restaurantId] || "",
         })),
       };
 
@@ -169,20 +234,43 @@ export default function CheckoutCart() {
       batchDiscount = originalFee - deliveryFee;
   }
   
-  const discount = 0; // We can add voucher logic later
+  let discount = 0; 
+  checkedGroups.forEach(g => {
+    const vCode = selectedVouchers[g.restaurantId];
+    if (vCode) {
+      const v = availableVouchers.find(v => v.code === vCode && String(v.restaurant_id) === String(g.restaurantId));
+      if (v) {
+        const groupTotal = g.products.reduce((a, p) => a + calculateLineTotal(p), 0);
+        if (groupTotal >= (v.minOrderValue || 0)) {
+           if (v.discountType === 'amount') {
+               discount += v.discountValue;
+           } else {
+               let pctDiscount = (groupTotal * v.discountValue) / 100;
+               if (v.maxDiscountAmount && pctDiscount > v.maxDiscountAmount) {
+                  pctDiscount = v.maxDiscountAmount;
+               }
+               discount += pctDiscount;
+           }
+        }
+      }
+    }
+  });
   
   const subTotal = checkedGroups.reduce((acc, g) => acc + g.products.reduce((a, p) => a + calculateLineTotal(p), 0), 0);
   const totalPay = subTotal + deliveryFee - discount;
   const totalItems = checkedGroups.reduce((acc, g) => acc + (g.totalQuantity || g.products.reduce((a, p) => a + p.quantity, 0)), 0);
 
-  if (!groups.length) {
+  if (isLoading) {
     return (
-      <div className="gp-page-wrapper" style={{textAlign: 'center', padding: '100px 0'}}>
-        <i className="bi bi-basket3" style={{fontSize: 60, color: '#a0aec0'}}></i>
-        <h2 style={{marginTop: 20}}>Giỏ hàng trống</h2>
-        <Link to="/" className="gp-checkout-add-more" style={{width: 200, margin: '20px auto', display: 'block', textDecoration: 'none'}}>Về trang chủ</Link>
+      <div className="gp-page-wrapper" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh'}}>
+        <div className="spinner-border text-danger" role="status"></div>
+        <p style={{marginLeft: 10, color: '#c90000'}}>Đang tải giỏ hàng...</p>
       </div>
     );
+  }
+
+  if (!groups.length) {
+    return null;
   }
 
   return (
@@ -338,18 +426,48 @@ export default function CheckoutCart() {
                 </div>
             </div>
 
-            <div className="gp-voucher-card">
-                <div className="gp-voucher-left merchant">
-                    <i className="bi bi-shop"></i>
-                </div>
-                <div className="gp-voucher-mid">
-                    <h5>Mã Nhà Hàng</h5>
-                    <p>GIFT50K</p>
-                </div>
-                <div className="gp-voucher-right">
-                    <button type="button" className="gp-btn-apply-voucher">Áp dụng</button>
-                </div>
-            </div>
+            {availableVouchers.length > 0 ? (
+              availableVouchers.map((voucher) => {
+                const group = checkedGroups.find(g => String(g.restaurantId) === String(voucher.restaurant_id));
+                const restaurantName = group ? group.restaurantName : "Nhà hàng";
+                const isSelected = selectedVouchers[voucher.restaurant_id] === voucher.code;
+                
+                return (
+                  <div className={`gp-voucher-card ${isSelected ? 'applied' : ''}`} key={voucher._id}>
+                      <div className="gp-voucher-left merchant">
+                          <i className="bi bi-shop"></i>
+                      </div>
+                      <div className="gp-voucher-mid">
+                          <h5>Mã của {restaurantName}</h5>
+                          <p>{voucher.code} - Giảm {voucher.discountType === 'percent' ? `${voucher.discountValue}%` : formatCurrency(voucher.discountValue)}</p>
+                          {voucher.minOrderValue > 0 && <small>Đơn tối thiểu {formatCurrency(voucher.minOrderValue)}</small>}
+                      </div>
+                      <div className="gp-voucher-right">
+                          {isSelected ? (
+                              <button type="button" className="gp-btn-apply-voucher" style={{background: '#e2e8f0', color: '#4a5568'}} onClick={() => {
+                                setSelectedVouchers(prev => {
+                                  const next = {...prev};
+                                  delete next[voucher.restaurant_id];
+                                  return next;
+                                });
+                              }}>Bỏ chọn</button>
+                          ) : (
+                              <button type="button" className="gp-btn-apply-voucher" onClick={() => {
+                                setSelectedVouchers(prev => ({
+                                  ...prev,
+                                  [voucher.restaurant_id]: voucher.code
+                                }));
+                              }}>Áp dụng</button>
+                          )}
+                      </div>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="gp-voucher-note" style={{textAlign: 'center', margin: '20px 0'}}>
+                Không có mã giảm giá nào cho nhà hàng đã chọn.
+              </p>
+            )}
 
             <p className="gp-voucher-note">
               <i className="bi bi-info-circle"></i> Có thể áp dụng cùng lúc mã Freeship và mã Nhà hàng
@@ -409,7 +527,7 @@ export default function CheckoutCart() {
             </button>
             
             <p className="gp-terms-text">
-              Bằng việc đặt đơn, bạn đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a> của chúng tôi.
+              Bằng việc đặt đơn, bạn đồng ý với <Link to="/legal/terms">Điều khoản dịch vụ</Link> và <Link to="/legal/privacy">Chính sách bảo mật</Link> của chúng tôi.
             </p>
           </div>
 

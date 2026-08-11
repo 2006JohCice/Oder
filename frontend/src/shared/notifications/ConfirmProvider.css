@@ -43,8 +43,8 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #ffffff;
-  color: #ffc107;
+  background: #fef2f2;
+  color: #dc2626;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,9 +54,9 @@
 
 .confirm-modal-header h3 {
   margin: 0;
-  font-size: 18px;
-  color: #2A3F54;
-  font-weight: 600;
+  font-size: 20px;
+  color: #1e293b;
+  font-weight: 700;
 }
 
 .confirm-modal-body p {
@@ -93,12 +93,12 @@
 }
 
 .confirm-btn-ok {
-  background: #1ABB9C;
+  background: #dc2626; /* Primary brand color / red */
   color: #fff;
-  box-shadow: 0 2px 6px rgba(26, 187, 156, 0.2);
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.2);
 }
 
 .confirm-btn-ok:hover {
-  background: #169F85;
-  box-shadow: 0 4px 10px rgba(26, 187, 156, 0.3);
+  background: #b91c1c;
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
 }

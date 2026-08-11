@@ -307,9 +307,9 @@ function UsersAdmin() {
 
                       <td>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <div className="adm-avatar">{getInitial(u.name)}</div>
+                          <div className="adm-avatar">{getInitial(u.fullname || u.name)}</div>
                           <div>
-                            <div style={{ fontWeight: 600, fontSize: 13.5, color: "var(--adm-text)" }}>{u.name || "—"}</div>
+                            <div style={{ fontWeight: 600, fontSize: 13.5, color: "var(--adm-text)" }}>{u.fullname || u.name || "—"}</div>
                             <div style={{ fontSize: 12, color: "var(--adm-muted)" }}>{u.email || "—"}</div>
                           </div>
                         </div>
@@ -363,10 +363,10 @@ function UsersAdmin() {
 
             <div className="uad-panel-avatar-row">
               <div className="adm-avatar" style={{ width: 54, height: 54, fontSize: 22 }}>
-                {getInitial(selected.name)}
+                {getInitial(selected.fullname || selected.name)}
               </div>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 15, color: "var(--adm-text)" }}>{selected.name}</div>
+                <div style={{ fontWeight: 700, fontSize: 15, color: "var(--adm-text)" }}>{selected.fullname || selected.name}</div>
                 <div style={{ fontSize: 12.5, color: "var(--adm-muted)" }}>{selected.email}</div>
               </div>
             </div>
@@ -374,8 +374,8 @@ function UsersAdmin() {
             <div style={{ padding: "0 18px 18px" }}>
               <div className="adm-form-group">
                 <label className="adm-form-label"><i className="bi bi-person" /> Tên người dùng</label>
-                <input className="adm-form-input" value={selected.name || ""}
-                  onChange={e => setSelected({ ...selected, name: e.target.value })} placeholder="Nhập tên..." />
+                <input className="adm-form-input" value={selected.fullname || selected.name || ""}
+                  onChange={e => setSelected({ ...selected, fullname: e.target.value })} placeholder="Nhập tên..." />
               </div>
 
               <div className="adm-form-group">

@@ -15,6 +15,11 @@ const advertisement = require ('./advertisement.route')
 const doneCart = require ('./doneCart')
 const restaurant = require('./restaurant.route')
 const voucher = require('./voucher.route')
+const platformVoucher = require('./platform-voucher.route');
+const seo = require('./seo.route')
+const notification = require('./notification.route')
+const chat = require('./chat.route')
+const policy = require('./policy.route')
 
 module.exports = (app) => {
     const prefixAdmin = systemConfig.prefixAdmin;
@@ -24,6 +29,9 @@ module.exports = (app) => {
     app.use("/api" + prefixAdmin ,auth);
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,userAdmin)
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,productAdmin) // done
+    app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,restaurant);
+    app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,voucher);
+    app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,platformVoucher);
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,doneCart)
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,userAccount) // lỗi http://localhost:3000/admin/users // đã fix
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,userInforOrder) // lỗi http://localhost:3000/admin/reports // đã fix
@@ -33,7 +41,10 @@ module.exports = (app) => {
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,account) // http://localhost:3000/admin/listAccount // đã fix
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,setting) // doing
     app.use("/api" + prefixAdmin ,advertisement);
-    app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,restaurant);
+    app.use("/api" + prefixAdmin + "/restaurants", authMiddleware.requireAuth, restaurant);
     app.use("/api" + prefixAdmin ,authMiddleware.requireAuth,voucher);
-
+    app.use("/api" + prefixAdmin + "/seo", seo);
+    app.use("/api" + prefixAdmin + "/policies", authMiddleware.requireAuth, policy);
+    app.use("/api" + prefixAdmin + "/notifications", authMiddleware.requireAuth, notification);
+    app.use("/api" + prefixAdmin + "/chat", authMiddleware.requireAuth, chat);
 }

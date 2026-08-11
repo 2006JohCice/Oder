@@ -2,7 +2,7 @@ const userAccount = require("../../models/user.model");
 const paginationHelper = require("../../helpers/pagination")
 module.exports.index = async (req, res) => {
   // console.log("đã vào được userAccount controller")
-  let final = { deleted: false };
+  let final = { deleted: { $ne: true } };
   //Pagination
   const countUser = await userAccount.countDocuments(final);
   let objPagination = paginationHelper(

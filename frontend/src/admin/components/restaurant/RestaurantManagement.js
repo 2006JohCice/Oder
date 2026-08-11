@@ -46,6 +46,25 @@ const RestaurantManagement = () => {
     }
   };
 
+  const deleteRestaurant = async (id) => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa nhà hàng này không?")) return;
+    try {
+      const res = await fetch(`/api/admin/restaurants/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        fetchRestaurants();
+      } else {
+        alert(data.message || "Có lỗi xảy ra");
+      }
+    } catch (error) {
+      alert("Lỗi kết nối máy chủ");
+    }
+  };
+
   const summary = useMemo(() => ({
     total: restaurants.length,
     active: restaurants.filter((item) => item.status === "active").length,
@@ -134,7 +153,14 @@ const RestaurantManagement = () => {
                 restaurants.map((restaurant) => (
                   <tr key={restaurant._id}>
                     <td>
-                      <div style={{ fontWeight: 600, fontSize: 13.5, color: "var(--adm-text)" }}>{restaurant.name}</div>
+                      <div style={{ fontWeight: 600, fontSize: 13.5, color: "var(--adm-text)" }}>
+                        {restaurant.name}
+                        {restaurant.appealStatus === "pending" && (
+                          <span className="adm-badge adm-badge--orange" style={{ marginLeft: 8, fontSize: 10 }} title={`Kháng cáo: ${restaurant.appealMessage}`}>
+                            <i className="bi bi-flag-fill"></i> Có kháng cáo
+                          </span>
+                        )}
+                      </div>
                       <div style={{ fontSize: 12, color: "var(--adm-muted)", marginTop: 2 }}><i className="bi bi-geo-alt" /> {restaurant.address}</div>
                       <div style={{ fontSize: 12, color: "var(--adm-muted)" }}><i className="bi bi-telephone" /> {restaurant.phone}</div>
                     </td>
@@ -177,6 +203,9 @@ const RestaurantManagement = () => {
                         <Link to={`/restaurant/${restaurant.slug || restaurant._id}/products`} target="_blank" rel="noreferrer" className="adm-btn adm-btn--ghost adm-btn--icon" title="Xem menu">
                           <i className="bi bi-box-arrow-up-right" />
                         </Link>
+                        <button className="adm-btn adm-btn--danger adm-btn--icon" onClick={() => deleteRestaurant(restaurant._id)} title="Xóa nhà hàng" style={{ marginLeft: 4 }}>
+                          <i className="bi bi-trash-fill" />
+                        </button>
                       </div>
                     </td>
                   </tr>

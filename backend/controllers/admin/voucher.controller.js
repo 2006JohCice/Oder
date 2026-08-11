@@ -14,6 +14,7 @@ module.exports.getVouchers = async (req, res) => {
 
     res.json({ vouchers });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Lỗi server" });
   }
 };
@@ -24,7 +25,7 @@ module.exports.createVoucher = async (req, res) => {
     const restaurant = await Restaurant.findOne({ owner_id: req.user.id });
     if (!restaurant) return res.status(404).json({ message: "Không tìm thấy nhà hàng" });
 
-    const { code, discountType, discountValue, minOrderValue, maxDiscountAmount, expirationDate, description } = req.body;
+    const { code, discountType, discountValue, minOrderValue, maxDiscountAmount, maxUsage, expirationDate, description } = req.body;
 
     // Check if code already exists
     const exist = await Voucher.findOne({ code: code.toUpperCase(), restaurant_id: restaurant._id, deleted: false });
@@ -38,6 +39,7 @@ module.exports.createVoucher = async (req, res) => {
       discountValue,
       minOrderValue,
       maxDiscountAmount,
+      maxUsage,
       expirationDate,
       description,
       restaurant_id: restaurant._id
@@ -46,6 +48,7 @@ module.exports.createVoucher = async (req, res) => {
     await newVoucher.save();
     res.status(201).json({ message: "Tạo mã giảm giá thành công", voucher: newVoucher });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Lỗi server" });
   }
 };

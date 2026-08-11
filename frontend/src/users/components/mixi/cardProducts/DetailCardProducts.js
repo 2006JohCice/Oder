@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { formatCurrency } from "../../../utils/shop";
+import { formatCurrency, isRestaurantClosed } from "../../../utils/shop";
 import { useCart } from "../../mixi/cart/CartContext";
 import { notifyApp } from "../../../../shared/notifications/ToastProvider";
 
@@ -7,16 +7,22 @@ function DetailCardProducts({ data }) {
   const { fetchCart } = useCart();
   const [addingProductId, setAddingProductId] = useState(null);
 
-  const handleAddToCart = async (productId) => {
-    if (addingProductId === productId) return;
-    setAddingProductId(productId);
+  const handleAddToCart = async (product) => {
+    const isClosed = isRestaurantClosed(product.restaurantInfo?.openTime, product.restaurantInfo?.closeTime);
+    if (isClosed) {
+      notifyApp("Nhà hàng đã đóng cửa", "info");
+      return;
+    }
+    
+    if (addingProductId === product._id) return;
+    setAddingProductId(product._id);
 
     try {
       const res = await fetch("/api/cart/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ productId, quantity: 1 }),
+        body: JSON.stringify({ productId: product._id, quantity: 1 }),
       });
 
       if (res.status === 401) {
@@ -42,6 +48,7 @@ function DetailCardProducts({ data }) {
     <div className="gp-list-view-container">
       {data.map((product) => {
         const isSoldOut = product.stock <= 0;
+        const isClosed = isRestaurantClosed(product.restaurantInfo?.openTime, product.restaurantInfo?.closeTime);
 
         return (
           <div key={product._id} className={`gp-list-card ${isSoldOut ? 'gp-sold-out' : ''}`}>
@@ -59,14 +66,15 @@ function DetailCardProducts({ data }) {
             {/* Right: Image & Action */}
             <div className="gp-lc-media">
                 <div className="gp-lc-img-box">
-                    <img src={product.img} alt={product.name} />
+                    <img src={product.img} alt={product.name} style={isClosed ? { filter: "grayscale(100%)" } : {}} />
                 </div>
                 <button 
                   className={`gp-lc-add-btn ${addingProductId === product._id ? 'loading' : ''}`}
-                  onClick={() => handleAddToCart(product._id)} 
-                  disabled={isSoldOut || addingProductId === product._id}
+                  onClick={() => handleAddToCart(product)} 
+                  disabled={isSoldOut || addingProductId === product._id || isClosed}
+                  style={isClosed ? { opacity: 0.5, cursor: "not-allowed" } : {}}
                 >
-                  {addingProductId === product._id ? <span className="spinner-border spinner-border-sm"></span> : <><i className="bi bi-plus-circle-fill"></i> Thêm</>}
+                  {addingProductId === product._id ? <span className="spinner-border spinner-border-sm"></span> : (isClosed ? <><i className="bi bi-clock"></i> Đóng cửa</> : <><i className="bi bi-plus-circle-fill"></i> Thêm</>)}
                 </button>
             </div>
           </div>

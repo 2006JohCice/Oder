@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
 
-// import "../css/user.css";
+import "../css/responsive.css";
 import Header from "../components/Header";
 import MainContent from "../components/HouseMain";
 import { Routes, Route } from "react-router-dom";
@@ -22,9 +22,14 @@ const RestaurantProducts = lazy(() => import("../components/pages/RestaurantProd
 const BookTable = lazy(() => import("../components/pages/BookTable"));
 const RestaurantManagement = lazy(() => import("../components/pages/RestaurantManagement"));
 const UserSettings = lazy(() => import("../components/pages/UserSettings"));
+const UserVouchers = lazy(() => import("../components/pages/UserVouchers"));
+const LegalPage = lazy(() => import("../components/pages/LegalPage"));
 const FeedBack = lazy(() => import("../components/pages/feedback"));
 const Report = lazy(() => import("../components/pages/Report"));
 const FeaturedProducts = lazy(() => import("../components/MainContents/products/featuredProducts"));
+const BlogList = lazy(() => import("../components/blog/BlogList"));
+const BlogDetail = lazy(() => import("../components/blog/BlogDetail"));
+const FavoriteRestaurants = lazy(() => import("../components/pages/FavoriteRestaurants"));
 
 function DefaultLayout() {
   const [loading, setLoading] = useState(true);
@@ -86,8 +91,13 @@ function DefaultLayout() {
             <Route path="/restaurant/:restaurantSlug/book-table" element={<BookTable />} />
             <Route path="/restaurant/manage" element={<RestaurantManagement />} />
             <Route path="/user/settings" element={<UserSettings />} />
+            <Route path="/user/vouchers" element={<UserVouchers />} />
+            <Route path="/legal/:policyType" element={<LegalPage />} />
             <Route path="/user/feedback" element={<FeedBack />} />
             <Route path="/user/reports" element={<Report />} />
+            <Route path="/blog" element={<BlogList />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
+            <Route path="/favorites" element={<FavoriteRestaurants />} />
           </Routes>
         </Suspense>
       </div>

@@ -122,6 +122,9 @@ function Header() {
             <Link to="/restaurants" className={`gp-nav-link ${pathname === '/restaurants' && !location.search.includes('mode=booking') ? 'gp-active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Nhà hàng</Link>
             <Link to="/restaurants?mode=booking" className={`gp-nav-link ${location.search.includes('mode=booking') ? 'gp-active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Đặt bàn</Link>
             <Link to="/featured" className={`gp-nav-link ${pathname.includes('/featured') ? 'gp-active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Món nổi bật</Link>
+            <Link to="/favorites" className={`gp-nav-link ${pathname.includes('/favorites') ? 'gp-active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Yêu thích</Link>
+            <Link to="/user/vouchers" className={`gp-nav-link ${pathname.includes('/user/vouchers') ? 'gp-active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Voucher</Link>
+            <Link to="/blog" className={`gp-nav-link ${pathname.includes('/blog') ? 'gp-active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Tin tức</Link>
             <Link to="/orders" className={`gp-nav-link ${pathname.includes('/orders') || pathname.includes('success') ? 'gp-active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('header.orders')}</Link>
             <Link to="/cart/checkout" className={`gp-nav-link ${pathname === '/cart/checkout' ? 'gp-active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
               <i className="bi bi-cart3"></i> {t('header.cart')} ({totalQuantity})
@@ -183,15 +186,8 @@ function Header() {
           </button>
           
           <div className="gp-categories-scroll">
-            <Link to="#" className="gp-category-chip">Bánh Quy</Link>
-            <Link to="#" className="gp-category-chip">Phở</Link>
-            <Link to="#" className="gp-category-chip">Lương Việt Nhật ORDER</Link>
-            <Link to="#" className="gp-category-chip">Bánh cuốn</Link>
-            <Link to="#" className="gp-category-chip">Phở cuốn</Link>
-            <Link to="#" className="gp-category-chip">Bánh cuốn nóng hà nội</Link>
-            <Link to="#" className="gp-category-chip">Bánh trôi nước</Link>
             {categories.map((cat, index) => (
-               <Link to="#" key={index} className="gp-category-chip">{cat.name}</Link>
+               <Link to={`/search?keyword=${encodeURIComponent(cat.name)}`} key={index} className="gp-category-chip">{cat.name}</Link>
             ))}
           </div>
         </div>

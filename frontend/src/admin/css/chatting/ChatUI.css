@@ -28,7 +28,7 @@
   flex-direction: column;
 }
 
-.chat-header {
+.chat-header-admin {
   padding: 16px;
   border-bottom: 1px solid var(--adm-border);
   display: flex;
@@ -55,6 +55,11 @@
 
 .chat-user-item:hover {
   background: var(--adm-row-hover);
+}
+
+.chat-user-item.active {
+  background: #ebf8ff;
+  border-right: 3px solid var(--adm-info);
 }
 
 .chat-user-avatar {
@@ -149,9 +154,11 @@
   align-items: center;
   gap: 6px;
 }
+
 .chat-active::before {
   content: '';
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   background: var(--adm-accent);
   border-radius: 50%;
 }
@@ -170,40 +177,45 @@
 .chat-bubble-row {
   display: flex;
 }
+
 .chat-bubble-row.me {
   justify-content: flex-end;
 }
+
 .chat-bubble-row.them {
   justify-content: flex-start;
 }
 
 .chat-bubble {
   padding: 12px 16px;
-  border-radius: 18px;
+  border-radius: 20px;
   max-width: 65%;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.5;
   word-wrap: break-word;
   position: relative;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
+
 .chat-bubble.me {
-  background: var(--adm-info);
+  background: #0084ff;
   color: #fff;
   border-bottom-right-radius: 4px;
 }
+
 .chat-bubble.them {
-  background: #fff;
-  color: var(--adm-text);
-  border: 1px solid var(--adm-border);
+  background: #f0f2f5;
+  color: #050505;
   border-bottom-left-radius: 4px;
 }
+
 .chat-time {
   font-size: 11px;
   opacity: 0.7;
   text-align: right;
   margin-top: 4px;
 }
+
 .chat-bubble.them .chat-time {
   color: var(--adm-muted);
 }
@@ -213,7 +225,7 @@
   font-size: 11.5px;
   color: var(--adm-muted);
   padding: 6px 12px;
-  background: rgba(0,0,0,0.04);
+  background: rgba(0, 0, 0, 0.04);
   border-radius: 20px;
   align-self: center;
   font-weight: 600;
@@ -244,6 +256,7 @@
   transition: border-color 0.2s;
   outline: none;
 }
+
 .chat-input:focus {
   border-color: var(--adm-info);
 }
@@ -273,9 +286,11 @@
   .chat-container {
     height: calc(100vh - 140px);
   }
+
   .chat-layout {
     flex-direction: column;
   }
+
   .chat-sidebar {
     width: 100%;
     height: 160px;
@@ -283,15 +298,17 @@
     border-bottom: 1px solid var(--adm-border);
     flex-shrink: 0;
   }
+
   .chat-main {
     flex: 1;
     height: calc(100% - 160px);
   }
+
   .chat-messages {
     padding: 12px;
   }
+
   .chat-bubble {
     max-width: 85%;
   }
 }
-

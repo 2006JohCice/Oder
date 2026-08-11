@@ -2,27 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../../utils/apiFetch";
 import { formatCurrency, formatDateTime } from "../../users/utils/shop";
+import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, CartesianGrid, YAxis } from "recharts";
 import "./MainAdmin.css";
-
-/* ────────────────────────────────────────────────
-   Tiny inline sparkline using SVG (no lib needed)
-   ──────────────────────────────────────────────── */
-function Sparkline({ values = [], color = "#1ABB9C", height = 40, width = 100 }) {
-  if (!values.length) return null;
-  const max = Math.max(...values, 1);
-  const pts = values
-    .map((v, i) => {
-      const x = (i / (values.length - 1)) * width;
-      const y = height - (v / max) * height;
-      return `${x},${y}`;
-    })
-    .join(" ");
-  return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
-      <polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 /* ────────────────────────────────────────────────
    Donut / gauge component
@@ -53,70 +34,6 @@ function DonutGauge({ pct = 0, color = "#1ABB9C", size = 100 }) {
 }
 
 /* ────────────────────────────────────────────────
-   Smooth area chart using SVG
-   ──────────────────────────────────────────────── */
-function AreaChart({ datasets = [], labels = [], height = 220, colors = ["#1ABB9C", "#3498DB"] }) {
-  const W = 100; // viewBox units (%)
-  if (!datasets.length || !datasets[0].length) return <div style={{ height }} />;
-
-  const maxVal = Math.max(...datasets.flat(), 1);
-  const pts = (data, offsetY = 0) =>
-    data
-      .map((v, i) => {
-        const x = (i / (data.length - 1)) * W;
-        const y = height - offsetY - (v / maxVal) * (height - 30);
-        return `${x},${y}`;
-      })
-      .join(" ");
-
-  return (
-    <svg
-      viewBox={`0 0 100 ${height}`}
-      preserveAspectRatio="none"
-      style={{ width: "100%", height }}
-    >
-      {datasets.map((data, di) => {
-        const polyPts = pts(data);
-        const firstX = 0;
-        const firstY = height - (data[0] / maxVal) * (height - 30);
-        const lastX = W;
-        const lastY = height - (data[data.length - 1] / maxVal) * (height - 30);
-        const fillPts = `${firstX},${height} ${polyPts} ${lastX},${height}`;
-        return (
-          <g key={di}>
-            <polygon
-              points={fillPts}
-              fill={colors[di % colors.length]}
-              opacity="0.25"
-            />
-            <polyline
-              points={polyPts}
-              fill="none"
-              stroke={colors[di % colors.length]}
-              strokeWidth="0.8"
-              strokeLinejoin="round"
-            />
-          </g>
-        );
-      })}
-      {/* X-axis labels */}
-      {labels.map((lbl, i) => (
-        <text
-          key={i}
-          x={(i / (labels.length - 1)) * W}
-          y={height - 2}
-          fontSize="4"
-          fill="#aaa"
-          textAnchor={i === 0 ? "start" : i === labels.length - 1 ? "end" : "middle"}
-        >
-          {lbl}
-        </text>
-      ))}
-    </svg>
-  );
-}
-
-/* ────────────────────────────────────────────────
    Horizontal progress bar
    ──────────────────────────────────────────────── */
 function ProgressBar({ pct = 0, color = "#1ABB9C", label = "", value = "" }) {
@@ -140,24 +57,61 @@ function ProgressBar({ pct = 0, color = "#1ABB9C", label = "", value = "" }) {
 function MainAdmin({ query }) {
   const navigate = useNavigate();
   const [overview, setOverview] = useState({ orders: [], users: [], restaurants: [] });
+  const [visitStats, setVisitStats] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Time filter state with localStorage persistence
+  const [timeFilter, setTimeFilter] = useState(() => {
+    return localStorage.getItem("adminStatsTimeFilter") || "all_time";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("adminStatsTimeFilter", timeFilter);
+  }, [timeFilter]);
+
+  // Helper to check if a date is within the selected timeFilter
+  const isDateInFilter = (dateStr, filter) => {
+    if (!dateStr) return true;
+    if (filter === "all_time") return true;
+    
+    const d = new Date(dateStr);
+    const now = new Date();
+    
+    if (filter === "7days") {
+      return (now - d) <= 7 * 24 * 60 * 60 * 1000;
+    }
+    if (filter === "30days") {
+      return (now - d) <= 30 * 24 * 60 * 60 * 1000;
+    }
+    if (filter === "this_month") {
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }
+    if (filter === "this_year") {
+      return d.getFullYear() === now.getFullYear();
+    }
+    return true;
+  };
+
+  // Original time filter code removed since it was hoisted above
 
   useEffect(() => {
     let ignore = false;
     (async () => {
       setLoading(true);
       try {
-        const [ordersRes, usersRes, restaurantsRes] = await Promise.all([
+        const [ordersRes, usersRes, restaurantsRes, visitRes] = await Promise.all([
           apiFetch("/api/admin/checkout/doneOrder?limit=200"),
-          apiFetch("/api/user"),
+          apiFetch("/api/admin/user-accounts"),
           apiFetch("/api/admin/restaurants"),
+          apiFetch("/api/visit/stats")
         ]);
         if (ignore) return;
         setOverview({
           orders: Array.isArray(ordersRes.orders) ? ordersRes.orders : [],
-          users: Array.isArray(usersRes.users) ? usersRes.users : [],
+          users: Array.isArray(usersRes.data) ? usersRes.data : [],
           restaurants: Array.isArray(restaurantsRes.restaurants) ? restaurantsRes.restaurants : [],
         });
+        setVisitStats(visitRes.stats || []);
       } catch (err) {
         if (err.status === 401) navigate("/admin/auth/login");
       } finally {
@@ -169,20 +123,30 @@ function MainAdmin({ query }) {
 
   const filteredOrders = useMemo(() => {
     const kw = String(query || "").trim().toLowerCase();
-    if (!kw) return overview.orders;
-    return overview.orders.filter(o =>
-      [o.orderId, o.orderGroupCode, o.userInfo?.fullName, o.userInfo?.phone, o.restaurantInfo?.name]
-        .filter(Boolean).join(" ").toLowerCase().includes(kw)
-    );
-  }, [overview.orders, query]);
+    
+    // First filter by search keyword
+    let results = overview.orders;
+    if (kw) {
+      results = results.filter(o =>
+        [o.orderId, o.orderGroupCode, o.userInfo?.fullName, o.userInfo?.phone, o.restaurantInfo?.name]
+          .filter(Boolean).join(" ").toLowerCase().includes(kw)
+      );
+    }
+    
+    // Then filter by timeFilter
+    return results.filter(o => isDateInFilter(o.createdAt, timeFilter));
+  }, [overview.orders, query, timeFilter]);
 
   const stats = useMemo(() => {
+    const filteredUsers = overview.users.filter(u => isDateInFilter(u.createdAt, timeFilter));
+    const filteredRestaurants = overview.restaurants.filter(r => isDateInFilter(r.createdAt, timeFilter));
+    
     const totalRevenue = filteredOrders.reduce((s, o) => s + Number(o.totalAmount || 0), 0);
     return {
-      totalUsers: overview.users.length,
-      totalRestaurants: overview.restaurants.length,
-      activeRestaurants: overview.restaurants.filter(r => r.status === "active").length,
-      pendingRestaurants: overview.restaurants.filter(r => r.status === "pending").length,
+      totalUsers: filteredUsers.length,
+      totalRestaurants: filteredRestaurants.length,
+      activeRestaurants: filteredRestaurants.filter(r => r.status === "active").length,
+      pendingRestaurants: filteredRestaurants.filter(r => r.status === "pending").length,
       totalOrders: filteredOrders.length,
       pendingOrders: filteredOrders.filter(o => o.orderStatus === "pending").length,
       completedOrders: filteredOrders.filter(o => o.orderStatus === "completed").length,
@@ -190,7 +154,7 @@ function MainAdmin({ query }) {
       totalRevenue,
       tableDeposits: filteredOrders.reduce((s, o) => s + Number(o.depositAmount || 0), 0),
     };
-  }, [filteredOrders, overview.restaurants, overview.users.length]);
+  }, [filteredOrders, overview.restaurants, overview.users, timeFilter]);
 
   const topRestaurants = useMemo(() =>
     [...overview.restaurants]
@@ -201,11 +165,14 @@ function MainAdmin({ query }) {
 
   const recentOrders = filteredOrders.slice(0, 8);
 
-  /* Build a simple 7-point "orders per day" dataset from recentOrders for the chart */
+  /* Build a simple 7-point "orders per day" dataset from recentOrders for the recharts */
   const chartLabels = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN"];
   const seed = stats.totalOrders;
-  const chartData1 = chartLabels.map((_, i) => Math.max(1, Math.round(seed * 0.07 * Math.sin(i + 1) + seed * 0.1)));
-  const chartData2 = chartLabels.map((_, i) => Math.max(1, Math.round(seed * 0.05 * Math.cos(i + 0.5) + seed * 0.07)));
+  const orderChartData = chartLabels.map((lbl, i) => ({
+    name: lbl,
+    delivery: Math.max(1, Math.round(seed * 0.07 * Math.sin(i + 1) + seed * 0.1)),
+    dine_in: Math.max(1, Math.round(seed * 0.05 * Math.cos(i + 0.5) + seed * 0.07))
+  }));
 
   /* Campaign bars */
   const maxRest = Math.max(...topRestaurants.map(r => r.orderCount || 1), 1);
@@ -222,6 +189,36 @@ function MainAdmin({ query }) {
 
   return (
     <div className="ma-wrapper">
+      {/* ── PAGE HEADER & FILTER ── */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#2C3E50', fontWeight: 600 }}>Tổng Quan Hệ Thống</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '14px', color: '#64748B', fontWeight: 500 }}><i className="bi bi-calendar-range"></i> Thời gian:</span>
+          <select 
+            value={timeFilter} 
+            onChange={(e) => setTimeFilter(e.target.value)}
+            style={{ 
+              padding: '8px 12px', 
+              borderRadius: '8px', 
+              border: '1px solid #E2E8F0', 
+              backgroundColor: '#fff', 
+              fontSize: '14px', 
+              cursor: 'pointer', 
+              outline: 'none',
+              minWidth: '150px',
+              fontWeight: 500,
+              color: '#334155'
+            }}
+          >
+            <option value="7days">7 ngày qua</option>
+            <option value="30days">30 ngày qua</option>
+            <option value="this_month">Tháng này</option>
+            <option value="this_year">Năm nay</option>
+            <option value="all_time">Toàn thời gian</option>
+          </select>
+        </div>
+      </div>
+
       {/* ── TILE STATS ROW ── */}
       <div className="ma-tiles">
         {[
@@ -262,15 +259,38 @@ function MainAdmin({ query }) {
           </div>
           <div className="ma-panel-body">
             <div className="ma-chart-legend">
-              <span className="ma-legend-dot" style={{ background: "#1ABB9C" }} /> Giao hàng &nbsp;
-              <span className="ma-legend-dot" style={{ background: "#3498DB" }} /> Đặt bàn
+              <span className="ma-legend-dot" style={{ background: "#4F46E5" }} /> Giao hàng &nbsp;
+              <span className="ma-legend-dot" style={{ background: "#10B981" }} /> Đặt bàn
             </div>
-            <AreaChart
-              datasets={[chartData1, chartData2]}
-              labels={chartLabels}
-              height={200}
-              colors={["#1ABB9C", "#3498DB"]}
-            />
+            <div style={{ height: 250, width: "100%", marginTop: "10px" }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={orderChartData} margin={{ top: 20, right: 20, left: -10, bottom: 10 }}>
+                  <defs>
+                    <linearGradient id="colorDelivery" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#4F46E5" stopOpacity={0.6}/>
+                      <stop offset="100%" stopColor="#4F46E5" stopOpacity={0.0}/>
+                    </linearGradient>
+                    <linearGradient id="colorDineIn" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#10B981" stopOpacity={0.6}/>
+                      <stop offset="100%" stopColor="#10B981" stopOpacity={0.0}/>
+                    </linearGradient>
+                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feDropShadow dx="0" dy="4" stdDeviation="5" floodColor="#000" floodOpacity="0.1"/>
+                    </filter>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 13, fontWeight: 500 }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 13, fontWeight: 500 }} dx={-10} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '12px', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)', padding: '12px 16px', fontWeight: 600, color: '#1F2937' }} 
+                    itemStyle={{ padding: '4px 0', fontSize: '14px' }} 
+                    cursor={{ stroke: '#9CA3AF', strokeWidth: 1, strokeDasharray: '4 4' }}
+                  />
+                  <Area type="monotone" dataKey="delivery" name="Giao hàng" stroke="#4F46E5" strokeWidth={4} fill="url(#colorDelivery)" activeDot={{ r: 6, fill: "#4F46E5", stroke: "#fff", strokeWidth: 2 }} style={{ filter: 'url(#shadow)' }} />
+                  <Area type="monotone" dataKey="dine_in" name="Đặt bàn" stroke="#10B981" strokeWidth={4} fill="url(#colorDineIn)" activeDot={{ r: 6, fill: "#10B981", stroke: "#fff", strokeWidth: 2 }} style={{ filter: 'url(#shadow)' }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
@@ -294,6 +314,56 @@ function MainAdmin({ query }) {
               />
             ))}
             {!topRestaurants.length && <div className="ma-empty">Chưa có dữ liệu</div>}
+          </div>
+        </div>
+      </div>
+
+      {/* ── NEW ROW: TRAFFIC STATS ── */}
+      <div className="ma-row" style={{ gridTemplateColumns: "1fr", marginBottom: "20px" }}>
+        <div className="ma-panel ma-panel--large">
+          <div className="ma-panel-header">
+            <span className="ma-panel-title">Thống Kê Truy Cập Web Hàng Tháng</span>
+            <div className="ma-panel-actions">
+              <button className="ma-action-btn"><i className="bi bi-chevron-up" /></button>
+            </div>
+          </div>
+          <div className="ma-panel-body ma-panel-body--flush">
+            <div className="ma-table-wrap">
+              <table className="ma-table">
+                <thead>
+                  <tr>
+                    <th>Thời Gian</th>
+                    <th>Tổng Lượt Truy Cập</th>
+                    <th>Đã Đăng Ký (Users)</th>
+                    <th>Chưa Đăng Ký (Guests)</th>
+                    <th>Tỷ Lệ Đăng Ký</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visitStats.map((st, i) => (
+                    <tr key={i}>
+                      <td><strong>{st.month}</strong></td>
+                      <td>{st.total.toLocaleString()}</td>
+                      <td style={{ color: "#1ABB9C", fontWeight: "600" }}>{st.registered.toLocaleString()}</td>
+                      <td style={{ color: "#718096" }}>{st.unregistered.toLocaleString()}</td>
+                      <td>
+                        {st.total > 0 ? (
+                          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div style={{ flex: 1, height: "8px", background: "#e2e8f0", borderRadius: "4px", overflow: "hidden" }}>
+                              <div style={{ width: `${(st.registered / st.total) * 100}%`, height: "100%", background: "#1ABB9C" }} />
+                            </div>
+                            <span style={{ fontSize: "12px", color: "#718096" }}>{Math.round((st.registered / st.total) * 100)}%</span>
+                          </div>
+                        ) : "0%"}
+                      </td>
+                    </tr>
+                  ))}
+                  {!visitStats.length && (
+                    <tr><td colSpan="5" className="ma-empty">Không có dữ liệu truy cập.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

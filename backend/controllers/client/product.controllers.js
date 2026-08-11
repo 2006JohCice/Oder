@@ -5,7 +5,7 @@ const Restaurant = require("../../models/restaurant.model");
 const decorateProducts = async (products = []) => {
   const restaurantIds = [...new Set(products.map((item) => String(item.restaurant_id || "")).filter(Boolean))];
   const restaurants = await Restaurant.find({ _id: { $in: restaurantIds } })
-    .select("name slug ratingAverage ratingCount orderCount")
+    .select("name slug ratingAverage ratingCount orderCount openTime closeTime")
     .lean();
 
   const restaurantMap = new Map(restaurants.map((item) => [String(item._id), item]));

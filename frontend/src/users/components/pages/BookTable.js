@@ -11,6 +11,7 @@ export default function BookTable() {
     const { cartItems, fetchCart } = useCart();
     
     const [restaurant, setRestaurant] = useState(null);
+    const [restaurantProducts, setRestaurantProducts] = useState([]);
     const [availableTables, setAvailableTables] = useState([]);
     const [mapLayout, setMapLayout] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -35,8 +36,20 @@ export default function BookTable() {
             try {
                 const res = await fetch("/api/restaurants");
                 const data = await res.json();
-                const found = (data.restaurants || []).find((item) => item.slug === restaurantSlug);
+                const found = (data.restaurants || []).find((item) => item.slug === restaurantSlug || item._id === restaurantSlug);
                 setRestaurant(found);
+
+                if (found) {
+                    try {
+                        const prodRes = await fetch(`/api/restaurants/${found._id}/products`);
+                        const prodData = await prodRes.json();
+                        if (prodRes.ok) {
+                            setRestaurantProducts(prodData.products || []);
+                        }
+                    } catch (e) {
+                        console.error("Failed to load products", e);
+                    }
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -165,7 +178,7 @@ export default function BookTable() {
     if (!restaurant) return <div className="gp-res-loading"><div className="spinner"></div></div>;
 
     const totalCapacity = selectedTables.reduce((sum, t) => sum + (t.capacity || 0), 0);
-    const depositAmount = totalCapacity >= 10 ? 500000 : 0;
+    const depositAmount = 200000;
 
     return (
         <div className="gp-res-page-wrapper">
@@ -222,7 +235,10 @@ export default function BookTable() {
                                             className={`gp-table-premium ${shapeClass} ${statusClass}`}
                                             style={table.style}
                                             onClick={() => {
-                                                if (!table.isAvailable) return;
+                                                if (!table.isAvailable) {
+                                                    notifyApp("Bàn này đã được đặt trong khung giờ này. Vui lòng chọn bàn khác hoặc đổi giờ!", "warning");
+                                                    return;
+                                                }
                                                 setSelectedTables(prev => {
                                                     if (prev.find(t => t.id === table.id)) {
                                                         return prev.filter(t => t.id !== table.id);
@@ -325,7 +341,7 @@ export default function BookTable() {
                                     <i className="bi bi-info-circle-fill"></i>
                                     <div>
                                         <strong>Yêu cầu đặt cọc: {formatCurrency(depositAmount)}</strong>
-                                        <p>Nhóm trên 10 người cần cọc để giữ chỗ tốt nhất.</p>
+                                        <p>Nhà hàng yêu cầu thanh toán cọc để giữ chỗ cho bạn.</p>
                                     </div>
                                 </div>
                             )}
@@ -339,7 +355,7 @@ export default function BookTable() {
                                 <div className="gp-receipt-line">
                                     <span>Bàn số:</span>
                                     <strong className={selectedTables.length > 0 ? 'text-red' : ''}>
-                                        {selectedTables.map(t => t.tableNumber).join(", ") || "Vui lòng chọn trên sơ đồ"}
+                                        {selectedTables.map(t => t.label).join(", ") || "Vui lòng chọn trên sơ đồ"}
                                     </strong>
                                 </div>
                                 <div className="gp-receipt-divider"></div>
@@ -355,12 +371,35 @@ export default function BookTable() {
                                 {isSubmitting ? "ĐANG XỬ LÝ..." : "XÁC NHẬN ĐẶT BÀN"} <i className="bi bi-chevron-right"></i>
                             </button>
                             <p className="gp-policy-text">
-                                Hệ thống sẽ tự động xếp số lượng khách tương ứng với các bàn bạn đã chọn. Bằng việc xác nhận, bạn đồng ý với Điều khoản sử dụng của chúng tôi.
+                                Hệ thống sẽ tự động xếp số lượng khách tương ứng với các bàn bạn đã chọn. Bằng việc xác nhận, bạn đồng ý với <Link to="/legal/terms">Điều khoản sử dụng</Link> của chúng tôi.
                             </p>
                         </div>
                     </form>
                 </div>
             </div>
+
+            {/* ATTRACTION SECTION - RESTAURANT DISHES */}
+            {restaurantProducts.length > 0 && (
+                <div style={{ marginTop: '40px', padding: '20px', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                        <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#1a202c' }}><i className="bi bi-star-fill text-warning"></i> Món Ngon Tại Nhà Hàng</h3>
+                        <Link to={`/restaurant/${restaurant.slug || restaurant._id}/products`} style={{ color: '#c90000', textDecoration: 'none', fontSize: '14px', fontWeight: 'bold' }}>
+                            Xem Toàn Bộ Menu <i className="bi bi-arrow-right"></i>
+                        </Link>
+                    </div>
+                    <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px' }} className="gp-horizontal-scroll">
+                        {restaurantProducts.slice(0, 6).map(prod => (
+                            <Link to={`/restaurant/${restaurant.slug || restaurant._id}/products/detail/${prod.slug}`} key={prod._id} style={{ textDecoration: 'none', color: 'inherit', minWidth: '160px', width: '160px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #edf2f7', background: '#fff', display: 'block', transition: 'transform 0.2s', cursor: 'pointer' }}>
+                                <img src={prod.img || "https://placehold.co/160x160?text=Food"} alt={prod.name} style={{ width: '100%', height: '120px', objectFit: 'cover' }} />
+                                <div style={{ padding: '10px' }}>
+                                    <h4 style={{ fontSize: '13px', margin: '0 0 5px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prod.name}</h4>
+                                    <p style={{ margin: 0, color: '#c90000', fontWeight: 'bold', fontSize: '13px' }}>{formatCurrency(prod.price)}</p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

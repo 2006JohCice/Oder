@@ -537,7 +537,10 @@ module.exports.getRestaurantVouchers = async (req, res) => {
     const now = new Date();
 
     const vouchers = await Voucher.find({
-      restaurant_id: restaurantId,
+      $or: [
+        { restaurant_id: restaurantId },
+        { restaurant_id: null }
+      ],
       status: 'active',
       deleted: false,
       expirationDate: { $gte: now }
@@ -547,5 +550,135 @@ module.exports.getRestaurantVouchers = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+module.exports.getRecommendedRestaurants = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 12;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
+
+    const pipeline = [
+      { $match: { status: "active", deleted: false } },
+      { 
+        $addFields: {
+          score: {
+            $add: [
+              { $multiply: [{ $ifNull: ["$ratingAverage", 0] }, 20] }, 
+              { $multiply: [{ $ifNull: ["$orderCount", 0] }, 1] },     
+              { $multiply: [{ $ifNull: ["$likesCount", 0] }, 5] }      
+            ]
+          }
+        }
+      },
+      { $sort: { score: -1, _id: -1 } },
+      { $skip: skip },
+      { $limit: limit }
+    ];
+
+    let restaurants = await Restaurant.aggregate(pipeline);
+
+    if (page === 1 && restaurants.length > 3) {
+       const randomRest = await Restaurant.aggregate([
+         { $match: { status: "active", deleted: false, ratingAverage: { $lt: 4.5 } } },
+         { $sample: { size: 1 } }
+       ]);
+       if (randomRest.length > 0) {
+         if (!restaurants.find(r => String(r._id) === String(randomRest[0]._id))) {
+            const randomIndex = Math.floor(Math.random() * restaurants.length);
+            restaurants[randomIndex] = randomRest[0];
+         }
+       }
+    }
+
+    res.json({ recommendations: restaurants });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+module.exports.getMyVouchers = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const vouchers = await Voucher.find({ 
+      restaurant_id: restaurant._id,
+      deleted: false 
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).json({ vouchers });
+  } catch (error) {
+    console.error("getMyVouchers Error:", error);
+    return res.status(500).json({ message: "Loi server" });
+  }
+};
+
+module.exports.createVoucher = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const { code, discountType, discountValue, minOrderValue, maxDiscountAmount, maxUsage, expirationDate, description } = req.body;
+
+    const exist = await Voucher.findOne({ code: code.toUpperCase(), restaurant_id: restaurant._id, deleted: false });
+    if (exist) {
+      return res.status(400).json({ message: "Mã giảm giá đã tồn tại" });
+    }
+
+    const newVoucher = await Voucher.create({
+      code: code.toUpperCase(),
+      discountType,
+      discountValue,
+      minOrderValue,
+      maxDiscountAmount,
+      maxUsage,
+      expirationDate,
+      description,
+      restaurant_id: restaurant._id
+    });
+
+    return res.status(201).json({ message: "Tạo mã giảm giá thành công", voucher: newVoucher });
+  } catch (error) {
+    console.error("createVoucher Error:", error);
+    return res.status(500).json({ message: "Loi server" });
+  }
+};
+
+module.exports.updateVoucherStatus = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const { voucherId } = req.params;
+    const { status } = req.body;
+
+    const voucher = await Voucher.findOne({ _id: voucherId, restaurant_id: restaurant._id, deleted: false });
+    if (!voucher) return res.status(404).json({ message: "Voucher khong ton tai" });
+
+    await Voucher.updateOne({ _id: voucherId }, { status });
+    return res.status(200).json({ message: "Cập nhật thành công" });
+  } catch (error) {
+    console.error("updateVoucherStatus Error:", error);
+    return res.status(500).json({ message: "Loi server" });
+  }
+};
+
+module.exports.deleteVoucher = async (req, res) => {
+  try {
+    const restaurant = await findOwnerRestaurant(res.locals.user._id, true);
+    if (!restaurant) return res.status(403).json({ message: "Nha hang chua duoc phe duyet" });
+
+    const { voucherId } = req.params;
+    const voucher = await Voucher.findOne({ _id: voucherId, restaurant_id: restaurant._id, deleted: false });
+    if (!voucher) return res.status(404).json({ message: "Voucher khong ton tai" });
+
+    await Voucher.updateOne({ _id: voucherId }, { deleted: true, deletedAt: new Date() });
+    return res.status(200).json({ message: "Xóa thành công" });
+  } catch (error) {
+    console.error("deleteVoucher Error:", error);
+    return res.status(500).json({ message: "Loi server" });
   }
 };

@@ -1,0 +1,65 @@
+/* --- ADMIN DASHBOARD RESPONSIVE --- */
+
+@media (max-width: 1024px) {
+  /* iPad / Tablet */
+  .admin-grid, .admin-hero-grid, .admin-grid-4 {
+      grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile Landscape / iPad Portrait */
+  .admin-main {
+      padding: 10px;
+  }
+
+  /* Make sure all grids stack */
+  .admin-grid, .admin-hero-grid, .admin-grid-4, .admin-kpi-grid {
+      grid-template-columns: 1fr !important;
+  }
+
+  /* Toolbar styling */
+  .admin-toolbar {
+      flex-direction: column;
+      align-items: stretch !important;
+      gap: 10px;
+  }
+  
+  .admin-search input {
+      width: 100% !important;
+  }
+
+  /* Table overflow */
+  .admin-table, .admin-table-user {
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      white-space: nowrap;
+  }
+
+  /* Form layouts */
+  .admin-form-row {
+      flex-direction: column;
+  }
+  
+  .admin-input, .admin-select {
+      width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mobile Portrait */
+  .admin-topbar {
+      padding: 10px !important;
+  }
+  
+  .admin-btn {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 5px;
+  }
+  
+  .admin-card {
+      padding: 15px 10px;
+  }
+}

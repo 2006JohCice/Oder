@@ -1,27 +1,25 @@
 /* eslint-disable no-unused-vars, react-hooks/exhaustive-deps, jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, no-multi-str */
 
 import "../../css/tinyMCE/MyEditor.css";
-
 import { Editor } from "@tinymce/tinymce-react";
 import { useRef } from "react";
 
-function MyEditor() {
+function MyEditor({ value, onEditorChange }) {
   const editorRef = useRef(null);
 
-  const handleSave = () => {
-    if (editorRef.current) {
-      console.log(editorRef.current.getContent());
-    }
-  };
-
   return (
-    <div>
+    <div className="gp-tinymce-container">
       <Editor
         apiKey="0tco57klvip65a8n1b7epf1bguqh7jkxq7q2mt557wdtgeum"
         onInit={(evt, editor) => (editorRef.current = editor)}
+        value={value}
+        onEditorChange={(content) => {
+          if (onEditorChange) {
+            onEditorChange(content);
+          }
+        }}
         init={{
-          // menubar: true,
-          height: 500,
+          height: 400,
           plugins: [
             "advlist autolink lists link image charmap preview anchor",
             "searchreplace visualblocks code fullscreen",
@@ -34,13 +32,6 @@ function MyEditor() {
             bullist numlist outdent indent | link image | preview",
         }}
       />
-      <button
-        onClick={handleSave}
-        style={{ marginTop: "20px", padding: "8px 16px" }}
-        className="admin-btn"
-      >
-        GÃ¡Â»Â­i Ã„Âi
-      </button>
     </div>
   );
 }

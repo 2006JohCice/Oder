@@ -19,94 +19,94 @@
   --admin-border: rgba(255, 255, 255, 0.1);
   --admin-text: #f8fafc;
   --admin-text-muted: #94a3b8;
-  --rol-bg:            #f1f5fb;
-  --rol-surface:       #ffffff;
-  --rol-surface-2:     #f8fafd;
-  --rol-border:        #e2e8f4;
-  --rol-border-hover:  #c7d4ea;
+  --rol-bg: #f1f5fb;
+  --rol-surface: #ffffff;
+  --rol-surface-2: #f8fafd;
+  --rol-border: #e2e8f4;
+  --rol-border-hover: #c7d4ea;
 
-  --rol-accent:        #6366f1;
-  --rol-accent-dim:    rgba(99, 102, 241, 0.09);
-  --rol-accent-hover:  #4f46e5;
+  --rol-accent: #6366f1;
+  --rol-accent-dim: rgba(99, 102, 241, 0.09);
+  --rol-accent-hover: #4f46e5;
 
-  --rol-green:         #16a34a;
-  --rol-green-dim:     rgba(22, 163, 74, 0.09);
-  --rol-green-border:  rgba(22, 163, 74, 0.25);
+  --rol-green: #16a34a;
+  --rol-green-dim: rgba(22, 163, 74, 0.09);
+  --rol-green-border: rgba(22, 163, 74, 0.25);
 
-  --rol-red:           #dc2626;
-  --rol-red-dim:       rgba(220, 38, 38, 0.08);
-  --rol-red-border:    rgba(220, 38, 38, 0.25);
+  --rol-red: #dc2626;
+  --rol-red-dim: rgba(220, 38, 38, 0.08);
+  --rol-red-border: rgba(220, 38, 38, 0.25);
 
-  --rol-#ffffff:        #d97706;
-  --rol-#ffffff-dim:    rgba(217, 119, 6, 0.09);
+  --rol-#ffffff: #d97706;
+  --rol-#ffffff-dim: rgba(217, 119, 6, 0.09);
 
-  --rol-sky:           #0284c7;
-  --rol-sky-dim:       rgba(2, 132, 199, 0.08);
+  --rol-sky: #0284c7;
+  --rol-sky-dim: rgba(2, 132, 199, 0.08);
 
-  --rol-purple:        #7c3aed;
-  --rol-purple-dim:    rgba(124, 58, 237, 0.09);
+  --rol-purple: #7c3aed;
+  --rol-purple-dim: rgba(124, 58, 237, 0.09);
 
-  --rol-text:          #0f172a;
-  --rol-muted:         #64748b;
-  --rol-muted-2:       #94a3b8;
+  --rol-text: #0f172a;
+  --rol-muted: #64748b;
+  --rol-muted-2: #94a3b8;
 
-  --rol-shadow-sm:     0 1px 4px rgba(15, 23, 42, 0.06);
-  --rol-shadow:        0 4px 20px rgba(15, 23, 42, 0.08);
-  --rol-shadow-lg:     0 8px 32px rgba(15, 23, 42, 0.12);
+  --rol-shadow-sm: 0 1px 4px rgba(15, 23, 42, 0.06);
+  --rol-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+  --rol-shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.12);
 
-  --rol-radius:        14px;
-  --rol-radius-sm:     9px;
-  --rol-radius-xs:     6px;
+  --rol-radius: 14px;
+  --rol-radius-sm: 9px;
+  --rol-radius-xs: 6px;
 
-  --rol-font:          'Plus Jakarta Sans', sans-serif;
-  --rol-mono:          'Fira Code', monospace;
-  --rol-transition:    0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  --rol-font: 'Plus Jakarta Sans', sans-serif;
+  --rol-mono: 'Fira Code', monospace;
+  --rol-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   /* Brand */
-  --adm-accent:        #1ABB9C;
-  --adm-accent-dark:   #148f76;
-  --adm-accent-dim:    rgba(26,187,156,0.10);
+  --adm-accent: #1ABB9C;
+  --adm-accent-dark: #148f76;
+  --adm-accent-dim: rgba(26, 187, 156, 0.10);
 
   /* Semantic colors */
-  --adm-danger:        #E74C3C;
-  --adm-danger-dim:    rgba(231,76,60,0.10);
-  --adm-warning:       #F39C12;
-  --adm-warning-dim:   rgba(243,156,18,0.10);
-  --adm-info:          #3498DB;
-  --adm-info-dim:      rgba(52,152,219,0.10);
-  --adm-purple:        #9B59B6;
-  --adm-purple-dim:    rgba(155,89,182,0.10);
-  --adm-sky:           #0EA5E9;
-  --adm-sky-dim:       rgba(14,165,233,0.10);
+  --adm-danger: #E74C3C;
+  --adm-danger-dim: rgba(231, 76, 60, 0.10);
+  --adm-warning: #F39C12;
+  --adm-warning-dim: rgba(243, 156, 18, 0.10);
+  --adm-info: #3498DB;
+  --adm-info-dim: rgba(52, 152, 219, 0.10);
+  --adm-purple: #9B59B6;
+  --adm-purple-dim: rgba(155, 89, 182, 0.10);
+  --adm-sky: #0EA5E9;
+  --adm-sky-dim: rgba(14, 165, 233, 0.10);
 
   /* Neutral */
-  --adm-bg:            #F5F6FA;
-  --adm-card:          #FFFFFF;
-  --adm-sidebar-bg:    #2A3F54;
-  --adm-text:          #2c3e50;
-  --adm-text-2:        #34495e;
-  --adm-muted:         #73879C;
-  --adm-muted-2:       #95a5a6;
-  --adm-border:        #E6E9ED;
-  --adm-border-2:      #dce1e7;
-  --adm-input-bg:      #ffffff;
-  --adm-row-hover:     #f8f9fb;
+  --adm-bg: #F5F6FA;
+  --adm-card: #FFFFFF;
+  --adm-sidebar-bg: #2A3F54;
+  --adm-text: #2c3e50;
+  --adm-text-2: #34495e;
+  --adm-muted: #73879C;
+  --adm-muted-2: #95a5a6;
+  --adm-border: #E6E9ED;
+  --adm-border-2: #dce1e7;
+  --adm-input-bg: #ffffff;
+  --adm-row-hover: #f8f9fb;
 
   /* Shadow */
-  --adm-shadow-sm:     0 1px 3px rgba(0,0,0,0.08);
-  --adm-shadow:        0 2px 8px rgba(0,0,0,0.10);
-  --adm-shadow-lg:     0 4px 20px rgba(0,0,0,0.12);
+  --adm-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --adm-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+  --adm-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.12);
 
   /* Radius */
-  --adm-radius-sm:     4px;
-  --adm-radius:        8px;
-  --adm-radius-lg:     12px;
+  --adm-radius-sm: 4px;
+  --adm-radius: 8px;
+  --adm-radius-lg: 12px;
 
   /* Font */
-  --adm-font:          "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
-  --adm-mono:          "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --adm-font: "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --adm-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
   /* Page inner padding */
-  --adm-page-pad:      24px;
+  --adm-page-pad: 24px;
   --accent: #1ABB9C;
   --accent-dark: #169F85;
   --accent-soft: rgba(26, 187, 156, 0.1);
@@ -120,12 +120,12 @@
   --bg: #0f1724;
   --card: #0b1220;
   --muted: #97a0b5;
-  --accent: #6ee7b7; 
+  --accent: #6ee7b7;
   --accent-2: #60a5fa;
   --danger: #fb7185;
-  --glass: rgba(255,255,255,0.04);
+  --glass: rgba(255, 255, 255, 0.04);
   --radius: 12px;
-  --button:white;
+  --button: white;
   --max-width: 1200px;
   --sidebar-w: 260px;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -201,8 +201,8 @@ button {
 .detail-shell,
 .hero-metrics article,
 .empty-state {
-  background: rgba(255, 252, 247, 0.96);
-  border: 1px solid rgba(71, 48, 31, 0.12);
+  /* background: rgba(255, 252, 247, 0.96); */
+  /* border: 1px solid rgba(71, 48, 31, 0.12); */
   box-shadow: 0 12px 24px rgba(77, 47, 24, 0.08);
 }
 
@@ -779,6 +779,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 980px) {
+
   .promo-grid,
   .order-layout,
   .detail-shell,
@@ -799,6 +800,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 720px) {
+
   .site-main,
   .search-shell {
     width: min(100% - 20px, 1200px);
@@ -919,6 +921,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 480px) {
+
   .site-main,
   .search-shell,
   .topbar,
@@ -1027,6 +1030,7 @@ body::-webkit-scrollbar-thumb {
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1035,7 +1039,8 @@ body::-webkit-scrollbar-thumb {
 
 /* GLOBAL GOURMET PULSE STYLES */
 body {
-  background-color: #f8fafc; /* Nền xám xanh sáng dịu mắt */
+  background-color: #f8fafc;
+  /* Nền xám xanh sáng dịu mắt */
   color: #1a202c;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   margin: 0;

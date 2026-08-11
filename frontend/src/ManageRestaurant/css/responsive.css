@@ -1,0 +1,87 @@
+/* --- RESTAURANT MANAGER (MERCHANT) RESPONSIVE --- */
+
+@media (max-width: 1024px) {
+  /* iPad / Tablet */
+  .adm-stat-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile Landscape / iPad Portrait */
+  .adm-page {
+      padding: 15px !important;
+  }
+
+  .adm-stat-grid {
+      grid-template-columns: 1fr !important;
+  }
+
+  /* Make Toolbar stack */
+  .adm-toolbar {
+      flex-direction: column;
+      align-items: stretch !important;
+  }
+  
+  .adm-search input {
+      width: 100% !important;
+  }
+  
+  .adm-tabs {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 5px;
+  }
+
+  /* Table responsive */
+  .adm-table-container, .table-container {
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      white-space: nowrap;
+  }
+  
+  /* Multi Action bar */
+  .adm-multi-bar {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 10px !important;
+  }
+
+  /* Orders layout */
+  .order-card-merchant, .merchant-orders-grid {
+      grid-template-columns: 1fr !important;
+  }
+
+  /* Chat UI full screen on mobile */
+  .chat-web-container {
+      height: calc(100vh - 120px) !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+  }
+  
+  .chat-sidebar {
+      position: absolute;
+      z-index: 10;
+      width: 100% !important;
+      height: 100%;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+  }
+  
+  .chat-sidebar.active-mobile {
+      transform: translateX(0);
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mobile Portrait */
+  .adm-page-title {
+      font-size: 1.2rem !important;
+  }
+  
+  .adm-btn-primary {
+      padding: 8px 12px !important;
+      font-size: 0.8rem !important;
+  }
+}

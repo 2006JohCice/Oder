@@ -163,6 +163,32 @@ const addProductToCart = async (cart, productId, quantity) => {
     return { status: 404, payload: { message: "Sản phẩm không tồn tại" } };
   }
 
+  // Check if restaurant is closed
+  if (product.restaurant_id && isValidObjectId(product.restaurant_id)) {
+    const restaurant = await Restaurant.findOne({ _id: product.restaurant_id, deleted: false });
+    if (restaurant && restaurant.openTime && restaurant.closeTime) {
+      const now = new Date();
+      const currentTime = now.getHours() + now.getMinutes() / 60;
+      
+      const [openH, openM] = restaurant.openTime.split(":").map(Number);
+      const openTime = openH + openM / 60;
+      
+      const [closeH, closeM] = restaurant.closeTime.split(":").map(Number);
+      const closeTime = closeH + closeM / 60;
+      
+      let isClosed = false;
+      if (closeTime < openTime) {
+        if (currentTime >= closeTime && currentTime < openTime) isClosed = true;
+      } else {
+        if (currentTime < openTime || currentTime >= closeTime) isClosed = true;
+      }
+
+      if (isClosed) {
+        return { status: 400, payload: { message: "Nhà hàng đã đóng cửa" } };
+      }
+    }
+  }
+
   const currentProducts = Array.isArray(cart.products) ? cart.products : [];
   const existingProductInCart = currentProducts.find(
     (item) => String(item.product_id) === String(productId)
