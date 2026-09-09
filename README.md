@@ -54,14 +54,28 @@ Plz.No edit ,Delete account for pepole login
 
 
 Done:
-<img width="1919" height="897" alt="image" src="https://github.com/user-attachments/assets/536d8125-861f-457e-95ac-136a9fff7dec" />
+
+<img width="1917" height="911" alt="image" src="https://github.com/user-attachments/assets/9016f0f7-4e9d-420f-98e5-5a9d549e1508" />
+-----------------------------
+
+<img width="1916" height="898" alt="image" src="https://github.com/user-attachments/assets/a589de6d-148d-40b3-b2b3-77663ec0d27d" />
 
 -----------------------------
-<img width="1910" height="897" alt="image" src="https://github.com/user-attachments/assets/2601c175-8554-41d1-950d-fdea5b872a6f" />
+<img width="1917" height="910" alt="image" src="https://github.com/user-attachments/assets/0568449d-4e14-4021-9e94-411fe79fbf3c" />
 
 ----------------------------
-<img width="1905" height="894" alt="image" src="https://github.com/user-attachments/assets/6fed0274-e59d-4baf-b134-664f7252e196" />
+<img width="1917" height="907" alt="image" src="https://github.com/user-attachments/assets/fe9da455-ecc0-47f5-b813-5faaadc6c408" />
 
 ---------------------------
-<img width="1856" height="895" alt="image" src="https://github.com/user-attachments/assets/7aaa4d8b-5bfe-48ef-b825-57c05c5fadf9" />
+<img width="1917" height="912" alt="image" src="https://github.com/user-attachments/assets/e7a16d57-84d2-4f24-8d74-3f93bbfd74b4" />
+
+---------------------------
+<img width="1917" height="898" alt="image" src="https://github.com/user-attachments/assets/a9040c9d-d8e7-487b-a629-95797c432fcf" />
+
+---------------------------
+<img width="1916" height="882" alt="image" src="https://github.com/user-attachments/assets/f1cb6b82-3a17-4b09-b336-967a3d295dad" />
+
+---------------------------
+<img width="1917" height="906" alt="image" src="https://github.com/user-attachments/assets/60dc5bb0-ee9e-4a2a-94be-9a7a2006ff26" />
+
 
