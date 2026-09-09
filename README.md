@@ -70,6 +70,12 @@ Done:
 <img width="1917" height="912" alt="image" src="https://github.com/user-attachments/assets/e7a16d57-84d2-4f24-8d74-3f93bbfd74b4" />
 
 ---------------------------
+<img width="1907" height="896" alt="image" src="https://github.com/user-attachments/assets/f859490e-4fc0-4cd5-a2f9-e9a5e96bfa81" />
+
+---------------------------
+<img width="1896" height="900" alt="image" src="https://github.com/user-attachments/assets/e48259a9-c53a-4e5d-809d-96596362c4b8" />
+
+---------------------------
 <img width="1917" height="898" alt="image" src="https://github.com/user-attachments/assets/a9040c9d-d8e7-487b-a629-95797c432fcf" />
 
 ---------------------------
